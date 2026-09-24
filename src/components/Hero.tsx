@@ -2,6 +2,8 @@ import { motion } from 'motion/react'
 import { Check } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { trust } from '../data/content'
+import { MaxBadge, TgIcon, maxHref, tgHref } from './Messengers'
+import { useOrder } from './Order'
 import { GeneratorBox } from './generator/GeneratorBox'
 import { Stage } from './generator/Stage'
 import { useGen } from './generator/store'
@@ -17,6 +19,7 @@ const up = (delay: number) => ({
 
 export function Hero() {
   const setHeroVisible = useGen().setHeroVisible
+  const order = useOrder()
   const ref = useRef<HTMLElement>(null)
 
   // Автодемо крутится, только пока первый экран на виду: не жжём батарею ниже по странице
@@ -29,7 +32,7 @@ export function Hero() {
   }, [setHeroVisible])
 
   return (
-    <section id="top" ref={ref} className="scroll-mt-20 px-4 pb-6 pt-12 sm:px-6 sm:pt-16 lg:pt-[76px]">
+    <section id="top" ref={ref} className="px-4 pb-6 pt-[104px] sm:px-6 sm:pt-[124px] lg:pt-[136px]">
       <h1 className="display mx-auto max-w-[1000px] text-center text-[44px] text-ink sm:text-[72px] lg:text-[100px]">
         <motion.span className="block" {...up(0.05)}>
           Сайт для бизнеса
@@ -52,6 +55,19 @@ export function Hero() {
             </li>
           ))}
         </ul>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[14px] text-ink-soft">
+          <span>Не хотите собирать? Можно сразу</span>
+          <button type="button" onClick={order} className="rounded-full bg-ink px-3.5 py-1.5 font-medium text-white transition hover:bg-black active:scale-[0.97]">
+            заказать сайт
+          </button>
+          <span>или написать</span>
+          <a href={tgHref()} target="_blank" rel="noopener" aria-label="Написать в Telegram" className="grid h-8 w-8 place-items-center rounded-full bg-cloud text-ink transition hover:bg-cloud-2">
+            <TgIcon size={15} />
+          </a>
+          <a href={maxHref} target="_blank" rel="noopener" aria-label="Написать в Max" className="grid h-8 w-8 place-items-center rounded-full bg-cloud text-ink transition hover:bg-cloud-2">
+            <MaxBadge />
+          </a>
+        </div>
       </motion.div>
 
       <motion.div {...up(0.6)} className="mt-12 sm:mt-16">
