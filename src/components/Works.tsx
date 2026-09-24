@@ -1,11 +1,39 @@
-import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react'
+import { AnimatePresence, motion, useInView, useScroll, useTransform } from 'motion/react'
 import { ArrowUpRight, Plus, X } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { included, works } from '../data/content'
 import { BrowserFrame, PhoneFrame } from './preview/Frames'
 import { Reveal } from './Reveal'
 
 const shot = (id: string, m = false) => `${import.meta.env.BASE_URL}img/works/${id}${m ? '-m' : ''}.webp`
+const clip = (id: string, ext: 'mp4' | 'webp') => `${import.meta.env.BASE_URL}video/works/${id}.${ext}`
+/** Для каких работ записан живой ролик первого экрана (фары, пролив, скролл-видео) */
+const LIVE: Record<string, boolean> = { veridis: true, 'veridis-m': true, caspol: true, expert: true }
+
+/** Живая запись первого экрана сайта клиента: без звука, по кругу, играет только на экране */
+function LiveClip({ id, alt, className }: { id: string; alt: string; className?: string }) {
+  const ref = useRef<HTMLVideoElement>(null)
+  const seen = useInView(ref, { margin: '200px' })
+  useEffect(() => {
+    const v = ref.current
+    if (!v) return
+    if (seen) v.play().catch(() => {})
+    else v.pause()
+  }, [seen])
+  return (
+    <video
+      ref={ref}
+      src={clip(id, 'mp4')}
+      poster={clip(id, 'webp')}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-label={alt}
+      className={className}
+    />
+  )
+}
 
 function Shot({ id, host, className }: { id: string; host: string; className?: string }) {
   return (
@@ -32,7 +60,7 @@ function Showcase() {
             <Shot id="intellect" host={byId.intellect.host} className="absolute left-[80px] top-[30px] w-[560px]" />
             <Shot id="caspol" host={byId.caspol.host} className="absolute left-[420px] top-[330px] w-[620px]" />
             <PhoneFrame className="absolute left-[690px] top-[40px] w-[190px]">
-              <img src={shot('veridis', true)} alt="" loading="lazy" className="block aspect-[390/844] w-full object-cover" />
+              <LiveClip id="veridis-m" alt="" className="block aspect-[390/844] w-full object-cover" />
             </PhoneFrame>
           </div>
         </motion.div>
@@ -93,15 +121,27 @@ function WorkCard({ id, tall }: { id: string; tall?: boolean }) {
       <div className={`relative overflow-hidden rounded-[14px] bg-night ${tall ? 'flex flex-1 items-center justify-center bg-[radial-gradient(ellipse_at_50%_30%,#3a3a3a,#1b1b1b)] py-10' : ''}`}>
         {tall ? (
           <PhoneFrame className="w-[230px] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
-            <img src={shot(id, true)} alt={`Мобильная версия сайта ${w.name}`} loading="lazy" className="block aspect-[390/844] w-full object-cover" />
+            {LIVE[`${id}-m`] ? (
+              <LiveClip id={`${id}-m`} alt={`Мобильная версия сайта ${w.name}`} className="block aspect-[390/844] w-full object-cover" />
+            ) : (
+              <img src={shot(id, true)} alt={`Мобильная версия сайта ${w.name}`} loading="lazy" className="block aspect-[390/844] w-full object-cover" />
+            )}
           </PhoneFrame>
         ) : (
-          <img
-            src={shot(id)}
-            alt={`Сайт ${w.name}: первый экран`}
-            loading="lazy"
-            className="block aspect-[16/10] w-full object-cover object-top transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.03]"
-          />
+          LIVE[id] ? (
+            <LiveClip
+              id={id}
+              alt={`Сайт ${w.name}: первый экран с анимацией`}
+              className="block aspect-[16/10] w-full object-cover object-top transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.03]"
+            />
+          ) : (
+            <img
+              src={shot(id)}
+              alt={`Сайт ${w.name}: первый экран`}
+              loading="lazy"
+              className="block aspect-[16/10] w-full object-cover object-top transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.03]"
+            />
+          )
         )}
       </div>
       <div className="flex flex-col gap-3 px-3 pb-2 pt-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">

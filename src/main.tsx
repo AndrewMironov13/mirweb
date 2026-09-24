@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { Harness } from './Harness.tsx'
 
 const root = document.getElementById('root')!
 /** Разметку первого экрана уже отдал пререндер: вступительную анимацию пропускаем, чтобы не мигало */
@@ -9,6 +10,6 @@ const root = document.getElementById('root')!
 
 createRoot(root).render(
   <StrictMode>
-    <App />
+    {import.meta.env.DEV && new URLSearchParams(location.search).has('harness') ? <Harness /> : <App />}
   </StrictMode>,
 )

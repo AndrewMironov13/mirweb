@@ -1,116 +1,14 @@
-import { motion, useReducedMotion, type Transition } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
 import { Check, Menu } from 'lucide-react'
-import { createContext, useContext, useEffect, useState, type CSSProperties, type ReactNode } from 'react'
-import type { Draft } from '../../data/niches'
+import { useContext, type CSSProperties } from 'react'
+import { tplOf, type Draft } from '../../data/niches'
+import { Anim, EASE, Fade, Photo, Pop, Rise, ScrollDemo, Typed } from './anim'
+import { TEMPLATES } from './templates'
 
 export const DESKTOP = { w: 1280, h: 760 }
 export const MOBILE = { w: 390, h: 800 }
 
 const img = (name: string) => `${import.meta.env.BASE_URL}img/niche/${name}.webp`
-const EASE = [0.22, 1, 0.36, 1] as const
-
-/** Если animated = false, всё рисуется сразу: для миниатюр и reduced motion */
-const Anim = createContext(true)
-
-function useT(delay: number, duration = 0.7): Transition {
-  const on = useContext(Anim)
-  return on ? { delay, duration, ease: EASE } : { duration: 0 }
-}
-
-/** Строка заголовка выезжает снизу из-под маски */
-function Rise({ delay, children, className, style }: { delay: number; children: ReactNode; className?: string; style?: CSSProperties }) {
-  const t = useT(delay, 0.8)
-  return (
-    <span className={`block overflow-hidden pb-[0.08em] ${className ?? ''}`} style={style}>
-      <motion.span
-        className="block"
-        initial={{ transform: 'translateY(105%)' }}
-        animate={{ transform: 'translateY(0%)' }}
-        transition={t}
-      >
-        {children}
-      </motion.span>
-    </span>
-  )
-}
-
-function Fade({ delay, children, className, style, y = 14 }: { delay: number; children: ReactNode; className?: string; style?: CSSProperties; y?: number }) {
-  const t = useT(delay, 0.6)
-  return (
-    <motion.div
-      className={className}
-      style={style}
-      initial={{ opacity: 0, transform: `translateY(${y}px)` }}
-      animate={{ opacity: 1, transform: 'translateY(0px)' }}
-      transition={t}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function Pop({ delay, children, className, style }: { delay: number; children: ReactNode; className?: string; style?: CSSProperties }) {
-  const on = useContext(Anim)
-  return (
-    <motion.div
-      className={className}
-      style={style}
-      initial={{ opacity: 0, transform: 'scale(0.86)' }}
-      animate={{ opacity: 1, transform: 'scale(1)' }}
-      transition={on ? { delay, type: 'spring', bounce: 0.35, visualDuration: 0.45 } : { duration: 0 }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-/** Название печатается по буквам, как будто его вводят в конструкторе */
-function Typed({ text, delay }: { text: string; delay: number }) {
-  const on = useContext(Anim)
-  const [n, setN] = useState(on ? 0 : text.length)
-  useEffect(() => {
-    if (!on) return setN(text.length)
-    setN(0)
-    let i = 0
-    let iv: number | undefined
-    const start = window.setTimeout(() => {
-      iv = window.setInterval(() => {
-        i += 1
-        setN(i)
-        if (i >= text.length) window.clearInterval(iv)
-      }, Math.max(22, 380 / Math.max(1, text.length)))
-    }, delay * 1000)
-    return () => {
-      window.clearTimeout(start)
-      if (iv) window.clearInterval(iv)
-    }
-  }, [text, delay, on])
-  return <>{text.slice(0, n)}</>
-}
-
-function Photo({ src, delay, className, style, dark }: { src: string; delay: number; className?: string; style?: CSSProperties; dark?: boolean }) {
-  const on = useContext(Anim)
-  const t = useT(delay, 1.1)
-  return (
-    <motion.div
-      className={`overflow-hidden ${className ?? ''}`}
-      style={{ ...style, background: dark ? '#0b0b0c' : '#e8e4de' }}
-      initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-      animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-      transition={t}
-    >
-      <motion.img
-        src={src}
-        alt=""
-        draggable={false}
-        className="h-full w-full object-cover"
-        initial={{ transform: 'scale(1.18)' }}
-        animate={{ transform: 'scale(1)' }}
-        transition={{ ...t, duration: on ? 1.8 : 0 }}
-      />
-    </motion.div>
-  )
-}
 
 const headFont = (d: Draft): CSSProperties =>
   d.niche.type === 'serif'
@@ -387,10 +285,21 @@ export function SitePreview({ draft, mobile, animated = true }: { draft: Draft; 
   const reduce = useReducedMotion()
   const on = animated && !reduce
   const L = draft.niche.layout
+  const T = TEMPLATES[tplOf(draft.niche)]
   return (
     <Anim.Provider value={on}>
       <div className="h-full w-full select-none overflow-hidden font-sans" aria-hidden="true">
-        {mobile ? <MobileSite d={draft} /> : L === 'dark-left' ? <DarkLeft d={draft} /> : L === 'center' ? <Center d={draft} /> : <LightSplit d={draft} />}
+        {T ? (
+          <ScrollDemo h={mobile ? MOBILE.h : DESKTOP.h}>{mobile ? <T.Mobile d={draft} /> : <T.Desktop d={draft} />}</ScrollDemo>
+        ) : mobile ? (
+          <MobileSite d={draft} />
+        ) : L === 'dark-left' ? (
+          <DarkLeft d={draft} />
+        ) : L === 'center' ? (
+          <Center d={draft} />
+        ) : (
+          <LightSplit d={draft} />
+        )}
       </div>
     </Anim.Provider>
   )

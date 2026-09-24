@@ -1,0 +1,62 @@
+{
+ "auto": {
+  "sourcePage": "https://mixkit.co/free-stock-video/closeup-of-red-sports-car-49/",
+  "sourceMp4": "https://assets.mixkit.co/videos/49/49-1080.mp4",
+  "license": "Mixkit Stock Video Free License (free for commercial and personal use, no attribution required; do not redistribute as a standalone stock file)",
+  "focusX": 0.6
+ },
+ "barber": {
+  "sourcePage": "https://mixkit.co/free-stock-video/barber-cutting-the-hair-of-a-bearded-man-43222/",
+  "sourceMp4": "https://assets.mixkit.co/videos/43222/43222-1080.mp4",
+  "license": "Mixkit Stock Video Free License: free for commercial and personal use, including websites; no attribution required. Do not resell or redistribute the clip as a standalone file",
+  "focusX": 0.55
+ },
+ "beauty": {
+  "sourcePage": "https://mixkit.co/free-stock-video/neck-massage-by-physiotherapist-49539/",
+  "sourceMp4": "https://assets.mixkit.co/videos/49539/49539-720.mp4",
+  "license": "Mixkit Free License (free for commercial use on websites, no attribution required). 720p is the highest available; 1080 returns 403.",
+  "focusX": 0.46
+ },
+ "food": {
+  "sourcePage": "https://mixkit.co/free-stock-video/vegetables-into-the-pan-in-slow-motion-49231/",
+  "sourceMp4": "https://assets.mixkit.co/videos/49231/49231-720.mp4",
+  "license": "Mixkit Stock Video Free License - free for commercial and personal use incl. websites, no attribution required (highest available rendition is 720p = native 1280x720, no upscale)",
+  "focusX": 0.52
+ },
+ "build": {
+  "sourcePage": "https://mixkit.co/free-stock-video/sunset-behind-a-building-under-construction-3971/",
+  "sourceMp4": "https://assets.mixkit.co/videos/3971/3971-1080.mp4",
+  "license": "Mixkit Stock Video Free License (free for commercial use incl. websites, no attribution required)",
+  "focusX": 0.24
+ },
+ "industry": {
+  "sourcePage": "https://mixkit.co/free-stock-video/workers-welding-heavy-metal-in-a-factory-47755/",
+  "sourceMp4": "https://assets.mixkit.co/videos/47755/47755-720.mp4",
+  "license": "Mixkit Stock Video Free License (https://mixkit.co/license/#videoFree): free for commercial and personal use, no attribution required; 720p is the max free resolution (1080p is Envato-only), which equals the 1280 px target",
+  "focusX": 0.6
+ },
+ "health": {
+  "sourcePage": "https://mixkit.co/free-stock-video/woman-looks-at-teeth-in-dentist-office-mirror-8863/",
+  "sourceMp4": "https://assets.mixkit.co/videos/8863/8863-720.mp4",
+  "license": "Mixkit Restricted License. The item page says the clip is free for commercial and non-commercial projects with no attribution. 720p is the largest file offered, and 1280 px is the target width, so it is not upscaled. Check before paid or broadcast ads. Free-License fallback: https://mixkit.co/free-stock-video/young-man-in-consultation-with-the-dentist-4774/ (1080p, a close-up of a check-up with an open mouth; weaker message).",
+  "focusX": 0.58
+ },
+ "sport": {
+  "sourcePage": "https://mixkit.co/free-stock-video/lightweight-boxer-practicing-in-a-dark-boxing-ring-45874/",
+  "sourceMp4": "https://assets.mixkit.co/videos/45874/45874-720.mp4",
+  "license": "Mixkit Free License (Stock Video Free License): free for commercial and personal use, including websites, no attribution required; not for resale as standalone footage. Best available size 1280x720 (the 1080p file returns 403).",
+  "focusX": 0.47
+ },
+ "edu": {
+  "sourcePage": "https://coverr.co/s?q=notes (clip: 'Girl taking notes during a video call', coverr-girl-taking-notes-during-a-video-call-6093)",
+  "sourceMp4": "https://cdn.coverr.co/videos/coverr-girl-taking-notes-during-a-video-call-6093/1080p.mp4",
+  "license": "Coverr License: free for commercial and non-commercial use, no attribution required (not a Coverr+ premium clip, no watermark)",
+  "focusX": 0.45
+ },
+ "services": {
+  "sourcePage": "https://mixkit.co/free-stock-video/silhouette-of-business-handshake-in-skyscraper-15795/",
+  "sourceMp4": "https://assets.mixkit.co/videos/15795/15795-720.mp4",
+  "license": "Mixkit Stock Video Free License (free for commercial and personal use, no attribution required; do not redistribute as a standalone stock file)",
+  "focusX": 0.49
+ }
+}
