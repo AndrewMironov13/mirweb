@@ -133,8 +133,8 @@ export function Stage() {
           </div>
         </div>
       </div>
-      <p className="mt-3 text-center text-[12px] text-ink-soft">
-        Фото и тексты в черновике — примеры. В вашем сайте будут ваши
+      <p className="mx-auto mt-4 max-w-[640px] text-center text-[13px] leading-[1.55] text-ink-soft">
+        Черновик собран из заготовок за пару секунд. Настоящий сайт делаем с нуля под ваш бизнес: уникальный дизайн, ваши фото и видео, анимации при прокрутке
       </p>
     </div>
   )

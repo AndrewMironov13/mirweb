@@ -50,6 +50,13 @@ export function OrderProvider({ children }: { children: ReactNode }) {
               <button type="button" onClick={() => setOpen(false)} aria-label="Закрыть" className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-cloud text-ink-soft transition hover:bg-cloud-2 hover:text-ink">
                 <X size={17} />
               </button>
+              <div className="mb-5 flex items-center gap-3 pr-10">
+                <img src={`${import.meta.env.BASE_URL}img/andrey-avatar.webp`} alt="" className="h-11 w-11 rounded-full object-cover ring-2 ring-white shadow-[0_6px_16px_-6px_rgba(0,0,0,.4)]" />
+                <div className="leading-tight">
+                  <p className="text-[14px] font-semibold text-ink">Андрей</p>
+                  <p className="text-[13px] text-ink-soft">отвечаю сам, без менеджеров</p>
+                </div>
+              </div>
               <h2 id="order-title" className="display pr-10 text-[34px] leading-[1.05] text-ink">Заказать сайт</h2>
               <p className="mt-3 text-[15px] leading-[1.55] text-ink-soft">
                 Оставьте телефон или ник — напишем, зададим пару вопросов и покажем первый экран бесплатно

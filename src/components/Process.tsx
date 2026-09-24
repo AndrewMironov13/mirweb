@@ -47,7 +47,10 @@ function Chat() {
                 </div>
               )}
             </div>
-            <p className={`mt-1.5 px-1 text-[12px] text-white/55 ${us ? '' : 'text-right'}`}>{us ? 'МирВеб' : 'Клиент'}</p>
+            <p className={`mt-1.5 flex items-center gap-1.5 px-1 text-[12px] text-white/55 ${us ? '' : 'justify-end'}`}>
+              {us && <img src={`${import.meta.env.BASE_URL}img/andrey-avatar.webp`} alt="" className="h-5 w-5 rounded-full object-cover" />}
+              {us ? 'Андрей, МирВеб' : 'Клиент'}
+            </p>
           </motion.div>
         )
       })}
