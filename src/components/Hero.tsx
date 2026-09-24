@@ -55,18 +55,20 @@ export function Hero() {
             </li>
           ))}
         </ul>
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[14px] text-ink-soft">
-          <span>Не хотите собирать? Можно сразу</span>
-          <button type="button" onClick={order} className="rounded-full bg-ink px-3.5 py-1.5 font-medium text-white transition hover:bg-black active:scale-[0.97]">
-            заказать сайт
-          </button>
-          <span>или написать</span>
-          <a href={tgHref()} target="_blank" rel="noopener" aria-label="Написать в Telegram" className="grid h-8 w-8 place-items-center rounded-full bg-cloud text-ink transition hover:bg-cloud-2">
-            <TgIcon size={15} />
-          </a>
-          <a href={maxHref} target="_blank" rel="noopener" aria-label="Написать в Max" className="grid h-8 w-8 place-items-center rounded-full bg-cloud text-ink transition hover:bg-cloud-2">
-            <MaxBadge />
-          </a>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[14px] text-ink-soft">
+          <span>Не хотите собирать черновик?</span>
+          {/* Кнопки держим одной группой: иначе на 320 px одинокий MAX уезжает на третью строку */}
+          <span className="inline-flex items-center gap-2">
+            <button type="button" onClick={order} className="h-10 rounded-full bg-ink px-4 font-medium text-white transition hover:bg-black active:scale-[0.97]">
+              Заказать сайт
+            </button>
+            <a href={tgHref()} target="_blank" rel="noopener" aria-label="Написать в Telegram" className="grid h-10 w-10 place-items-center rounded-full bg-cloud text-ink transition hover:bg-cloud-2">
+              <TgIcon size={16} />
+            </a>
+            <a href={maxHref} target="_blank" rel="noopener" aria-label="Написать в Max" className="grid h-10 w-10 place-items-center rounded-full bg-cloud text-ink transition hover:bg-cloud-2">
+              <MaxBadge />
+            </a>
+          </span>
         </div>
       </motion.div>
 

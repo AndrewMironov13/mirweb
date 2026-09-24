@@ -31,7 +31,7 @@
   --color-night: #262524;
   --color-night-2: #302f2d;
   --color-line: #ebebea;
-  --color-go: #00a870;
+  --color-go: #0b7a50;
   --color-rust: #c2410c;
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -46,6 +46,17 @@
   }
   body {
     @apply bg-paper text-ink font-sans;
+  }
+  /* Без одиноких слов в последней строке: «…клиенты только с / Карт» */
+  p,
+  li,
+  blockquote {
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
   }
   ::selection {
     background: #f4d6c6;

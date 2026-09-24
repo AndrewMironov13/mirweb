@@ -47,7 +47,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0, transform: 'translateY(16px) scale(.98)' }}
               transition={{ type: 'spring', bounce: 0.18, visualDuration: 0.4 }}
             >
-              <button type="button" onClick={() => setOpen(false)} aria-label="Закрыть" className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-cloud text-ink-soft transition hover:bg-cloud-2 hover:text-ink">
+              <button type="button" onClick={() => setOpen(false)} aria-label="Закрыть" className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-cloud text-ink-soft transition hover:bg-cloud-2 hover:text-ink">
                 <X size={17} />
               </button>
               <h2 id="order-title" className="display pr-10 text-[34px] leading-[1.05] text-ink">Заказать сайт</h2>

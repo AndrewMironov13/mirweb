@@ -6,6 +6,13 @@ import { DESKTOP, SitePreview } from './preview/SitePreview'
 import { Reveal } from './Reveal'
 
 const EASE = [0.22, 1, 0.36, 1] as const
+/** Разделители сетки шагов: 1 колонка → 2×2 → 4 в ряд. Для каждой ячейки явно, без конфликтующих классов */
+const STEP_BORDERS = [
+  '',
+  'border-t border-white/10 sm:border-t-0 sm:border-l lg:border-l',
+  'border-t border-white/10 lg:border-t-0 lg:border-l',
+  'border-t border-white/10 sm:border-l lg:border-t-0',
+]
 const sample = makeDraft('Барбершоп «Борода»', null)
 
 /** Переписка появляется по сообщению, как в настоящем чате */
@@ -40,7 +47,7 @@ function Chat() {
                 </div>
               )}
             </div>
-            <p className={`mt-1.5 px-1 text-[12px] text-white/35 ${us ? '' : 'text-right'}`}>{us ? 'МирВеб' : 'Клиент'}</p>
+            <p className={`mt-1.5 px-1 text-[12px] text-white/55 ${us ? '' : 'text-right'}`}>{us ? 'МирВеб' : 'Клиент'}</p>
           </motion.div>
         )
       })}
@@ -66,7 +73,7 @@ export function Process() {
             {process.steps.map((s, i) => (
               <div
                 key={s.title}
-                className={`p-7 ${i > 0 ? 'border-t border-white/10 sm:border-t-0' : ''} ${i % 2 === 1 ? 'sm:border-l sm:border-white/10' : ''} ${i >= 2 ? 'sm:border-t sm:border-white/10 lg:border-t-0' : ''} ${i === 2 ? 'lg:border-l lg:border-white/10' : ''}`}
+                className={`p-7 ${STEP_BORDERS[i]}`}
               >
                 <p className="text-[13px] text-white/45">{s.day}</p>
                 <p className="mt-2 text-[17px] font-medium">{s.title}</p>

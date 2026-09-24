@@ -41,6 +41,10 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
   const timers = useRef<number[]>([])
   const textRef = useRef(text)
   textRef.current = text
+  const demoRef = useRef(demo)
+  demoRef.current = demo
+  /** Текст, по которому собран текущий черновик: к нему возвращаем поле, если автодемо прервали на полуслове */
+  const builtRef = useRef(DEMO_SEQUENCE[0])
   const demoIdx = useRef(1)
 
   const clearTimers = () => {
@@ -50,6 +54,7 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
 
   const build = useCallback((t: string, s: SphereId | null) => {
     clearTimers()
+    builtRef.current = t
     const d = makeDraft(t, s)
     setDraft(d)
     setBuildKey((k) => k + 1)
@@ -70,6 +75,8 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
   const setText = useCallback((t: string) => {
     setDemo(false)
     setTextRaw(t)
+    // Посетитель пишет своё — «Готово» от прошлого черновика уже не про его текст
+    setStatus((st) => (st === 'done' ? 'idle' : st))
   }, [])
 
   const pickSphere = useCallback(
@@ -107,7 +114,8 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
       setDemo(false)
       setSphere(null)
       setTextRaw(t)
-      document.getElementById('top')?.scrollIntoView({ behavior: 'smooth' })
+      // Ведём сразу к сцене с черновиком, а не к заголовку: иначе на телефоне результат оказывается ниже экрана
+      document.getElementById('stage')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       window.setTimeout(() => build(t, null), 450)
     },
     [build],
@@ -146,6 +154,8 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
     })()
     return () => {
       alive = false
+      // Первый экран ушёл из вида посреди печати: не оставляем в поле обрывок вроде «Студия маник»
+      if (demoRef.current) setTextRaw(builtRef.current)
     }
   }, [demo, heroVisible, build])
 

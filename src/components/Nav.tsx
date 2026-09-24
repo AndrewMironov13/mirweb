@@ -42,7 +42,7 @@ export function Nav() {
             <span className="text-[16px] font-semibold tracking-[-0.01em]">МирВеб</span>
           </a>
 
-          <nav aria-label="Разделы" className="glass pointer-events-auto absolute left-1/2 hidden h-11 -translate-x-1/2 items-center gap-1 rounded-full px-1.5 md:flex">
+          <nav aria-label="Разделы" className="glass pointer-events-auto absolute left-1/2 hidden h-11 -translate-x-1/2 items-center gap-1 rounded-full px-1.5 lg:flex">
             {nav.map((n) => (
               <a key={n.href} href={n.href} className="rounded-full px-4 py-2 text-[14.5px] text-ink transition-colors hover:bg-black/[0.05]">
                 {n.label}
@@ -51,15 +51,18 @@ export function Nav() {
           </nav>
 
           <div className="pointer-events-auto flex items-center gap-2">
-            <Circle href={tgHref()} label="Написать в Telegram">
-              <TgIcon />
-            </Circle>
+            {/* На самых узких телефонах (320) Telegram живёт в меню, иначе бургер уезжает за край */}
+            <span className="hidden min-[370px]:block">
+              <Circle href={tgHref()} label="Написать в Telegram">
+                <TgIcon />
+              </Circle>
+            </span>
             <span className="hidden md:block">
               <Circle href={maxHref} label="Написать в Max">
                 <MaxBadge />
               </Circle>
             </span>
-            <button type="button" onClick={orderNow} className="btn-dark h-11 rounded-full px-4 text-[14.5px] shadow-[0_10px_30px_-12px_rgba(28,27,26,.55)] sm:px-5">
+            <button type="button" onClick={orderNow} className="btn-dark h-11 rounded-full px-4 text-[14.5px] shadow-[0_10px_30px_-12px_rgba(28,27,26,.55),0_0_0_1px_rgba(255,255,255,.22)] sm:px-5">
               <span className="hidden sm:inline">Заказать сайт</span>
               <span className="sm:hidden">Заказать</span>
             </button>
@@ -68,7 +71,7 @@ export function Nav() {
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
               aria-expanded={open}
-              className="glass relative grid h-11 w-11 place-items-center rounded-full md:hidden"
+              className="glass relative grid h-11 w-11 place-items-center rounded-full lg:hidden"
             >
               <span className={`absolute h-[2px] w-[18px] rounded-full bg-ink transition-transform duration-300 ${open ? 'rotate-45' : '-translate-y-[5px]'}`} />
               <span className={`absolute h-[2px] w-[18px] rounded-full bg-ink transition-transform duration-300 ${open ? '-rotate-45' : 'translate-y-[5px]'}`} />
@@ -84,7 +87,7 @@ export function Nav() {
             <motion.button
               type="button"
               aria-label="Закрыть меню"
-              className="fixed inset-0 z-40 bg-[#1c1b1a]/20 md:hidden"
+              className="fixed inset-0 z-40 bg-[#1c1b1a]/20 lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -92,7 +95,7 @@ export function Nav() {
             />
             <motion.nav
               aria-label="Меню"
-              className="fixed inset-x-3 top-[68px] z-50 flex flex-col gap-2 md:hidden"
+              className="fixed inset-x-3 top-[68px] z-50 mx-auto flex max-w-[520px] flex-col gap-2 lg:hidden"
               initial="hidden"
               animate="show"
               exit="hidden"

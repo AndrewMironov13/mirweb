@@ -17,9 +17,14 @@ const statusText = (s: Status, noun: string, took: number) =>
 
 export function GeneratorBox({ id, compact, toStage }: { id?: string; compact?: boolean; toStage?: boolean }) {
   const g = useGen()
-  /** Поле внизу страницы: после сборки уводим к сцене, где виден результат */
+  /** После сборки по действию посетителя показываем сцену, если она ниже экрана (телефон, ноутбук 1280×720, поле внизу страницы) */
   const reveal = () => {
-    if (toStage) window.setTimeout(() => document.getElementById('stage')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60)
+    window.setTimeout(() => {
+      const el = document.getElementById('stage')
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      if (toStage || r.top > window.innerHeight * 0.55 || r.bottom < 120) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 60)
   }
   const ta = useRef<HTMLTextAreaElement>(null)
   const building = g.status === 'style' || g.status === 'headline' || g.status === 'mobile'
@@ -54,7 +59,7 @@ export function GeneratorBox({ id, compact, toStage }: { id?: string; compact?: 
           }}
           onChange={(e) => g.setText(e.target.value)}
           onKeyDown={onKey}
-          placeholder="Как называется ваш бизнес и чем занимаетесь? Например: барбершоп «Борода»"
+          placeholder="Название и чем занимаетесь. Например: барбершоп «Борода»"
           className="block w-full resize-none bg-transparent px-3.5 pt-3 text-[16px] leading-[1.5] text-ink outline-none placeholder:text-muted"
         />
 
@@ -72,7 +77,7 @@ export function GeneratorBox({ id, compact, toStage }: { id?: string; compact?: 
                     reveal()
                   }}
                   aria-pressed={on}
-                  className={`rounded-full px-3 py-1.5 text-[13px] font-medium transition-[background-color,color,transform] duration-300 active:scale-95 ${on ? 'bg-ink text-white' : 'text-ink-soft hover:bg-white hover:text-ink'}`}
+                  className={`rounded-full px-3 py-2 text-[13px] font-medium transition-[background-color,color,transform] duration-300 active:scale-95 ${on ? 'bg-ink text-white' : 'text-ink-soft hover:bg-white hover:text-ink'}`}
                 >
                   {s.label}
                 </button>
@@ -81,8 +86,9 @@ export function GeneratorBox({ id, compact, toStage }: { id?: string; compact?: 
           </div>
         )}
 
-        <div className="mt-3 flex items-center justify-between gap-3 pl-2.5">
-          <div className="relative flex h-10 min-w-0 flex-1 items-center overflow-hidden text-[13px]">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 pl-2.5">
+          {/* На узком телефоне статус уходит отдельной строкой под кнопки, иначе от него остаётся «Гот…» */}
+          <div className="relative order-last flex h-8 w-full min-w-0 items-center overflow-hidden text-[13px] sm:order-none sm:h-10 sm:w-auto sm:flex-1">
             <AnimatePresence initial={false}>
               {building || g.status === 'done' ? (
                 <motion.span
@@ -98,7 +104,9 @@ export function GeneratorBox({ id, compact, toStage }: { id?: string; compact?: 
                   <span className="truncate">{statusText(g.status, g.draft.niche.noun, g.took)}</span>
                 </motion.span>
               ) : (
-                <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+                <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-y-0 left-0 right-0 flex items-center truncate text-muted">
+                  {g.text.trim() && !g.demo ? 'Enter или «Показать» — и черновик готов' : ''}
+                </motion.span>
               )}
             </AnimatePresence>
           </div>
@@ -109,7 +117,7 @@ export function GeneratorBox({ id, compact, toStage }: { id?: string; compact?: 
               g.random()
               reveal()
             }}
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-[11px] text-ink-soft transition hover:bg-white hover:text-ink active:scale-95"
+            className="ml-auto grid h-10 w-10 shrink-0 place-items-center rounded-[11px] text-ink-soft sm:ml-0 transition hover:bg-white hover:text-ink active:scale-95"
             title="Случайный пример"
             aria-label="Показать случайный пример"
           >

@@ -11,7 +11,7 @@ const SPOTS = [
   { l: 12, t: 60, r: 8 },
   { l: 82, t: 50, r: -6 },
   { l: -6, t: 32, r: 4 },
-  { l: 70, t: 84, r: -5 },
+  { l: 84, t: 80, r: -5 },
 ]
 
 export function Pricing() {
@@ -51,7 +51,7 @@ export function Pricing() {
 
             <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#c4a5ff]">{pricing.eyebrow}</p>
             <h2 className="display relative mt-4 text-[44px] sm:text-[64px]">{pricing.title}</h2>
-            <p className="display relative mt-6 text-[64px] text-[#f0a37a] sm:text-[96px]">{brand.priceLabel.replace(/ /g, ' ')}</p>
+            <p className="display relative mt-6 text-[54px] text-[#f0a37a] min-[400px]:text-[64px] sm:text-[96px]">{brand.priceLabel.replace(/ /g, ' ')}</p>
             <p className="relative mx-auto mt-5 max-w-[520px] text-[17px] leading-[1.6] text-white/65">{pricing.text}</p>
           </Reveal>
 

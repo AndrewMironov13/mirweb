@@ -78,7 +78,7 @@ export const NICHES: Niche[] = [
   },
   {
     id: 'autoservice', sphere: 'auto', noun: 'автосервис',
-    keys: ['автосерв', 'сто ', 'шиномон', 'ремонт авто', 'ремонт машин', 'развал', 'диагност', 'масл'],
+    keys: ['автосерв', 'автомастер', 'кузовн', 'сто ', 'шиномон', 'ремонт авто', 'ремонт машин', 'развал', 'диагност', 'масл'],
     services: ['Ремонт.', 'ТО.', 'Шиномонтаж.'],
     pain: 'Запись на время, без очереди и работ, о которых вы не просили',
     cta: 'Записаться на ремонт', cta2: 'Цены на работы',
@@ -364,18 +364,42 @@ export function detectNiche(text: string): Niche | null {
   return best
 }
 
-/** Имя бизнеса: то, что в кавычках. Иначе — текст до первой запятой или тире, не длиннее 24 знаков */
+const CAP = /^[A-ZА-ЯЁ0-9]/
+
+/**
+ * Имя бизнеса.
+ * 1. В кавычках — берём как есть: «Борода».
+ * 2. Без кавычек отрезаем адрес («… на Ленина», «… в Нижнем») и хвост после запятой или тире.
+ * 3. Если в конце идут слова с большой буквы, а первое слово — описание («Кофейня Уют»,
+ *    «ногтевая студия Лак»), имя — эти слова: «Уют», «Лак». Иначе — вся фраза («Юрист по банкротству»).
+ */
 export function extractName(text: string): { name: string; quoted: boolean } {
   const q = text.match(/[«"“„]([^»"”“]{1,40})[»"”“]?/)
-  let raw = (q ? q[1] : text.split(/[,;(]|\s[—–-]\s/)[0]).trim().replace(/\s+/g, ' ')
+  if (q) return { name: fit(q[1]), quoted: true }
+
+  let raw = text.split(/[,;(]|\s[—–-]\s/)[0].trim().replace(/\s+/g, ' ')
+  raw = raw.replace(/\s(на|в|во|у|возле|около|рядом с)\s[A-ZА-ЯЁ].*$/u, '').trim()
   if (!raw) return { name: '', quoted: false }
-  if (raw.length > 24) {
-    const cut = raw.slice(0, 24)
-    raw = cut.slice(0, cut.lastIndexOf(' ') > 8 ? cut.lastIndexOf(' ') : 24).trim()
-    // Не заканчиваем имя предлогом: «Продаём клей для» → «Продаём клей»
+
+  const words = raw.split(' ')
+  let i = words.length
+  while (i > 1 && CAP.test(words[i - 1])) i--
+  const tail = words.slice(i)
+  // «Мастерская Сергея Петровича», «Автомастерская Константинопольского» — это не бренд, а часть фразы
+  const genitive = tail.length > 0 && (/(ого|его)$/u.test(tail[0]) || /(вич|вича|вны|ична|ичны)$/u.test(tail[tail.length - 1]))
+  if (i > 0 && i < words.length && !genitive) return { name: fit(tail.join(' ')), quoted: true }
+  return { name: fit(raw), quoted: false }
+}
+
+/** Не длиннее 28 знаков, по границе слова, без висящего предлога в конце */
+function fit(s: string): string {
+  let raw = s.trim().replace(/\s+/g, ' ')
+  if (raw.length > 28) {
+    const cut = raw.slice(0, 28)
+    raw = cut.slice(0, cut.lastIndexOf(' ') > 8 ? cut.lastIndexOf(' ') : 28).trim()
     raw = raw.replace(/\s+\S{1,3}$/u, '')
   }
-  return { name: raw.charAt(0).toUpperCase() + raw.slice(1), quoted: Boolean(q) }
+  return raw.charAt(0).toUpperCase() + raw.slice(1)
 }
 
 const TR: Record<string, string> = {
@@ -384,19 +408,25 @@ const TR: Record<string, string> = {
   ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
 }
 
-/** «Борода» → boroda.ru, для адресной строки превью */
+const STOP = new Set(['na', 'v', 'vo', 'u', 's', 'so', 'k', 'po', 'za', 'do', 'ot', 'i', 'iz', 'dlya', 'pod', 'pro'])
+
+/** «Борода» → boroda.ru, «Кофейня Уют на Ленина» → kofeynya-uyut.ru. Для адресной строки превью */
 export function toDomain(name: string): string {
-  const s = name
+  const words = name
     .toLowerCase()
     .replace(/…/g, '')
     .split('')
     .map((c) => TR[c] ?? c)
     .join('')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .split('-')
-    .reduce((acc, w) => (acc && (acc + '-' + w).length > 22 ? acc : acc ? acc + '-' + w : w.slice(0, 22)), '')
-  return (s || 'vash-biznes') + '.ru'
+    .split(/[^a-z0-9]+/)
+    .filter((w) => w && !STOP.has(w))
+  let out = ''
+  for (const w of words) {
+    const next = out ? `${out}-${w}` : w
+    if (next.length > 22) break
+    out = next
+  }
+  return (out || words[0]?.slice(0, 22) || 'vash-biznes') + '.ru'
 }
 
 export interface Draft {

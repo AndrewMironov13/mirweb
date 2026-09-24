@@ -140,7 +140,7 @@ function Header({ d, light, mobile }: { d: Draft; light: boolean; mobile?: boole
   const color = light ? 'rgba(255,255,255,.78)' : 'rgba(28,27,26,.7)'
   if (mobile) {
     return (
-      <Fade delay={0.2} y={-10} className="relative z-10 flex items-center justify-between px-5 pt-[38px]">
+      <Fade delay={0.2} y={-10} className="relative z-10 flex items-center justify-between px-5 pt-5">
         <Logo d={d} light={light} />
         <Menu size={24} color={light ? '#fff' : '#1c1b1a'} />
       </Fade>

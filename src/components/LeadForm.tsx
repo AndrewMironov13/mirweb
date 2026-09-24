@@ -7,7 +7,8 @@ import { sendLead } from '../lib/lead'
 type State = 'idle' | 'sending' | 'sent' | 'error'
 
 /** Поле «телефон или ник» + кнопка. dark = на тёмном фоне */
-export function LeadForm({ business, niche, source, dark, autoFocus, stacked }: { business?: string; niche?: string; source: string; dark?: boolean; autoFocus?: boolean; stacked?: boolean }) {
+/** stackedLg: кнопка под полем только на широком экране, где форма стоит в узкой колонке сцены */
+export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }: { business?: string; niche?: string; source: string; dark?: boolean; autoFocus?: boolean; stackedLg?: boolean }) {
   const [contact, setContact] = useState('')
   const [state, setState] = useState<State>('idle')
 
@@ -40,7 +41,7 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stacked }: 
       ) : (
         <motion.form key="form" onSubmit={submit} exit={{ opacity: 0 }} className="w-full">
           <div
-            className={`flex gap-1.5 rounded-[14px] p-1.5 ${stacked ? 'flex-col' : 'items-center'} ${dark ? 'bg-white/10 ring-1 ring-white/15 focus-within:ring-white/40' : 'bg-white ring-1 ring-line focus-within:ring-ink/30'}`}
+            className={`flex flex-col gap-1.5 rounded-[14px] p-1.5 min-[400px]:flex-row min-[400px]:items-center ${stackedLg ? 'lg:flex-col lg:items-stretch' : ''} ${dark ? 'bg-white/10 ring-1 ring-white/15 focus-within:ring-white/40' : 'bg-white ring-1 ring-line focus-within:ring-ink/30'}`}
           >
             <input
               type="text"
@@ -51,7 +52,7 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stacked }: 
               onChange={(e) => setContact(e.target.value)}
               placeholder="Телефон или @ник"
               aria-label="Телефон или ник в Telegram"
-              className={`min-w-0 flex-1 bg-transparent px-3 py-2.5 text-[15px] outline-none ${dark ? 'text-white placeholder:text-white/45' : 'text-ink placeholder:text-muted'}`}
+              className={`min-w-0 flex-1 bg-transparent px-3 py-2.5 text-[16px] outline-none ${dark ? 'text-white placeholder:text-white/45' : 'text-ink placeholder:text-muted'}`}
             />
             <button
               type="submit"

@@ -31,7 +31,7 @@ function Showcase() {
           <div className="absolute inset-0 rotate-[-14deg]">
             <Shot id="intellect" host={byId.intellect.host} className="absolute left-[80px] top-[30px] w-[560px]" />
             <Shot id="caspol" host={byId.caspol.host} className="absolute left-[420px] top-[330px] w-[620px]" />
-            <PhoneFrame className="absolute left-[660px] top-[-40px] w-[200px]">
+            <PhoneFrame className="absolute left-[690px] top-[40px] w-[190px]">
               <img src={shot('veridis', true)} alt="" loading="lazy" className="block aspect-[390/844] w-full object-cover" />
             </PhoneFrame>
           </div>
@@ -104,12 +104,11 @@ function WorkCard({ id, tall }: { id: string; tall?: boolean }) {
           />
         )}
       </div>
-      <div className="flex items-end justify-between gap-4 px-3 pb-2 pt-4">
-        <div>
+      <div className="flex flex-col gap-3 px-3 pb-2 pt-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+        <div className="min-w-0">
           <p className="text-[17px] font-semibold text-ink">{w.name}</p>
-          <p className="mt-0.5 text-[15px] text-ink-soft">
-            {w.niche} · {w.city}
-          </p>
+          <p className="mt-0.5 text-[15px] text-ink-soft">{w.niche}</p>
+          <p className="text-[14px] text-muted">{w.city}</p>
         </div>
         <span className="flex shrink-0 items-center gap-1 text-[14px] font-medium text-ink-soft transition-colors group-hover:text-ink">
           {w.host.includes('.') ? w.host : 'Открыть'} <ArrowUpRight size={15} />
@@ -125,11 +124,11 @@ export function Works() {
       <Reveal>
         <Showcase />
       </Reveal>
-      <Reveal className="mt-4 grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <Reveal className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="md:col-span-2">
           <WorkCard id="intellect" />
         </div>
-        <div className="flex flex-col lg:row-span-2">
+        <div className="flex flex-col md:order-last md:col-span-2 lg:order-none lg:col-span-1 lg:row-span-2">
           <WorkCard id="veridis" tall />
         </div>
         <WorkCard id="caspol" />

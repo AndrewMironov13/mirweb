@@ -11,6 +11,13 @@ import { useMedia } from '../../lib/useMedia'
 
 const img = (name: string) => `${import.meta.env.BASE_URL}img/niche/${name}.webp`
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+/** Длинное имя не должно рваться посреди слова в узкой колонке: уменьшаем кегль по длине самого длинного слова и всей строки */
+const titleSize = (name: string) => {
+  const longest = Math.max(...name.split(/\s+/).map((w) => w.length))
+  if (longest >= 13 || name.length > 22) return 'text-[32px] sm:text-[36px]'
+  if (longest >= 10 || name.length > 14) return 'text-[38px] sm:text-[42px]'
+  return 'text-[44px] sm:text-[52px]'
+}
 
 /** Сцена под полем ввода: браузер и телефон с «собранным» сайтом на размытом фоне ниши */
 export function Stage() {
@@ -79,20 +86,25 @@ export function Stage() {
                 transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               >
                 <p className="mt-5 text-[14px] text-white/60">{cap(d.niche.noun)}</p>
-                <p className="display mt-1 text-[44px] leading-[1.02] [overflow-wrap:anywhere] sm:text-[52px]">{d.quoted ? `«${d.name}»` : d.name}</p>
+                <p
+                  lang="ru"
+                  className={`display mt-1 leading-[1.04] [hyphens:auto] [overflow-wrap:break-word] ${titleSize(d.name)}`}
+                >
+                  {d.quoted ? `«${d.name}»` : d.name}
+                </p>
               </motion.div>
             </AnimatePresence>
             <p className="mt-4 text-[15px] leading-[1.55] text-white/75">
-              Настоящий сайт с вашими фото, ценами и отзывами соберём за {brand.days} дней. Этот черновик — бесплатно
+              Настоящий сайт с вашими фото, ценами и отзывами соберём за {brand.days} дней. Этот черновик — бесплатно
             </p>
 
-            <BuildLog />
+            {!formOpen && <BuildLog />}
 
             <div className="mt-6 lg:mt-auto">
               <AnimatePresence mode="wait" initial={false}>
                 {formOpen ? (
                   <motion.div key="form" initial={{ opacity: 0, transform: 'translateY(8px)' }} animate={{ opacity: 1, transform: 'translateY(0px)' }} exit={{ opacity: 0 }}>
-                    <LeadForm dark stacked autoFocus business={d.name} niche={d.niche.noun} source="Генератор на первом экране" />
+                    <LeadForm dark stackedLg autoFocus business={d.name} niche={d.niche.noun} source="Генератор на первом экране" />
                   </motion.div>
                 ) : (
                   <motion.div key="btns" className="flex flex-col gap-2 sm:flex-row lg:flex-col" exit={{ opacity: 0 }}>
@@ -121,7 +133,7 @@ export function Stage() {
           </div>
         </div>
       </div>
-      <p className="mt-3 text-center text-[12px] text-muted">
+      <p className="mt-3 text-center text-[12px] text-ink-soft">
         Фото и тексты в черновике — примеры. В вашем сайте будут ваши
       </p>
     </div>
@@ -135,8 +147,8 @@ function BuildLog() {
   const g = useGen()
   const at = ORDER.indexOf(g.status)
   const rows = [
-    `Стиль и фото под ${g.draft.niche.noun}`,
-    'Заголовок: услуги крупно, боль строкой ниже',
+    `Стиль и фото: ${g.draft.niche.noun}`,
+    'Заголовок по вашим услугам',
     'Кнопки записи и мессенджеры',
     'Мобильная версия',
   ]

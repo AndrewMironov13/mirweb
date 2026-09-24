@@ -15,11 +15,11 @@ export function Spheres() {
       </Reveal>
       <Reveal y={16} className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
         {sphereCards.map((c) => (
-          <div key={c.title}>
+          <div key={c.title} className="h-full">
             <button
               type="button"
               onClick={() => g.runFromOutside(c.sample)}
-              className="group flex w-full items-center justify-between gap-4 rounded-[22px] bg-cloud px-6 py-6 text-left transition-colors duration-300 hover:bg-cloud-2"
+              className="group flex h-full w-full items-center justify-between gap-4 rounded-[22px] bg-cloud px-6 py-6 text-left transition-colors duration-300 hover:bg-cloud-2"
             >
               <span>
                 <span className="block text-[17px] font-medium text-ink">{c.title}</span>

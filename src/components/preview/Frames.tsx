@@ -25,8 +25,11 @@ export function PhoneFrame({ children, className }: { children: ReactNode; class
   return (
     <div className={`relative rounded-[34px] bg-[#111] p-[7px] shadow-[0_40px_80px_-24px_rgba(0,0,0,.7),0_0_0_1px_rgba(255,255,255,.12)] ${className ?? ''}`}>
       <div className="relative overflow-hidden rounded-[27px] bg-black">
+        {/* Строка состояния: вырез камеры живёт в ней, а не поверх шапки сайта с названием бизнеса */}
+        <div className="relative h-[26px] bg-black">
+          <div className="absolute left-1/2 top-[6px] h-[16px] w-[54px] -translate-x-1/2 rounded-full bg-[#0c0c0c] ring-1 ring-white/5" />
+        </div>
         {children}
-        <div className="pointer-events-none absolute left-1/2 top-[7px] z-20 h-[19px] w-[62px] -translate-x-1/2 rounded-full bg-black" />
       </div>
     </div>
   )
