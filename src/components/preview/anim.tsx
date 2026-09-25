@@ -14,6 +14,15 @@ export const useAnimOn = () => useContext(Anim)
 
 export const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`
 
+/**
+ * Видео для черновика: своё у ниши (маникюр, кофейня, йога…), иначе общее у сферы.
+ * Шаблоны берут src и poster только отсюда, чтобы под «Маникюр. Педикюр. Брови.» не играл массаж
+ */
+export function nicheVideo(d: { niche: { video?: string } }, tpl: string) {
+  const id = d.niche.video ?? tpl
+  return { src: asset(`video/niche/${id}.mp4`), poster: asset(`video/niche/${id}.webp`) }
+}
+
 export function useT(delay: number, duration = 0.7): Transition {
   const on = useAnimOn()
   return on ? { delay, duration, ease: EASE } : { duration: 0 }
@@ -191,14 +200,16 @@ export function ScrollDemo({ h, children }: { h: number; children: ReactNode }) 
   const depth = Math.round(h * 0.92)
   return (
     <motion.div
-      className="will-change-transform"
+      className="scroll-demo"
       initial={{ transform: 'translateY(0px)' }}
       animate={
         on
           ? { transform: ['translateY(0px)', 'translateY(0px)', `translateY(-${depth}px)`, `translateY(-${depth}px)`, 'translateY(0px)'] }
           : { transform: 'translateY(0px)' }
       }
-      transition={on ? { duration: 6.2, times: [0, 0.46, 0.64, 0.82, 1], ease: [0.65, 0, 0.35, 1] } : { duration: 0 }}
+      // 0–3.3 с первый экран досматривается целиком, 3.3–4.4 едем вниз, до 5.8 смотрим вторую секцию, к 7.0 назад
+      // Сглаживание на каждый участок отдельно: одна кривая на весь ролик съедала паузу на второй секции
+      transition={on ? { duration: 7.0, times: [0, 0.47, 0.63, 0.83, 1], ease: ['linear', [0.65, 0, 0.35, 1], 'linear', [0.65, 0, 0.35, 1]] } : { duration: 0 }}
     >
       {children}
     </motion.div>
@@ -206,4 +217,4 @@ export function ScrollDemo({ h, children }: { h: number; children: ReactNode }) 
 }
 
 /** Время, когда вторая секция уже на экране: к нему шаблоны привязывают её собственные анимации */
-export const SECOND_AT = 3.4
+export const SECOND_AT = 3.9

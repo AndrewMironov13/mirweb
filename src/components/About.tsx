@@ -35,7 +35,7 @@ function Portrait() {
 
   return (
     <div onPointerMove={move} onPointerLeave={leave} className="relative [perspective:1100px]">
-      <motion.div style={{ rotateX, rotateY, x: shiftX }} className="relative overflow-hidden rounded-[22px] will-change-transform">
+      <motion.div style={{ rotateX, rotateY, x: shiftX }} className="relative overflow-hidden rounded-[22px]">
         <img
           src={`${import.meta.env.BASE_URL}img/andrey.webp`}
           alt={`${about.name}, ${about.role.toLowerCase()}`}

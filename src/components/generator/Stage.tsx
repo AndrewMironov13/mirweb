@@ -7,9 +7,11 @@ import { BrowserFrame, PhoneFrame } from '../preview/Frames'
 import { Scaled } from '../preview/Scaled'
 import { DESKTOP, MOBILE, SitePreview } from '../preview/SitePreview'
 import { useGen, type Status } from './store'
+import { tplOf } from '../../data/niches'
 import { useMedia } from '../../lib/useMedia'
 
-const img = (name: string) => `${import.meta.env.BASE_URL}img/niche/${name}.webp`
+/** Фон сцены — крошечная (96 px) копия кадра ниши: браузер сам растягивает её мягко, без дорогого фильтра размытия */
+const ambient = (d: { niche: { video?: string } }, tpl: string) => `${import.meta.env.BASE_URL}video/niche/${d.niche.video ?? tpl}-blur.webp`
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 /** Длинное имя не должно рваться посреди слова в узкой колонке: уменьшаем кегль по длине самого длинного слова и всей строки */
 const titleSize = (name: string) => {
@@ -28,6 +30,8 @@ export function Stage() {
   const formOpen = formFor === g.buildKey
   const stage = useRef<HTMLDivElement>(null)
   const visible = useInView(stage)
+  /** Живые превью только пока сцена рядом с экраном: иначе анимации, видео и слои крутятся вхолостую. Вернулись — сборка проиграется заново */
+  const live = useInView(stage, { amount: 0.2 })
   const sm = useMedia('(min-width: 640px)')
   const lg = useMedia('(min-width: 1024px)')
 
@@ -37,11 +41,11 @@ export function Stage() {
         {/* Фон: фото ниши, сильно размытое. Даёт цвет и настроение, не спорит с превью */}
         <AnimatePresence initial={false}>
           <motion.img
-            key={d.niche.photo}
-            src={img(d.niche.photo)}
+            key={ambient(d, tplOf(d.niche))}
+            src={ambient(d, tplOf(d.niche))}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full scale-125 object-cover blur-2xl brightness-[.5] saturate-[1.3]"
+            className="absolute inset-0 h-full w-full scale-110 object-cover brightness-[.55] saturate-[1.25]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -56,7 +60,7 @@ export function Stage() {
             {sm && (
               <BrowserFrame domain={d.domain}>
                 <Scaled width={DESKTOP.w} height={DESKTOP.h}>
-                  <SitePreview key={g.buildKey} draft={d} />
+                  {live && <SitePreview key={g.buildKey} draft={d} />}
                 </Scaled>
               </BrowserFrame>
             )}
@@ -65,7 +69,7 @@ export function Stage() {
             <div className="mx-auto w-[244px] lg:absolute lg:bottom-6 lg:right-6 lg:mx-0 lg:w-[190px]">
               <PhoneFrame>
                 <Scaled width={MOBILE.w} height={MOBILE.h}>
-                  <SitePreview key={g.buildKey} draft={d} mobile />
+                  {live && <SitePreview key={g.buildKey} draft={d} mobile />}
                 </Scaled>
               </PhoneFrame>
             </div>

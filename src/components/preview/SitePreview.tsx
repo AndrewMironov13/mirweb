@@ -1,9 +1,9 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { Check, Menu } from 'lucide-react'
-import { useContext, type CSSProperties } from 'react'
+import { useContext, useEffect, type CSSProperties } from 'react'
 import { tplOf, type Draft } from '../../data/niches'
 import { Anim, EASE, Fade, Photo, Pop, Rise, ScrollDemo, Typed } from './anim'
-import { TEMPLATES } from './templates'
+import { hasTemplate, preloadTemplates, useTemplate } from './templates'
 
 export const DESKTOP = { w: 1280, h: 760 }
 export const MOBILE = { w: 390, h: 800 }
@@ -285,12 +285,18 @@ export function SitePreview({ draft, mobile, animated = true }: { draft: Draft; 
   const reduce = useReducedMotion()
   const on = animated && !reduce
   const L = draft.niche.layout
-  const T = TEMPLATES[tplOf(draft.niche)]
+  const id = tplOf(draft.niche)
+  const T = useTemplate(id)
+  const templated = hasTemplate(id)
+  useEffect(() => preloadTemplates(), [])
   return (
     <Anim.Provider value={on}>
       <div className="h-full w-full select-none overflow-hidden font-sans" aria-hidden="true">
         {T ? (
           <ScrollDemo h={mobile ? MOBILE.h : DESKTOP.h}>{mobile ? <T.Mobile d={draft} /> : <T.Desktop d={draft} />}</ScrollDemo>
+        ) : templated ? (
+          // шаблон ещё грузится: тёмная заглушка на доли секунды, а не старая раскладка
+          <div className="h-full w-full bg-[#0b0b0c]" />
         ) : mobile ? (
           <MobileSite d={draft} />
         ) : L === 'dark-left' ? (

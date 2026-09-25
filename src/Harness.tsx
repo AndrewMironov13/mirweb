@@ -1,7 +1,7 @@
 import { makeDraft, NICHES, tplOf } from './data/niches'
 import { DESKTOP, MOBILE, SitePreview } from './components/preview/SitePreview'
 import { Anim } from './components/preview/anim'
-import { TEMPLATES } from './components/preview/templates'
+import { useTemplate } from './components/preview/templates'
 
 /**
  * Стенд для проверки шаблонов черновиков (только для разработки), открывается по ?harness:
@@ -21,7 +21,7 @@ export function Harness() {
   const mobile = q.get('mobile') === '1'
   const still = q.get('still') === '1'
   const size = mobile ? MOBILE : DESKTOP
-  const T = TEMPLATES[tplOf(d.niche)]
+  const T = useTemplate(tplOf(d.niche))
   const section = q.get('section') === '2'
   const noscroll = q.get('noscroll') === '1' || section
 
