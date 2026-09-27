@@ -23,6 +23,10 @@ const port = server.address().port
 
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+// Спокойный первый кадр: без автодемо и живых макетов, иначе в разметку попадает случайный кадр печати
+await page.addInitScript(() => {
+  window.__SNAPSHOT__ = true
+})
 await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: 'networkidle' })
 await page.waitForTimeout(2500)
 const H = await page.evaluate(() => document.documentElement.scrollHeight)

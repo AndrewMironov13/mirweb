@@ -10,7 +10,7 @@ export function Pricing() {
 
   return (
     <section id="price" className="scroll-mt-16 bg-night pb-24 pt-8 text-white lg:pb-28">
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-0">
+      <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
         <Reveal className="mx-auto max-w-[900px] py-10 text-center lg:py-16">
           <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#c4a5ff]">{pricing.eyebrow}</p>
           <h2 className="display mt-4 text-[44px] sm:text-[64px]">{pricing.title}</h2>

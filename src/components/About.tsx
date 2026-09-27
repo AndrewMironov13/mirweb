@@ -50,7 +50,7 @@ function Portrait() {
 
 export function About() {
   return (
-    <section className="mx-auto max-w-[1200px] px-4 pt-24 sm:px-6 lg:px-0 lg:pt-32">
+    <section className="mx-auto max-w-[1248px] px-4 pt-24 sm:px-6 lg:pt-32">
       <Reveal>
         <div className="grid items-center gap-8 overflow-hidden rounded-[28px] bg-[radial-gradient(ellipse_at_85%_30%,#2b2a2c_0%,#161519_55%,#121116_100%)] p-5 text-white sm:p-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:p-14">
           <div className="order-2 lg:order-1">

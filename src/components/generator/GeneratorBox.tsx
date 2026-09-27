@@ -5,7 +5,7 @@ import { SPHERES } from '../../data/niches'
 import { useMedia } from '../../lib/useMedia'
 import { useGen, type Status } from './store'
 
-const statusText = (s: Status, noun: string, took: number) =>
+export const statusText = (s: Status, noun: string, took: number) =>
   s === 'style'
     ? `Подбираю стиль: ${noun}`
     : s === 'headline'
@@ -29,8 +29,15 @@ export function GeneratorBox({ id, compact, toStage }: { id?: string; compact?: 
    * После сборки по действию посетителя показываем сцену целиком: низ сцены к низу экрана,
    * а если она выше экрана — верх под шапку. Уже видна целиком — страницу не двигаем
    */
+  const box = useRef<HTMLDivElement>(null)
   const reveal = () => {
     window.setTimeout(() => {
+      // Телефон: сцена выше экрана, поэтому держим под шапкой само поле — ввод, сферы и начало черновика видны вместе
+      if (!toStage && window.innerWidth < 1024) {
+        const b = box.current?.getBoundingClientRect()
+        if (b && (b.top < 64 || b.top > 140)) window.scrollTo({ top: window.scrollY + b.top - 76, behavior: smooth() })
+        return
+      }
       const scene = document.getElementById('stage')?.firstElementChild
       if (!scene) return
       const r = scene.getBoundingClientRect()
@@ -93,7 +100,7 @@ export function GeneratorBox({ id, compact, toStage }: { id?: string; compact?: 
 
   if (compact)
     return (
-      <div className="mx-auto w-full max-w-[720px]">
+      <div ref={box} className="mx-auto w-full max-w-[760px]">
         <div
           className="rounded-[20px] bg-cloud p-1.5 transition-shadow duration-300 focus-within:shadow-[0_0_0_1px_rgba(43,42,41,.14),0_12px_40px_-12px_rgba(43,42,41,.18)] sm:p-2"
           onClick={() => field.current?.focus()}
@@ -195,7 +202,7 @@ function Chip({ id, label, onPick }: { id: (typeof SPHERES)[number]['id']; label
         onPick()
       }}
       aria-pressed={on}
-      className={`shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-[13px] font-medium transition-[background-color,color,transform] duration-300 active:scale-95 ${on ? 'bg-ink text-white' : 'text-ink-soft hover:bg-white hover:text-ink'}`}
+      className={`shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-[13px] font-medium transition-[background-color,color,transform] duration-300 active:scale-95 ${on ? 'bg-ink text-white' : 'bg-white/60 text-ink-soft hover:bg-white hover:text-ink'}`}
     >
       {label}
     </button>
@@ -255,7 +262,7 @@ function Spheres({ onPick, lead }: { onPick: () => void; lead?: ReactNode }) {
         onScroll={measure}
         role="group"
         aria-label="Сфера бизнеса"
-        className="relative flex min-w-0 flex-1 gap-0.5 overflow-x-auto sm:justify-between overscroll-x-contain px-1 [scrollbar-width:none] sm:px-1.5 [&::-webkit-scrollbar]:hidden"
+        className="relative flex min-w-0 flex-1 gap-1 overflow-x-auto sm:justify-between overscroll-x-contain px-1 [scrollbar-width:none] sm:px-1.5 [&::-webkit-scrollbar]:hidden"
         style={{ maskImage: mask, WebkitMaskImage: mask }}
       >
         {SPHERES.map((s) => (

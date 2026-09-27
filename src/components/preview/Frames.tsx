@@ -1,10 +1,12 @@
+import { AnimatePresence, motion } from 'motion/react'
 import { Lock, RotateCw } from 'lucide-react'
 import type { ReactNode } from 'react'
 
-export function BrowserFrame({ domain, children, className }: { domain: string; children: ReactNode; className?: string }) {
+/** busy — идёт сборка черновика: под адресной строкой бежит тонкая полоска, как загрузка страницы */
+export function BrowserFrame({ domain, children, className, busy }: { domain: string; children: ReactNode; className?: string; busy?: boolean }) {
   return (
     <div className={`overflow-hidden rounded-[14px] bg-[#1d1d1f] shadow-[0_40px_90px_-30px_rgba(0,0,0,.65),0_0_0_1px_rgba(255,255,255,.08)] ${className ?? ''}`}>
-      <div className="flex h-[34px] items-center gap-3 px-3.5">
+      <div className="relative flex h-[34px] items-center gap-3 px-3.5">
         <div className="flex gap-1.5">
           <span className="h-[11px] w-[11px] rounded-full bg-[#ff5f57]" />
           <span className="h-[11px] w-[11px] rounded-full bg-[#febc2e]" />
@@ -15,6 +17,18 @@ export function BrowserFrame({ domain, children, className }: { domain: string; 
           <span className="truncate">{domain}</span>
         </div>
         <RotateCw size={12} className="text-white/40" />
+        <AnimatePresence>
+          {busy && (
+            <motion.span
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 h-[2px] origin-left bg-[linear-gradient(90deg,#9a3412,#e8772f)]"
+              initial={{ transform: 'scaleX(0)', opacity: 1 }}
+              animate={{ transform: 'scaleX(0.92)' }}
+              exit={{ transform: 'scaleX(1)', opacity: 0, transition: { duration: 0.35 } }}
+              transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+            />
+          )}
+        </AnimatePresence>
       </div>
       <div className="relative">{children}</div>
     </div>

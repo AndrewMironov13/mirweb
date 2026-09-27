@@ -9,6 +9,7 @@ import { DESKTOP, MOBILE, SitePreview } from '../preview/SitePreview'
 import { useGen, type Status } from './store'
 import { tplOf } from '../../data/niches'
 import { useMedia } from '../../lib/useMedia'
+import { SNAPSHOT, draftPoster } from '../../lib/snapshot'
 
 /** Фон сцены — крошечная (96 px) копия кадра ниши: браузер сам растягивает её мягко, без дорогого фильтра размытия */
 const ambient = (d: { niche: { video?: string } }, tpl: string) => `${import.meta.env.BASE_URL}video/niche/${d.niche.video ?? tpl}-blur.webp`
@@ -31,7 +32,10 @@ export function Stage() {
   const stage = useRef<HTMLDivElement>(null)
   const visible = useInView(stage)
   /** Живые превью только пока сцена рядом с экраном: иначе анимации, видео и слои крутятся вхолостую. Вернулись — сборка проиграется заново */
-  const live = useInView(stage, { amount: 0.2 })
+  const live = useInView(stage, { amount: 0.2 }) && !SNAPSHOT
+  /** Первый черновик после пререндера: уже нарисован картинкой, поэтому без анимации сборки и без видео */
+  const first = g.buildKey === 0
+  const building = !done && !first
   const sm = useMedia('(min-width: 640px)')
   const lg = useMedia('(min-width: 1024px)')
 
@@ -59,9 +63,13 @@ export function Stage() {
               Лишнее прячем ещё и классом: пререндер снят на 1440, и до запуска JS телефон видел бы браузер, а потом сцена прыгала бы */}
           <div className="hidden sm:block lg:absolute lg:left-[372px] lg:right-[64px] lg:top-10 xl:left-auto xl:right-[88px] xl:w-[720px]">
             {sm && (
-              <BrowserFrame domain={d.domain}>
+              <BrowserFrame domain={d.domain} busy={building}>
                 <Scaled width={DESKTOP.w} height={DESKTOP.h}>
-                  {live && <SitePreview key={g.buildKey} draft={d} />}
+                  {live ? (
+                    <SitePreview key={g.buildKey} draft={d} animated={!first} />
+                  ) : (
+                    first && <img src={draftPoster()} alt="" className="block h-full w-full" />
+                  )}
                 </Scaled>
               </BrowserFrame>
             )}
@@ -70,7 +78,11 @@ export function Stage() {
             <div className="mx-auto w-[244px] sm:max-lg:hidden lg:absolute lg:bottom-6 lg:right-6 lg:mx-0 lg:w-[190px]">
               <PhoneFrame>
                 <Scaled width={MOBILE.w} height={MOBILE.h}>
-                  {live && <SitePreview key={g.buildKey} draft={d} mobile />}
+                  {live ? (
+                    <SitePreview key={g.buildKey} draft={d} mobile animated={!first} />
+                  ) : (
+                    first && <img src={draftPoster(true)} alt="" className="block h-full w-full" />
+                  )}
                 </Scaled>
               </PhoneFrame>
             </div>
@@ -83,7 +95,8 @@ export function Stage() {
               <span className={`h-1.5 w-1.5 rounded-full ${done ? 'bg-[#34d399]' : 'animate-pulse bg-[#fbbf24]'}`} />
               {done ? (
                 <span>
-                  Черновик первого экрана<span className="text-white/60"> · {String(g.took).replace('.', ',')} сек</span>
+                  Черновик первого экрана
+                  {g.took > 0 && <span className="text-white/60"> · {String(g.took).replace('.', ',')} сек</span>}
                 </span>
               ) : (
                 'Собираю черновик…'

@@ -1,8 +1,6 @@
 import { motion } from 'motion/react'
 import { process } from '../data/content'
-import { makeDraft } from '../data/niches'
-import { Scaled } from './preview/Scaled'
-import { DESKTOP, SitePreview } from './preview/SitePreview'
+import { draftPoster } from '../lib/snapshot'
 import { Reveal } from './Reveal'
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -13,7 +11,6 @@ const STEP_BORDERS = [
   'border-t border-white/10 lg:border-t-0 lg:border-l',
   'border-t border-white/10 sm:border-l lg:border-t-0',
 ]
-const sample = makeDraft('Барбершоп «Борода»', null)
 
 /** Переписка появляется по сообщению, как в настоящем чате */
 function Chat() {
@@ -41,9 +38,7 @@ function Chat() {
               {m.text}
               {m.preview && (
                 <div className="mt-3 w-[260px] max-w-full overflow-hidden rounded-[10px] ring-1 ring-white/10">
-                  <Scaled width={DESKTOP.w} height={DESKTOP.h}>
-                    <SitePreview draft={sample} animated={false} />
-                  </Scaled>
+                  <img src={draftPoster()} alt="Черновик первого экрана барбершопа «Борода»" loading="lazy" width={1280} height={760} className="block h-auto w-full" />
                 </div>
               )}
             </div>
@@ -61,7 +56,7 @@ function Chat() {
 export function Process() {
   return (
     <section id="process" className="mt-24 scroll-mt-16 bg-night py-24 text-white lg:mt-32 lg:py-32">
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-0">
+      <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
         <Reveal className="text-center">
           <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#f0a37a]">Как работаем</p>
           <h2 className="display mx-auto mt-4 max-w-[900px] text-[40px] sm:text-[56px]">Первый экран вы видите до оплаты</h2>

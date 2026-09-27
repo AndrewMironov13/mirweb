@@ -120,7 +120,7 @@ function WorkCard({ id, tall }: { id: string; tall?: boolean }) {
 
 export function Works() {
   return (
-    <section id="works" className="mx-auto max-w-[1200px] scroll-mt-20 px-4 pt-24 sm:px-6 lg:px-0 lg:pt-32">
+    <section id="works" className="mx-auto max-w-[1248px] scroll-mt-20 px-4 pt-24 sm:px-6 lg:pt-32">
       <Reveal>
         <h2 className="display text-[34px] text-ink sm:text-[40px]">Наши работы</h2>
         <p className="mt-3 max-w-[560px] text-[16px] leading-[1.6] text-ink-soft">

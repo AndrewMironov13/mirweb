@@ -7,7 +7,7 @@ import { Reveal } from './Reveal'
 export function Faq() {
   const [open, setOpen] = useState(0)
   return (
-    <section id="faq" className="mx-auto max-w-[1200px] scroll-mt-20 px-4 pt-24 sm:px-6 lg:px-0 lg:pt-32">
+    <section id="faq" className="mx-auto max-w-[1248px] scroll-mt-20 px-4 pt-24 sm:px-6 lg:pt-32">
       <Reveal>
         <h2 className="display text-[34px] text-ink sm:text-[40px]">Вопросы</h2>
       </Reveal>

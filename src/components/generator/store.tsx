@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { DEMO_SEQUENCE, NICHES, SPHERES, detectNiche, makeDraft, type Draft, type SphereId } from '../../data/niches'
+import { SNAPSHOT, isPre } from '../../lib/snapshot'
 
 export type Status = 'idle' | 'style' | 'headline' | 'mobile' | 'done'
 
@@ -28,6 +29,8 @@ export const useGen = () => useContext(Ctx)!
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 export function GeneratorProvider({ children }: { children: ReactNode }) {
+  /** Разметку отдал пререндер: первый черновик уже нарисован картинкой, собираем его без анимации и без видео */
+  const [staticStart] = useState(() => SNAPSHOT || isPre())
   const [text, setTextRaw] = useState(DEMO_SEQUENCE[0])
   const [sphere, setSphere] = useState<SphereId | null>(null)
   const [draft, setDraft] = useState<Draft>(() => makeDraft(DEMO_SEQUENCE[0], null))
@@ -109,10 +112,11 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
 
   // Автодемо: печатаем пример, собираем, держим, стираем, следующий
   useEffect(() => {
-    if (!demo || !heroVisible) return
+    if (!demo || !heroVisible || SNAPSHOT) return
     let alive = true
     ;(async () => {
-      await sleep(5200)
+      // Статичный первый кадр ждёт меньше: иначе первые секунды превью выглядит картинкой
+      await sleep(staticStart ? 2600 : 5200)
       // Стираем то, что уже стоит в поле, и идём по списку дальше
       const cur = textRef.current
       for (let c = cur.length; c >= 0 && alive; c--) {
@@ -143,13 +147,14 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
       // Первый экран ушёл из вида посреди печати: не оставляем в поле обрывок вроде «Студия маник»
       if (demoRef.current) setTextRaw(builtRef.current)
     }
-  }, [demo, heroVisible, build])
+  }, [demo, heroVisible, build, staticStart])
 
   // Первый показ: собираем пример сразу при загрузке
   useEffect(() => {
-    build(DEMO_SEQUENCE[0], null)
+    if (staticStart) setStatus('done')
+    else build(DEMO_SEQUENCE[0], null)
     return clearTimers
-  }, [build])
+  }, [build, staticStart])
 
   const shownSphere = useMemo(() => sphere ?? detectNiche(text)?.sphere ?? null, [sphere, text])
 

@@ -1,8 +1,8 @@
 import { motion } from 'motion/react'
-import { Check } from 'lucide-react'
+import { CircleCheck, Loader2 } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { trust } from '../data/content'
-import { GeneratorBox } from './generator/GeneratorBox'
+import { GeneratorBox, statusText } from './generator/GeneratorBox'
 import { Stage } from './generator/Stage'
 import { useGen } from './generator/store'
 
@@ -21,7 +21,10 @@ const up = (delay: number) => ({
  * первый экран показывает продукт, а не обещает его
  */
 export function Hero() {
-  const setHeroVisible = useGen().setHeroVisible
+  const g = useGen()
+  const setHeroVisible = g.setHeroVisible
+  /** Посетитель собирает свой черновик (не автодемо) */
+  const mine = !g.demo && g.status !== 'idle'
   const ref = useRef<HTMLElement>(null)
 
   // Автодемо крутится, только пока первый экран на виду: не жжём батарею ниже по странице
@@ -34,9 +37,9 @@ export function Hero() {
   }, [setHeroVisible])
 
   return (
-    <section id="top" ref={ref} className="px-4 pb-6 pt-[84px] sm:px-6 sm:pt-[108px] lg:pt-[100px] short:pt-[84px]">
+    <section id="top" ref={ref} className="px-4 pb-6 pt-[84px] sm:px-6 sm:pt-[108px] lg:pt-[100px] short:pt-[104px]">
       {/* На телефоне обе строки по одной: кегль от ширины экрана, «за 5 дней, от 30 000 ₽» не рвётся */}
-      <h1 className="display mx-auto max-w-[1000px] text-center text-[length:min(44px,calc((100vw_-_32px)/9.4))] text-ink sm:text-[56px] md:text-[68px] lg:text-[84px] short:text-[68px]">
+      <h1 className="display mx-auto max-w-[1000px] text-center text-[length:min(44px,calc((100vw_-_32px)/9.4))] text-ink sm:text-[56px] md:text-[68px] lg:text-[84px] short:text-[60px]">
         <motion.span className="block" {...up(0.05)}>
           Сайт для бизнеса
         </motion.span>{' '}
@@ -53,14 +56,24 @@ export function Hero() {
 
       <motion.div {...up(0.45)} className="mt-6 sm:mt-7 short:mt-5">
         <GeneratorBox id="gen-hero" compact />
-        <ul className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[13px] text-ink-soft sm:gap-x-5 sm:text-[14px]">
-          {trust.map((t) => (
-            <li key={t} className="flex items-center gap-1.5">
-              <Check size={15} strokeWidth={2.6} className="text-go" />
-              {t}
-            </li>
-          ))}
-        </ul>
+        {/* Факты под полем. Пока посетитель собирает свой черновик, на телефоне здесь ход сборки: сцена ниже, её статус под клавиатурой */}
+        <div className="relative mt-3">
+          <ul className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[13px] sm:gap-x-2.5 text-ink-soft sm:text-[14px] ${mine ? 'max-lg:invisible' : ''}`}>
+            {trust.map((t, i) => (
+              <li key={t} className="flex items-center gap-2.5">
+                {/* Точки-разделители только в одну строку: на телефоне строка переносится, и точка повисала в начале */}
+                {i > 0 && <span aria-hidden className="hidden h-1 w-1 rounded-full bg-muted/60 sm:block" />}
+                {t}
+              </li>
+            ))}
+          </ul>
+          {mine && (
+            <p aria-live="polite" className={`absolute inset-x-0 top-0 flex items-center justify-center gap-1.5 text-[13px] lg:hidden ${g.status === 'done' ? 'text-go' : 'text-ink-soft'}`}>
+              {g.status === 'done' ? <CircleCheck size={15} /> : <Loader2 size={15} className="animate-spin" />}
+              {statusText(g.status, g.draft.niche.noun, g.took)}
+            </p>
+          )}
+        </div>
       </motion.div>
 
       <motion.div {...up(0.6)} className="mt-6 sm:mt-8 short:mt-5">
