@@ -54,9 +54,10 @@ export function Stage() {
         </AnimatePresence>
         <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(20,19,18,.72)_0%,rgba(20,19,18,.35)_40%,rgba(20,19,18,.1)_100%)]" />
 
-        <div className="relative flex flex-col gap-8 p-4 sm:p-8 lg:block lg:h-full lg:p-0">
-          {/* Превью: браузер (от планшета) и телефон */}
-          <div className="lg:absolute lg:right-[88px] lg:top-12 lg:w-[720px]">
+        <div className="relative flex flex-col gap-8 p-4 pt-6 sm:p-8 lg:block lg:h-full lg:p-0">
+          {/* Превью: браузер (от планшета) и телефон. На 1024–1279 браузер ужимается, а не наезжает на подпись: сцена теперь видна с первого экрана.
+              Лишнее прячем ещё и классом: пререндер снят на 1440, и до запуска JS телефон видел бы браузер, а потом сцена прыгала бы */}
+          <div className="hidden sm:block lg:absolute lg:left-[372px] lg:right-[64px] lg:top-10 xl:left-auto xl:right-[88px] xl:w-[720px]">
             {sm && (
               <BrowserFrame domain={d.domain}>
                 <Scaled width={DESKTOP.w} height={DESKTOP.h}>
@@ -66,7 +67,7 @@ export function Stage() {
             )}
           </div>
           {(!sm || lg) && (
-            <div className="mx-auto w-[244px] lg:absolute lg:bottom-6 lg:right-6 lg:mx-0 lg:w-[190px]">
+            <div className="mx-auto w-[244px] sm:max-lg:hidden lg:absolute lg:bottom-6 lg:right-6 lg:mx-0 lg:w-[190px]">
               <PhoneFrame>
                 <Scaled width={MOBILE.w} height={MOBILE.h}>
                   {live && <SitePreview key={g.buildKey} draft={d} mobile />}
@@ -76,10 +77,17 @@ export function Stage() {
           )}
 
           {/* Подпись и заявка */}
-          <div className="text-white lg:absolute lg:bottom-12 lg:left-12 lg:top-12 lg:flex lg:w-[292px] lg:flex-col">
-            <div className="inline-flex h-7 items-center gap-2 rounded-full bg-white/12 px-3 text-[12px] text-white/80 ring-1 ring-white/10">
+          <div className="text-white lg:absolute lg:bottom-12 lg:left-12 lg:top-10 lg:flex lg:w-[292px] lg:flex-col">
+            {/* Ход сборки живёт здесь: поле на первом экране компактное, а сцена видна сразу под ним */}
+            <div className="inline-flex h-7 items-center gap-2 rounded-full bg-white/12 px-3 text-[12px] text-white/80 ring-1 ring-white/10" aria-live="polite">
               <span className={`h-1.5 w-1.5 rounded-full ${done ? 'bg-[#34d399]' : 'animate-pulse bg-[#fbbf24]'}`} />
-              {done ? 'Черновик первого экрана' : 'Собираю черновик…'}
+              {done ? (
+                <span>
+                  Черновик первого экрана<span className="text-white/60"> · {String(g.took).replace('.', ',')} сек</span>
+                </span>
+              ) : (
+                'Собираю черновик…'
+              )}
             </div>
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
