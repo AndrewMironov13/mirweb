@@ -9,9 +9,16 @@ export function TgIcon({ size = 18 }: { size?: number }) {
   )
 }
 
-/** У MAX нет общеизвестного знака — текстовый бейдж, как на CASPOL, а не выдуманный логотип */
+/**
+ * У MAX нет общеизвестного знака — текстовый бейдж, как на CASPOL, а не выдуманный логотип.
+ * Скринридеру не читаем: рядом всегда подпись «Max» или aria-label ссылки, иначе звучит «MAX Max»
+ */
 export function MaxBadge() {
-  return <b className="text-[10.5px] font-extrabold tracking-[0.02em]">MAX</b>
+  return (
+    <b aria-hidden="true" className="text-[10.5px] font-extrabold tracking-[0.02em]">
+      MAX
+    </b>
+  )
 }
 
 export const tgHref = (text = 'Здравствуйте! Хочу сайт. ') => tgLink(text)
