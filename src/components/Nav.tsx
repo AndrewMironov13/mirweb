@@ -79,15 +79,21 @@ export function Nav() {
     }
   }, [])
 
-  // Меню открыто: Escape закрывает, страница под ним не листается (как у окна заказа)
+  // Меню открыто: Escape закрывает, страница под ним не листается (как у окна заказа).
+  // От lg меню и бургер скрыты: планшет повернули или окно растянули — меню закрываем,
+  // иначе прокрутка осталась бы запертой, а закрыть было бы нечем
   useEffect(() => {
     if (!open) return
+    const wide = window.matchMedia('(min-width: 1024px)')
     const esc = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const onWide = () => wide.matches && setOpen(false)
     window.addEventListener('keydown', esc)
+    wide.addEventListener('change', onWide)
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
       window.removeEventListener('keydown', esc)
+      wide.removeEventListener('change', onWide)
       document.body.style.overflow = prev
     }
   }, [open])
@@ -208,7 +214,11 @@ export function Nav() {
                 <Circle href={maxHref} label="Написать в Max" className="glass-dense text-ink">
                   <MaxBadge />
                 </Circle>
-                <button type="button" onClick={orderNow} className={`btn-dark h-11 flex-1 rounded-full text-[15px] ${SHADOW}`}>
+                <button
+                  type="button"
+                  onClick={orderNow}
+                  className={`btn-dark h-11 flex-1 rounded-full text-[15px] ${SHADOW} ${d.cta ? 'on-dark bg-white text-ink hover:bg-cloud' : ''}`}
+                >
                   Заказать сайт
                 </button>
               </motion.div>

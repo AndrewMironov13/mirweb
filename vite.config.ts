@@ -26,11 +26,18 @@ function jsonLd(): Plugin {
     '@type': 'Organization',
     name: brand.name,
     description: seo.description,
-    ...(SITE_URL ? { url: SITE_URL + '/', logo: SITE_URL + '/img/logo-256.png', image: SITE_URL + '/og.jpg' } : {}),
-    founder: { '@type': 'Person', name: about.name, jobTitle: about.role },
     areaServed: { '@type': 'Country', name: 'Россия' },
     email: channels.email,
-    sameAs: [`https://t.me/${channels.telegram}`, channels.max],
+    sameAs: [`https://t.me/${channels.telegram}`, ...(SITE_URL ? [channels.max] : [])],
+    // Логотип, основатель и Max — только когда у сайта есть свой адрес
+    ...(SITE_URL
+      ? {
+          url: SITE_URL + '/',
+          logo: SITE_URL + '/img/logo-256.png',
+          image: SITE_URL + '/og.jpg',
+          founder: { '@type': 'Person', name: about.name, jobTitle: about.role },
+        }
+      : {}),
     makesOffer: {
       '@type': 'Offer',
       name: 'Лендинг для бизнеса под ключ',
@@ -61,7 +68,8 @@ function jsonLd(): Plugin {
       // Заголовок и описание страницы — из content.ts, как и JSON-LD: правятся в одном месте
       const meta = [`<title>${esc(seo.title)}</title>`, `<meta name="description" content="${esc(seo.description)}" />`].join('\n    ')
       if (!html.includes(SEO_SLOT)) throw new Error(`mirweb-seo: в index.html нет метки ${SEO_SLOT}, некуда вставить <title>`)
-      html = html.replace(SEO_SLOT, meta)
+      // Функцией, а не строкой: «$&» или «$1» в тексте не развернутся как шаблон замены
+      html = html.replace(SEO_SLOT, () => meta)
       const head = [
         `<script type="application/ld+json">${JSON.stringify(org)}</script>`,
         `<script type="application/ld+json">${JSON.stringify(faqLd)}</script>`,
