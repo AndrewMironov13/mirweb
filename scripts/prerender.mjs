@@ -35,8 +35,17 @@ for (let y = 0; y < H; y += 500) {
   await page.waitForTimeout(90)
 }
 await page.waitForTimeout(1200)
-await page.evaluate(() => window.scrollTo(0, 0))
-await page.waitForTimeout(400)
+// Наверх мгновенно: у html стоит scroll-behavior: smooth, и обычный scrollTo за 400 мс не доезжал до верха.
+// Дальше ждём, пока доиграют уходы (плашки, шапка возвращается в светлый вид)
+await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+await page.waitForTimeout(1200)
+// Невидимые фиксированные слои в разметке ни к чему: без JS они лежат поверх страницы и съедают нажатия
+const stripped = await page.evaluate(() => {
+  const ghosts = [...document.querySelectorAll('#root .fixed')].filter((el) => getComputedStyle(el).opacity === '0')
+  ghosts.forEach((el) => el.remove())
+  return ghosts.length
+})
+if (stripped) console.log(`prerender: убрано невидимых фиксированных слоёв: ${stripped}`)
 const markup = await page.evaluate(() => document.getElementById('root').innerHTML)
 await browser.close()
 server.close()

@@ -47,7 +47,7 @@
 
   --color-ink: #2b2a29;
   --color-ink-soft: #5f5d5a;
-  --color-muted: #8a8784;
+  --color-muted: #716e6b;
   --color-paper: #ffffff;
   --color-cloud: #f2f2f1;
   --color-cloud-2: #e9e9e7;
@@ -66,11 +66,14 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
+    /* Плашка генератора внизу экрана не закрывает поле или кнопку, к которой перешли по Tab */
+    scroll-padding-bottom: 96px;
   }
   body {
     @apply bg-paper text-ink font-sans;
   }
-  /* Без одиноких слов в последней строке: «…клиенты только с / Карт» */
+  /* Без одиноких слов в последней строке: «…клиенты только с / Карт».
+     Только для p, li и blockquote: текстовым div (пузырь чата) ставим класс text-pretty */
   p,
   li,
   blockquote {
@@ -85,9 +88,13 @@
     background: #f4d6c6;
     color: #2b2a29;
   }
+  /* Цвет кольца фокуса задаёт секция: на тёмном (.on-dark) оно белое, иначе тёмное кольцо там не видно */
   :focus-visible {
-    outline: 2px solid #2b2a29;
+    outline: 2px solid var(--focus-ring, #2b2a29);
     outline-offset: 3px;
+  }
+  .on-dark {
+    --focus-ring: #fff;
   }
 }
 
@@ -115,9 +122,40 @@
       0 10px 30px -14px rgba(28, 27, 26, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.7);
   }
+  /* Та же капсула над тёмной секцией: светлое стекло там становится серым пятном. Тени того же строения, что у .glass, — цвет переходит плавно */
+  .glass-dark {
+    background: rgba(38, 37, 36, 0.6);
+    -webkit-backdrop-filter: saturate(180%) blur(18px);
+    backdrop-filter: saturate(180%) blur(18px);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 10px 30px -14px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  /* Плашки меню на телефоне: почти непрозрачные, текст страницы под ними не читается */
+  .glass-dense {
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    backdrop-filter: saturate(180%) blur(24px);
+    box-shadow:
+      0 0 0 1px rgba(28, 27, 26, 0.07),
+      0 10px 30px -14px rgba(28, 27, 26, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
   .btn-dark {
     @apply inline-flex items-center justify-center gap-2 rounded-[11px] bg-ink font-medium text-white transition-[background-color,transform] duration-200 hover:bg-black active:scale-[0.97];
   }
+}
+
+/* Поле генератора: заметное кольцо, когда фокус именно в поле ввода, а не на сфере или кнопке внутри рамки.
+   Без слоя, чтобы перебить focus-within из разметки: у фокуса на сфере и кнопке своё кольцо */
+div:has(> div > #gen-hero):focus-within {
+  box-shadow: none;
+}
+div:has(> div > #gen-hero:focus) {
+  box-shadow:
+    0 0 0 1.5px #5f5d5a,
+    0 12px 40px -12px rgba(43, 42, 41, 0.18);
 }
 
 /* Вне экрана бесконечные анимации стоят: не тратим кадры на невидимое */
