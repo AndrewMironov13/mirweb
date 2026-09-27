@@ -1,6 +1,7 @@
 import { ArrowRight, Dices } from 'lucide-react'
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { SPHERES } from '../../data/niches'
+import { smooth } from '../../lib/goto'
 import { useMedia } from '../../lib/useMedia'
 import { useGen, type Status } from './store'
 
@@ -14,8 +15,6 @@ export const statusText = (s: Status, noun: string, took: number) =>
         : s === 'done'
           ? `Готово за ${String(took).replace('.', ',')} сек`
           : ''
-
-const smooth = (): ScrollBehavior => (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth')
 
 /**
  * Поле генератора: одна строка ввода и сферы в одну прокручиваемую ленту.
@@ -48,12 +47,36 @@ export function GeneratorBox({ id, toStage }: { id?: string; toStage?: boolean }
     }, 60)
   }
   const field = useRef<HTMLTextAreaElement & HTMLInputElement>(null)
+  /** Фокус был в поле в момент нажатия: кнопка или чип могли его уже забрать, а клавиатура ещё уезжает */
+  const typing = useRef(false)
+
+  /**
+   * Сенсорный экран: убираем клавиатуру и двигаем страницу, когда она уехала.
+   * Иначе место считается по экрану с клавиатурой, и сцена остаётся под ней
+   */
+  const revealAfterKeyboard = () => {
+    const was = typing.current || document.activeElement === field.current
+    typing.current = false
+    if (!was || !window.matchMedia('(pointer: coarse)').matches) return reveal()
+    field.current?.blur()
+    const vv = window.visualViewport
+    let fired = false
+    const go = () => {
+      if (fired) return
+      fired = true
+      vv?.removeEventListener('resize', go)
+      window.clearTimeout(t)
+      reveal()
+    }
+    vv?.addEventListener('resize', go)
+    const t = window.setTimeout(go, 450)
+  }
 
   const onKey = (e: KeyboardEvent<HTMLElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       g.generate()
-      reveal()
+      revealAfterKeyboard()
     }
   }
   const onFocus = () => {
@@ -70,7 +93,7 @@ export function GeneratorBox({ id, toStage }: { id?: string; toStage?: boolean }
       onClick={(e) => {
         e.stopPropagation()
         g.random()
-        reveal()
+        revealAfterKeyboard()
       }}
       className={`h-10 w-10 shrink-0 place-items-center rounded-[11px] text-ink-soft transition hover:bg-white hover:text-ink active:scale-95 ${cls}`}
       title="Случайный пример"
@@ -85,7 +108,7 @@ export function GeneratorBox({ id, toStage }: { id?: string; toStage?: boolean }
       onClick={(e) => {
         e.stopPropagation()
         g.generate()
-        reveal()
+        revealAfterKeyboard()
       }}
       className={`btn-dark shrink-0 px-4 text-[14px] ${cls}`}
     >
@@ -101,6 +124,9 @@ export function GeneratorBox({ id, toStage }: { id?: string; toStage?: boolean }
         <div
           className="rounded-[20px] bg-cloud p-1.5 transition-shadow duration-300 focus-within:shadow-[0_0_0_1px_rgba(43,42,41,.14),0_12px_40px_-12px_rgba(43,42,41,.18)] sm:p-2"
           onClick={() => field.current?.focus()}
+          onPointerDownCapture={() => {
+            typing.current = document.activeElement === field.current
+          }}
         >
           <label htmlFor={id} className="sr-only">
             Как называется ваш бизнес и чем занимаетесь
@@ -122,7 +148,7 @@ export function GeneratorBox({ id, toStage }: { id?: string; toStage?: boolean }
             {dice('hidden sm:grid')}
             {show('h-11')}
           </div>
-          <Spheres onPick={reveal} lead={dice('grid sm:hidden')} />
+          <Spheres onPick={revealAfterKeyboard} lead={dice('grid sm:hidden')} />
         </div>
       </div>
   )

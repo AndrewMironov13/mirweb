@@ -495,9 +495,32 @@ export interface Draft {
   domain: string
   /** Подпись над заголовком: «барбершоп «Борода»», а если ниша уже в имени — просто имя */
   label: string
+  /** Собран по тексту, который ввёл сам посетитель. Иначе это пример (автодемо, кубик, сфера): его имя не выдаём за бизнес посетителя */
+  mine: boolean
+  /** Имя взято из текста, а не из примера ниши, и это название, а не одни слова ниши («стоматология») */
+  ownName: boolean
 }
 
-export function makeDraft(text: string, sphere: SphereId | null): Draft {
+const LINK = /^(и|в|во|на|по|для|при|под|без|над|от|до|из|у|с|со|к|о|об)$/
+
+/** Имя — только слова найденной ниши: «Стоматология», «Студия маникюра». Короткий ключ («бар») засчитываем лишь с коротким окончанием, иначе «Бархат» стал бы нишей */
+function nicheWordsOnly(name: string, niche: Niche) {
+  const noun = niche.noun.toLowerCase().replace(/ё/g, 'е').split(' ')
+  const words = name.toLowerCase().replace(/ё/g, 'е').split(/[^\p{L}\d-]+/u).filter((w) => w && !LINK.test(w))
+  return (
+    words.length > 0 &&
+    words.every(
+      (w) =>
+        noun.includes(w) ||
+        niche.keys.some((raw) => {
+          const k = raw.replace(/ё/g, 'е').trim()
+          return w.startsWith(k) && (k.length >= 4 || w.length <= k.length + 2)
+        }),
+    )
+  )
+}
+
+export function makeDraft(text: string, sphere: SphereId | null, mine = false): Draft {
   const found = detectNiche(text)
   const niche =
     found && (!sphere || found.sphere === sphere)
@@ -508,7 +531,8 @@ export function makeDraft(text: string, sphere: SphereId | null): Draft {
   const quoted = got.name ? got.quoted : true
   const stem = niche.noun.toLowerCase().slice(0, 5)
   const label = !quoted || name.toLowerCase().includes(stem) ? name : `${niche.noun} «${name}»`
-  return { name, quoted, niche, domain: toDomain(name), label }
+  const ownName = Boolean(got.name) && (got.quoted || !found || !nicheWordsOnly(got.name, found))
+  return { name, quoted, niche, domain: toDomain(name), label, mine, ownName }
 }
 
 /** Сценарий автодемо: что печатаем в поле, пока посетитель не тронул его сам */

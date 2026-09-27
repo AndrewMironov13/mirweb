@@ -2,15 +2,14 @@ import { motion } from 'motion/react'
 import { CircleCheck, Loader2 } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { trust } from '../data/content'
+import { isPre } from '../lib/snapshot'
 import { GeneratorBox, statusText } from './generator/GeneratorBox'
 import { Stage } from './generator/Stage'
 import { useGen } from './generator/store'
 
 const EASE = [0.22, 1, 0.36, 1] as const
-/** Флаг ставит main.tsx до первого рендера, поэтому читаем его в момент рендера, а не при импорте */
-const pre = () => Boolean((window as unknown as { __PRE__?: boolean }).__PRE__)
 const up = (delay: number) => ({
-  initial: pre() ? false : { opacity: 0, transform: 'translateY(18px)' },
+  initial: isPre() ? false : { opacity: 0, transform: 'translateY(18px)' },
   animate: { opacity: 1, transform: 'translateY(0px)' },
   transition: { delay, duration: 0.9, ease: EASE },
 })
@@ -68,8 +67,9 @@ export function Hero() {
               </li>
             ))}
           </ul>
+          {/* Без aria-live: о готовом черновике скринридеру сообщает сцена, и только о собранном посетителем */}
           {mine && (
-            <p aria-live="polite" className={`absolute inset-x-0 top-0 flex items-center justify-center gap-1.5 text-[13px] lg:hidden ${g.status === 'done' ? 'text-go' : 'text-ink-soft'}`}>
+            <p className={`absolute inset-x-0 top-0 flex items-center justify-center gap-1.5 text-[13px] lg:hidden ${g.status === 'done' ? 'text-go' : 'text-ink-soft'}`}>
               {g.status === 'done' ? <CircleCheck size={15} /> : <Loader2 size={15} className="animate-spin" />}
               {statusText(g.status, g.draft.niche.noun, g.took)}
             </p>
