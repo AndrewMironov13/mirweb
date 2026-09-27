@@ -16,12 +16,14 @@ export function Faq() {
           const on = open === i
           return (
             <div key={f.q} className="border-b border-line">
+              <h3>
               <button type="button" onClick={() => setOpen(on ? -1 : i)} aria-expanded={on} className="flex w-full items-center justify-between gap-6 py-6 text-left">
                 <span className="text-[18px] font-medium text-ink sm:text-[20px]">{f.q}</span>
                 <motion.span animate={{ transform: on ? 'rotate(45deg)' : 'rotate(0deg)' }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} className="shrink-0 text-ink-soft">
                   <Plus size={20} />
                 </motion.span>
               </button>
+              </h3>
               <AnimatePresence initial={false}>
                 {on && (
                   <motion.div

@@ -1,7 +1,7 @@
-import { AnimatePresence, motion, useInView, useScroll, useTransform } from 'motion/react'
-import { ArrowUpRight, Plus, X } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { included, works } from '../data/content'
+import { motion, useInView, useScroll, useTransform } from 'motion/react'
+import { ArrowUpRight } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { works } from '../data/content'
 import { BrowserFrame, PhoneFrame } from './preview/Frames'
 import { Reveal } from './Reveal'
 
@@ -35,20 +35,19 @@ function LiveClip({ id, alt, className }: { id: string; alt: string; className?:
   )
 }
 
-function Shot({ id, host, className }: { id: string; host: string; className?: string }) {
+function Shot({ id, host, name, className }: { id: string; host: string; name: string; className?: string }) {
   return (
     <BrowserFrame domain={host} className={className}>
-      <img src={shot(id)} alt="" loading="lazy" className="block aspect-[16/10] w-full object-cover object-top" />
+      <img src={shot(id)} alt={`Сайт ${name}`} loading="lazy" className="block aspect-[16/10] w-full object-cover object-top" />
     </BrowserFrame>
   )
 }
 
-/** Большая серая панель: наклонный коллаж из живых сайтов и список того, что входит в работу */
+/** Большая серая панель: наклонный коллаж из живых сайтов */
 function Showcase() {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], [70, -70])
-  const [open, setOpen] = useState(0)
   const byId = Object.fromEntries(works.map((w) => [w.id, w]))
 
   return (
@@ -57,53 +56,14 @@ function Showcase() {
       <div className="relative h-[330px] sm:h-[480px] lg:absolute lg:inset-0 lg:h-auto">
         <motion.div style={{ y }} className="absolute left-1/2 top-1/2 h-[760px] w-[1100px] -translate-x-1/2 -translate-y-1/2 scale-[.42] sm:scale-[.62] lg:left-[50%] lg:scale-100">
           <div className="absolute inset-0 rotate-[-14deg]">
-            <Shot id="intellect" host={byId.intellect.host} className="absolute left-[80px] top-[30px] w-[560px]" />
-            <Shot id="caspol" host={byId.caspol.host} className="absolute left-[420px] top-[330px] w-[620px]" />
+            <Shot id="intellect" host={byId.intellect.host} name={byId.intellect.name} className="absolute left-[80px] top-[30px] w-[560px]" />
+            <Shot id="caspol" host={byId.caspol.host} name={byId.caspol.name} className="absolute left-[420px] top-[330px] w-[620px]" />
             <PhoneFrame className="absolute left-[690px] top-[40px] w-[190px]">
-              <LiveClip id="veridis-m" alt="" className="block aspect-[390/844] w-full object-cover" />
+              <LiveClip id="veridis-m" alt="Мобильная версия сайта VERIDIS" className="block aspect-[390/844] w-full object-cover" />
             </PhoneFrame>
           </div>
         </motion.div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-cloud to-transparent lg:hidden" />
-      </div>
-
-      {/* Что входит — белые плашки справа, как у референса */}
-      <div className="relative px-4 pb-4 sm:px-6 lg:absolute lg:right-4 lg:top-4 lg:w-[300px] lg:p-0">
-        <ul className="space-y-2">
-          {included.map((it, i) => {
-            const on = open === i
-            return (
-              <li key={it.title} className="rounded-[18px] bg-white shadow-[0_1px_0_rgba(0,0,0,.03)]">
-                <button type="button" onClick={() => setOpen(on ? -1 : i)} aria-expanded={on} className="flex w-full items-center gap-3 px-4 py-3.5 text-left">
-                  <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full transition-colors ${on ? 'bg-cloud-2 text-ink' : 'bg-cloud text-ink-soft'}`}>
-                    {on ? <X size={14} /> : <Plus size={14} />}
-                  </span>
-                  <span className="text-[15px] font-medium text-ink">{it.title}</span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {on && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                      className="overflow-hidden"
-                    >
-                      <p className="px-4 pb-4 text-[14px] leading-[1.55] text-ink-soft">{it.text}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
-
-      <div className="relative px-6 pb-8 pt-4 sm:px-8 lg:absolute lg:bottom-10 lg:left-10 lg:max-w-[380px] lg:p-0">
-        <h2 className="text-[18px] font-semibold text-ink">Наши работы: сайты, которые уже работают</h2>
-        <p className="mt-1.5 text-[16px] leading-[1.55] text-ink-soft">
-          Детейлинг, производство клеёв, премиальный автоцентр. Все живые — откройте и проверьте сами
-        </p>
       </div>
     </div>
   )
@@ -146,7 +106,7 @@ function WorkCard({ id, tall }: { id: string; tall?: boolean }) {
       </div>
       <div className="flex flex-col gap-3 px-3 pb-2 pt-4 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
         <div className="min-w-0">
-          <p className="text-[17px] font-semibold text-ink">{w.name}</p>
+          <h3 className="text-[17px] font-semibold text-ink">{w.name}</h3>
           <p className="mt-0.5 text-[15px] text-ink-soft">{w.niche}</p>
           <p className="text-[14px] text-muted">{w.city}</p>
         </div>
@@ -162,6 +122,12 @@ export function Works() {
   return (
     <section id="works" className="mx-auto max-w-[1200px] scroll-mt-20 px-4 pt-24 sm:px-6 lg:px-0 lg:pt-32">
       <Reveal>
+        <h2 className="display text-[34px] text-ink sm:text-[40px]">Наши работы</h2>
+        <p className="mt-3 max-w-[560px] text-[16px] leading-[1.6] text-ink-soft">
+          Детейлинг, автоцентр, производство клеёв. Делаем для любого бизнеса, а эти сайты уже работают: откройте и проверьте сами
+        </p>
+      </Reveal>
+      <Reveal className="mt-8">
         <Showcase />
       </Reveal>
       <Reveal className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">

@@ -9,7 +9,6 @@ import { Nav } from './components/Nav'
 import { OrderProvider } from './components/Order'
 import { Pricing } from './components/Pricing'
 import { Process } from './components/Process'
-import { Spheres } from './components/Spheres'
 import { Works } from './components/Works'
 
 export default function App() {
@@ -19,7 +18,6 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
-        <Spheres />
         <Works />
         <Process />
         <Pricing />

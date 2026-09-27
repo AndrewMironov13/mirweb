@@ -79,7 +79,7 @@ export function Process() {
                 className={`p-7 ${STEP_BORDERS[i]}`}
               >
                 <p className="text-[13px] text-white/45">{s.day}</p>
-                <p className="mt-2 text-[17px] font-medium">{s.title}</p>
+                <h3 className="mt-2 text-[17px] font-medium">{s.title}</h3>
                 <p className="mt-2 text-[15px] leading-[1.55] text-white/60">{s.text}</p>
               </div>
             ))}

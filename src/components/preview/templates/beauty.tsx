@@ -538,7 +538,7 @@ function Hero({ d, m }: { d: Draft; m: boolean }) {
         {m ? <NavM d={d} /> : <NavD d={d} />}
       </motion.div>
       <div style={{ position: 'absolute', left: m ? 20 : 104, bottom: m ? 76 : 113, width: m ? 350 : 826 }}>
-        <h1
+        <div
           style={{
             margin: 0,
             fontFamily: SERIF,
@@ -555,7 +555,7 @@ function Hero({ d, m }: { d: Draft; m: boolean }) {
               {l}
             </Line>
           ))}
-        </h1>
+        </div>
         <Up delay={1.85} style={{ marginTop: m ? 14 : 20 }}>
           <p
             style={{

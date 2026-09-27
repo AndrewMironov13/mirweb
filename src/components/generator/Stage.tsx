@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useInView } from 'motion/react'
 import { ArrowUpRight, Check, Loader2, Send } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { brand, tgLink } from '../../data/content'
+import { tgLink } from '../../data/content'
 import { LeadForm } from '../LeadForm'
 import { BrowserFrame, PhoneFrame } from '../preview/Frames'
 import { Scaled } from '../preview/Scaled'
@@ -99,7 +99,7 @@ export function Stage() {
               </motion.div>
             </AnimatePresence>
             <p className="mt-4 text-[15px] leading-[1.55] text-white/75">
-              Настоящий сайт с вашими фото, ценами и отзывами соберём за {brand.days} дней. Этот черновик — бесплатно
+              Настоящий сайт соберём с вашими фото, ценами и отзывами
             </p>
 
             {!formOpen && <BuildLog />}
@@ -138,7 +138,7 @@ export function Stage() {
         </div>
       </div>
       <p className="mx-auto mt-4 max-w-[640px] text-center text-[13px] leading-[1.55] text-ink-soft">
-        Черновик собран из заготовок за пару секунд. Настоящий сайт делаем с нуля под ваш бизнес: уникальный дизайн, ваши фото и видео, анимации при прокрутке
+        Черновик собран из заготовок. Настоящий сайт делаем с нуля: свой дизайн, ваши фото и видео, анимации при прокрутке
       </p>
     </div>
   )

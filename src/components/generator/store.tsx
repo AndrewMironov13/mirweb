@@ -19,8 +19,6 @@ interface Gen {
   stopDemo: () => void
   generate: () => void
   random: () => void
-  /** Для карточек ниже по странице: подставить пример, прокрутить наверх и собрать */
-  runFromOutside: (text: string) => void
   setHeroVisible: (v: boolean) => void
 }
 
@@ -109,18 +107,6 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
     build(n.sample, null)
   }, [draft.niche.id, build])
 
-  const runFromOutside = useCallback(
-    (t: string) => {
-      setDemo(false)
-      setSphere(null)
-      setTextRaw(t)
-      // Ведём сразу к сцене с черновиком, а не к заголовку: иначе на телефоне результат оказывается ниже экрана
-      document.getElementById('stage')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      window.setTimeout(() => build(t, null), 450)
-    },
-    [build],
-  )
-
   // Автодемо: печатаем пример, собираем, держим, стираем, следующий
   useEffect(() => {
     if (!demo || !heroVisible) return
@@ -169,7 +155,7 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
 
   const value: Gen = {
     text, setText, sphere, shownSphere, pickSphere, draft, buildKey, status, took, demo, stopDemo,
-    generate, random, runFromOutside, setHeroVisible,
+    generate, random, setHeroVisible,
   }
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }

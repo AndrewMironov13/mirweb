@@ -2,8 +2,6 @@ import { motion } from 'motion/react'
 import { Check } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { trust } from '../data/content'
-import { MaxBadge, TgIcon, maxHref, tgHref } from './Messengers'
-import { useOrder } from './Order'
 import { GeneratorBox } from './generator/GeneratorBox'
 import { Stage } from './generator/Stage'
 import { useGen } from './generator/store'
@@ -19,7 +17,6 @@ const up = (delay: number) => ({
 
 export function Hero() {
   const setHeroVisible = useGen().setHeroVisible
-  const order = useOrder()
   const ref = useRef<HTMLElement>(null)
 
   // Автодемо крутится, только пока первый экран на виду: не жжём батарею ниже по странице
@@ -55,21 +52,6 @@ export function Hero() {
             </li>
           ))}
         </ul>
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[14px] text-ink-soft">
-          <span>Не хотите собирать черновик?</span>
-          {/* Кнопки держим одной группой: иначе на 320 px одинокий MAX уезжает на третью строку */}
-          <span className="inline-flex items-center gap-2">
-            <button type="button" onClick={order} className="h-10 rounded-full bg-ink px-4 font-medium text-white transition hover:bg-black active:scale-[0.97]">
-              Заказать сайт
-            </button>
-            <a href={tgHref()} target="_blank" rel="noopener" aria-label="Написать в Telegram" className="grid h-10 w-10 place-items-center rounded-full bg-cloud text-ink transition hover:bg-cloud-2">
-              <TgIcon size={16} />
-            </a>
-            <a href={maxHref} target="_blank" rel="noopener" aria-label="Написать в Max" className="grid h-10 w-10 place-items-center rounded-full bg-cloud text-ink transition hover:bg-cloud-2">
-              <MaxBadge />
-            </a>
-          </span>
-        </div>
       </motion.div>
 
       <motion.div {...up(0.6)} className="mt-12 sm:mt-16">

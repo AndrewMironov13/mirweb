@@ -453,7 +453,7 @@ function RiseWords({ lines, style }: { lines: string[]; style?: CSSProperties })
   const on = useAnimOn()
   let n = 0
   return (
-    <h2 style={{ margin: 0, ...style }}>
+    <div style={{ margin: 0, ...style }}>
       {lines.map((line, li) => (
         <span key={li} style={{ display: 'block' }}>
           {line.split(' ').map((w, wi) => {
@@ -476,7 +476,7 @@ function RiseWords({ lines, style }: { lines: string[]; style?: CSSProperties })
           })}
         </span>
       ))}
-    </h2>
+    </div>
   )
 }
 
@@ -777,7 +777,7 @@ function DesktopHero({ d }: { d: Draft }) {
       <HeroVideo d={d} h={760} strip={64} position="50% 50%" top={520} pool="ellipse 720px 300px at 50% 38%" bottom={140} />
 
       <div style={{ position: 'absolute', left: 90, right: 90, top: 196, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-        <h1
+        <div
           style={{
             ...DISPLAY,
             margin: 0,
@@ -794,7 +794,7 @@ function DesktopHero({ d }: { d: Draft }) {
               {i === 1 ? <Marker delay={1.2}>{s}</Marker> : <Write i={i}>{s}</Write>}
             </Fragment>
           ))}
-        </h1>
+        </div>
         <Up delay={1.5} dur={0.5} style={{ marginTop: wrap ? 20 : 24, minHeight: 73 }}>
           <p
             style={{
@@ -959,13 +959,13 @@ function MobileHero({ d }: { d: Draft }) {
       {probes}
       <HeroVideo d={d} h={800} strip={168} position="45% 50%" top={420} pool="ellipse 240px 280px at 50% 36%" bottom={120} />
 
-      <h1 style={{ position: 'absolute', left: 20, right: 20, top: 128, margin: 0, textAlign: 'center', color: '#fff', ...DISPLAY }}>
+      <div style={{ position: 'absolute', left: 20, right: 20, top: 128, margin: 0, textAlign: 'center', color: '#fff', ...DISPLAY }}>
         {svcs.map((s, i) => (
           <span key={i} style={{ display: 'block', fontSize: sizes[i], lineHeight: 1.06 }}>
             {i === 1 ? <Marker delay={1.2}>{s}</Marker> : <Write i={i}>{s}</Write>}
           </span>
         ))}
-      </h1>
+      </div>
 
       <Up delay={1.5} style={{ position: 'absolute', left: 30, right: 30, top: 310, display: 'flex', justifyContent: 'center' }}>
         <p

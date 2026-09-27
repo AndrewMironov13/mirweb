@@ -357,7 +357,7 @@ function Hero({ d, m }: { d: Draft; m: boolean }) {
             : { position: 'absolute', left: 64, bottom: 96, width: 620, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }
         }
       >
-        <h1
+        <div
           style={{
             margin: 0,
             fontFamily: CAPS,
@@ -374,7 +374,7 @@ function Hero({ d, m }: { d: Draft; m: boolean }) {
               {w}
             </Mask>
           ))}
-        </h1>
+        </div>
         <Up
           at={2.2}
           style={{

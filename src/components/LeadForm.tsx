@@ -71,7 +71,12 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
                 </a>
               </>
             ) : (
-              'Нажимая «Отправить», вы соглашаетесь на обработку контактных данных'
+              <>
+                Нажимая «Отправить», вы соглашаетесь с{' '}
+                <a href={`${import.meta.env.BASE_URL}privacy.html`} target="_blank" className="underline underline-offset-2">
+                  политикой обработки персональных данных
+                </a>
+              </>
             )}
           </p>
         </motion.form>

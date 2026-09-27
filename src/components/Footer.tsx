@@ -1,4 +1,4 @@
-import { channels, nav, tgLink, works } from '../data/content'
+import { about, channels, nav, tgLink, works } from '../data/content'
 import { Logo } from './Logo'
 
 export function Footer() {
@@ -11,9 +11,12 @@ export function Footer() {
           <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <Logo className="text-white" />
             <p className="mt-4 max-w-[260px] text-[14px] leading-[1.6] text-white/60">
-              Делаем продающие сайты для малого бизнеса. Первый экран бесплатно, весь сайт за 5 дней
+              Продающие сайты для малого бизнеса
             </p>
-            <p className="mt-6 text-[13px] text-white/55">© {new Date().getFullYear()} МирВеб</p>
+            <p className="mt-6 text-[13px] text-white/55">© {new Date().getFullYear()} МирВеб, {about.name}</p>
+            <a href={`${import.meta.env.BASE_URL}privacy.html`} className="mt-2 inline-block text-[13px] text-white/55 underline-offset-2 transition-colors hover:text-white hover:underline">
+              Политика обработки персональных данных
+            </a>
           </div>
           <div>
             <p className={col}>Разделы</p>
@@ -43,6 +46,9 @@ export function Footer() {
               </a>
               <a href={channels.max} target="_blank" rel="noopener" className={link}>
                 Max
+              </a>
+              <a href={`mailto:${channels.email}`} className={`${link} break-all`}>
+                {channels.email}
               </a>
             </div>
           </div>

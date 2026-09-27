@@ -257,7 +257,7 @@ function Headline({ d, fs }: { d: Draft; fs: number }) {
   const [a, b, c] = d.niche.services
   const line: CSSProperties = { display: 'block', whiteSpace: 'nowrap' }
   return (
-    <h1
+    <div
       style={{
         margin: 0,
         fontFamily: SERIF,
@@ -274,7 +274,7 @@ function Headline({ d, fs }: { d: Draft; fs: number }) {
         <Sheen>{b}</Sheen>
       </span>
       <span style={line}>{c}</span>
-    </h1>
+    </div>
   )
 }
 
@@ -598,7 +598,7 @@ function H2({ d, max, width, floor }: { d: Draft; max: number; width: number; fl
   const fsTop = fitPx(cap(top), max, width, 0.67)
   const fsMain = Math.max(floor, fitPx(main, max, width, 0.62))
   return (
-    <h2 style={{ margin: 0, fontFamily: SERIF, lineHeight: 1, letterSpacing: '-.015em' }}>
+    <div style={{ margin: 0, fontFamily: SERIF, lineHeight: 1, letterSpacing: '-.015em' }}>
       {top && (
         <Slash at={0.05} style={{ fontSize: fsTop, fontWeight: 800, color: C.cream }}>
           {cap(top)}
@@ -607,7 +607,7 @@ function H2({ d, max, width, floor }: { d: Draft; max: number; width: number; fl
       <Slash wrap at={0.17} style={{ fontSize: fsMain, fontWeight: 700, fontStyle: 'italic', color: C.tung, paddingRight: '.1em' }}>
         {nb(main)}
       </Slash>
-    </h2>
+    </div>
   )
 }
 

@@ -429,12 +429,12 @@ function HeroD({ d }: { d: Draft }) {
           textAlign: 'center',
         }}
       >
-        <h1 style={{ margin: 0, fontFamily: SERIF, fontWeight: 400, fontSize: fs, lineHeight: 1.0, letterSpacing: '-0.01em', color: INK }}>
+        <div style={{ margin: 0, fontFamily: SERIF, fontWeight: 400, fontSize: fs, lineHeight: 1.0, letterSpacing: '-0.01em', color: INK }}>
           <Line delay={1.8}>
             {s1} <Em delay={1.92}>{s2}</Em>
           </Line>
           <Line delay={1.9}>{s3}</Line>
-        </h1>
+        </div>
         <Rise delay={2.1} style={{ marginTop: 18 }}>
           <p style={{ margin: 0, fontFamily: SANS, fontSize: 18, lineHeight: 1.5, color: MUTED, maxWidth: 640, textWrap: 'balance' }}>{nb(bare(n.pain))}</p>
         </Rise>
@@ -514,13 +514,13 @@ function Why({ d, fs, width, delay, lh }: { d: Draft; fs: number; width: number;
   const max = Math.floor(width / (fs * PF))
   const lines = [...wrap(plain, max).map((t) => ({ t, em: false })), ...wrap(tail, max).map((t) => ({ t, em: true }))]
   return (
-    <h2 style={{ margin: 0, fontFamily: SERIF, fontWeight: 400, fontSize: fs, lineHeight: lh, letterSpacing: '-0.01em', color: INK, whiteSpace: 'nowrap' }}>
+    <div style={{ margin: 0, fontFamily: SERIF, fontWeight: 400, fontSize: fs, lineHeight: lh, letterSpacing: '-0.01em', color: INK, whiteSpace: 'nowrap' }}>
       {lines.map((l, i) => (
         <Line key={i} delay={delay + i * 0.08}>
           {l.em ? <em style={{ fontStyle: 'italic' }}>{l.t}</em> : l.t}
         </Line>
       ))}
-    </h2>
+    </div>
   )
 }
 
@@ -654,13 +654,13 @@ function HeroM({ d }: { d: Draft }) {
           textAlign: 'center',
         }}
       >
-        <h1 style={{ margin: 0, fontFamily: SERIF, fontWeight: 400, fontSize: fs, lineHeight: 1.02, letterSpacing: '-0.01em', color: INK }}>
+        <div style={{ margin: 0, fontFamily: SERIF, fontWeight: 400, fontSize: fs, lineHeight: 1.02, letterSpacing: '-0.01em', color: INK }}>
           <Line delay={1.8}>{s1}</Line>
           <Line delay={1.9}>
             <em style={{ fontStyle: 'italic' }}>{s2}</em>
           </Line>
           <Line delay={2.0}>{s3}</Line>
-        </h1>
+        </div>
         <Rise delay={2.15} style={{ marginTop: 14 }}>
           <p style={{ margin: 0, fontFamily: SANS, fontSize: 16, lineHeight: 1.45, color: MUTED, maxWidth: 330, textWrap: 'balance' }}>{nb(bare(n.pain))}</p>
         </Rise>
