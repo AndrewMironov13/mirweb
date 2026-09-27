@@ -28,7 +28,8 @@ function LiveClip({ id, alt, className }: { id: string; alt: string; className?:
       muted
       loop
       playsInline
-      preload="metadata"
+      // Ролик качается, только когда блок подъехал к экрану (play() ниже): на старте страницы он не нужен
+      preload="none"
       aria-label={alt}
       className={className}
     />

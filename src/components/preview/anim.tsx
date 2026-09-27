@@ -11,6 +11,12 @@ export const EASE = [0.22, 1, 0.36, 1] as const
 /** false = рисуем всё сразу, без анимаций: миниатюры, пререндер, reduced motion */
 export const Anim = createContext(true)
 export const useAnimOn = () => useContext(Anim)
+/**
+ * Можно ли грузить видео ниш. Сцена видна с первого экрана, и автодемо иначе качало бы по ролику
+ * каждые 8 секунд: на телефоне это чужой трафик. Там и при «экономии трафика» — только постеры, пока посетитель ничего не нажал
+ */
+export const VideoOk = createContext(true)
+export const useVideoOk = () => useContext(VideoOk)
 
 export const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`
 
@@ -145,6 +151,7 @@ export function BgVideo({
   reveal?: 'fade' | 'wipe' | 'none'
 }) {
   const on = useAnimOn()
+  const videoOk = useVideoOk()
   const ref = useRef<HTMLVideoElement>(null)
   const box = useRef<HTMLDivElement>(null)
   const visible = useInView(box, { margin: '120px' })
@@ -170,7 +177,7 @@ export function BgVideo({
         transition={on && push ? { delay, duration: 9, ease: [0.16, 1, 0.3, 1] } : { duration: 0 }}
       >
         <img src={poster} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: position }} />
-        {on && (
+        {on && videoOk && (
           <video
             ref={ref}
             src={src}

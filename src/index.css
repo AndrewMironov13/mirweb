@@ -18,12 +18,32 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+20BD, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Запасные шрифты той же ширины, что и настоящие: пока шрифт грузится (font-display: swap),
+   строки не переносятся иначе, и первый экран не прыгает, когда шрифт приходит.
+   Ширины мерили на строках заголовка и подзаголовка: Times ≈ Display, Georgia/Noto Serif на 12% шире,
+   Onest на 3% шире Arial */
+@font-face {
+  font-family: 'Display Fallback';
+  src: local('Times New Roman'), local('TimesNewRomanPSMT'), local('Liberation Serif');
+  size-adjust: 98%;
+}
+@font-face {
+  font-family: 'Display Fallback Wide';
+  src: local('Georgia'), local('Noto Serif'), local('NotoSerif'), local('Droid Serif');
+  size-adjust: 88%;
+}
+@font-face {
+  font-family: 'Onest Fallback';
+  src: local('Arial'), local('ArialMT'), local('Helvetica'), local('Roboto');
+  size-adjust: 103%;
+}
+
 /* Низкий экран ноутбука (1280×720, 1366×768): первый экран сжимаем, чтобы сцена с превью поднялась в него */
 @custom-variant short (@media (min-width: 1024px) and (max-height: 820px));
 
 @theme {
-  --font-sans: 'Onest Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: 'Display', Georgia, serif;
+  --font-sans: 'Onest Variable', 'Onest Fallback', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: 'Display', 'Display Fallback', 'Display Fallback Wide', serif;
 
   --color-ink: #2b2a29;
   --color-ink-soft: #5f5d5a;

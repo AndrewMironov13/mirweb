@@ -37,13 +37,14 @@ export function Hero() {
   }, [setHeroVisible])
 
   return (
-    <section id="top" ref={ref} className="px-4 pb-6 pt-[84px] sm:px-6 sm:pt-[108px] lg:pt-[100px] short:pt-[104px]">
+    <section id="top" ref={ref} className="overflow-x-clip px-4 pb-6 pt-[84px] sm:px-6 sm:pt-[108px] lg:pt-[100px] short:pt-[104px]">
       {/* На телефоне обе строки по одной: кегль от ширины экрана, «за 5 дней, от 30 000 ₽» не рвётся */}
       <h1 className="display mx-auto max-w-[1000px] text-center text-[length:min(44px,calc((100vw_-_32px)/9.4))] text-ink sm:text-[56px] md:text-[68px] lg:text-[84px] short:text-[60px]">
-        <motion.span className="block" {...up(0.05)}>
+        {/* Строки не переносятся: пока грузится шрифт, запасной не должен дать третью строку и сдвиг всего экрана */}
+        <motion.span className="block whitespace-nowrap" {...up(0.05)}>
           Сайт для бизнеса
         </motion.span>{' '}
-        <motion.span className="block" {...up(0.15)}>
+        <motion.span className="block whitespace-nowrap" {...up(0.15)}>
           <span className="accent-word">за 5 дней,</span> от 30 000 ₽
         </motion.span>
       </h1>
@@ -55,7 +56,7 @@ export function Hero() {
       </motion.p>
 
       <motion.div {...up(0.45)} className="mt-6 sm:mt-7 short:mt-5">
-        <GeneratorBox id="gen-hero" compact />
+        <GeneratorBox id="gen-hero" />
         {/* Факты под полем. Пока посетитель собирает свой черновик, на телефоне здесь ход сборки: сцена ниже, её статус под клавиатурой */}
         <div className="relative mt-3">
           <ul className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[13px] sm:gap-x-2.5 text-ink-soft sm:text-[14px] ${mine ? 'max-lg:invisible' : ''}`}>

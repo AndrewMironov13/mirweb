@@ -10,6 +10,7 @@ import { useGen, type Status } from './store'
 import { tplOf } from '../../data/niches'
 import { useMedia } from '../../lib/useMedia'
 import { SNAPSHOT, draftPoster } from '../../lib/snapshot'
+import { VideoOk } from '../preview/anim'
 
 /** Фон сцены — крошечная (96 px) копия кадра ниши: браузер сам растягивает её мягко, без дорогого фильтра размытия */
 const ambient = (d: { niche: { video?: string } }, tpl: string) => `${import.meta.env.BASE_URL}video/niche/${d.niche.video ?? tpl}-blur.webp`
@@ -38,6 +39,9 @@ export function Stage() {
   const building = !done && !first
   const sm = useMedia('(min-width: 640px)')
   const lg = useMedia('(min-width: 1024px)')
+  /** Видео ниш: на компьютере сразу, на телефоне и при экономии трафика — после первого действия посетителя */
+  const saveData = Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData)
+  const videoOk = !g.demo || (lg && !saveData)
 
   return (
     <div id="stage" className="relative mx-auto w-full max-w-[1200px] scroll-mt-24">
@@ -59,17 +63,14 @@ export function Stage() {
         <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(20,19,18,.72)_0%,rgba(20,19,18,.35)_40%,rgba(20,19,18,.1)_100%)]" />
 
         <div className="relative flex flex-col gap-8 p-4 pt-6 sm:p-8 lg:block lg:h-full lg:p-0">
+          <VideoOk.Provider value={videoOk}>
           {/* Превью: браузер (от планшета) и телефон. На 1024–1279 браузер ужимается, а не наезжает на подпись: сцена теперь видна с первого экрана.
               Лишнее прячем ещё и классом: пререндер снят на 1440, и до запуска JS телефон видел бы браузер, а потом сцена прыгала бы */}
           <div className="hidden sm:block lg:absolute lg:left-[372px] lg:right-[64px] lg:top-10 xl:left-auto xl:right-[88px] xl:w-[720px]">
             {sm && (
               <BrowserFrame domain={d.domain} busy={building}>
-                <Scaled width={DESKTOP.w} height={DESKTOP.h}>
-                  {live ? (
-                    <SitePreview key={g.buildKey} draft={d} animated={!first} />
-                  ) : (
-                    first && <img src={draftPoster()} alt="" className="block h-full w-full" />
-                  )}
+                <Scaled width={DESKTOP.w} height={DESKTOP.h} cover={!live && first && <Poster />}>
+                  {live && <SitePreview key={g.buildKey} draft={d} animated={!first} />}
                 </Scaled>
               </BrowserFrame>
             )}
@@ -77,16 +78,13 @@ export function Stage() {
           {(!sm || lg) && (
             <div className="mx-auto w-[244px] sm:max-lg:hidden lg:absolute lg:bottom-6 lg:right-6 lg:mx-0 lg:w-[190px]">
               <PhoneFrame>
-                <Scaled width={MOBILE.w} height={MOBILE.h}>
-                  {live ? (
-                    <SitePreview key={g.buildKey} draft={d} mobile animated={!first} />
-                  ) : (
-                    first && <img src={draftPoster(true)} alt="" className="block h-full w-full" />
-                  )}
+                <Scaled width={MOBILE.w} height={MOBILE.h} cover={!live && first && <Poster mobile />}>
+                  {live && <SitePreview key={g.buildKey} draft={d} mobile animated={!first} />}
                 </Scaled>
               </PhoneFrame>
             </div>
           )}
+          </VideoOk.Provider>
 
           {/* Подпись и заявка */}
           <div className="text-white lg:absolute lg:bottom-12 lg:left-12 lg:top-10 lg:flex lg:w-[292px] lg:flex-col">
@@ -162,6 +160,23 @@ export function Stage() {
         Черновик собран из заготовок. Настоящий сайт делаем с нуля: свой дизайн, ваши фото и видео, анимации при прокрутке
       </p>
     </div>
+  )
+}
+
+/**
+ * Кадр готового черновика «Борода» до запуска скриптов. Самая крупная картинка первого экрана,
+ * поэтому грузится сразу и с высоким приоритетом: LCP фиксируется на ней, а не на поздних кадрах автодемо
+ */
+function Poster({ mobile }: { mobile?: boolean }) {
+  return (
+    <img
+      src={draftPoster(mobile)}
+      alt=""
+      width={mobile ? MOBILE.w : DESKTOP.w}
+      height={mobile ? MOBILE.h : DESKTOP.h}
+      fetchPriority="high"
+      className="absolute inset-0 block h-full w-full"
+    />
   )
 }
 

@@ -6,7 +6,7 @@ import { animate, motion, useInView, useMotionValue, useTransform, type MotionVa
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import type { Draft } from '../../../data/niches'
 import type { Template } from '.'
-import { BgVideo, EASE, SECOND_AT, nicheVideo, useAnimOn } from '../anim'
+import { BgVideo, EASE, SECOND_AT, nicheVideo, useAnimOn, useVideoOk } from '../anim'
 
 /**
  * Еда: открытый огонь, «устье печи». Композиция по ekstedt.nu:
@@ -471,7 +471,8 @@ function cropBox(size: number, c: Crop, cy = 0.5): CSSProperties {
  */
 function Frame({ v, crop, size, t, cy }: { v: Video; crop: Crop; size: number; t?: number; cy?: number }) {
   const on = useAnimOn()
-  const live = on && t !== undefined
+  const videoOk = useVideoOk()
+  const live = on && videoOk && t !== undefined
   const ref = useRef<HTMLVideoElement>(null)
   const seen = useInView(ref, { margin: '80px' })
   const [go, setGo] = useState(false)

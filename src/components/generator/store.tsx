@@ -35,7 +35,7 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
   const [sphere, setSphere] = useState<SphereId | null>(null)
   const [draft, setDraft] = useState<Draft>(() => makeDraft(DEMO_SEQUENCE[0], null))
   const [buildKey, setBuildKey] = useState(0)
-  const [status, setStatus] = useState<Status>('idle')
+  const [status, setStatus] = useState<Status>(staticStart ? 'done' : 'idle')
   const [took, setTook] = useState(0)
   const [demo, setDemo] = useState(true)
   const [heroVisible, setHeroVisible] = useState(true)
@@ -151,8 +151,7 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
 
   // Первый показ: собираем пример сразу при загрузке
   useEffect(() => {
-    if (staticStart) setStatus('done')
-    else build(DEMO_SEQUENCE[0], null)
+    if (!staticStart) build(DEMO_SEQUENCE[0], null)
     return clearTimers
   }, [build, staticStart])
 

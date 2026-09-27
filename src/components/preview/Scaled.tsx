@@ -2,9 +2,12 @@ import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
 /**
  * Рисуем «сайт» в настоящем размере (1280 или 390 px) и ужимаем трансформацией
- * под ширину контейнера. Так превью выглядит как живая страница, а не как схема
+ * под ширину контейнера. Так превью выглядит как живая страница, а не как схема.
+ * Высота — через aspect-ratio, а не пикселями: пререндер снят на 1440, и на телефоне
+ * рамка не должна дорастать, когда стартует React.
+ * cover — картинка на всю рамку без масштаба (кадр черновика до запуска скриптов)
  */
-export function Scaled({ width, height, children }: { width: number; height: number; children: ReactNode }) {
+export function Scaled({ width, height, children, cover }: { width: number; height: number; children?: ReactNode; cover?: ReactNode }) {
   const box = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0)
 
@@ -18,8 +21,9 @@ export function Scaled({ width, height, children }: { width: number; height: num
   }, [width])
 
   return (
-    <div ref={box} className="relative w-full overflow-hidden" style={{ height: scale ? height * scale : undefined, aspectRatio: scale ? undefined : `${width} / ${height}` }}>
-      {scale > 0 && (
+    <div ref={box} className="relative w-full overflow-hidden" style={{ aspectRatio: `${width} / ${height}` }}>
+      {cover}
+      {scale > 0 && children && (
         <div
           className="absolute left-0 top-0 origin-top-left"
           style={{ width, height, transform: `scale(${scale})` }}
