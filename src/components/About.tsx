@@ -1,10 +1,13 @@
 import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from 'motion/react'
 import type { PointerEvent } from 'react'
 import { about } from '../data/content'
+import { T } from '../lib/typo'
 import { MaxBadge, TgIcon, maxHref, tgHref } from './Messengers'
 import { Reveal } from './Reveal'
 
 const SPRING = { stiffness: 120, damping: 18, mass: 0.6 }
+/** «Основатель МирВеб» → «основатель МирВеб»: без toLowerCase, иначе и название станет строчным */
+const role = about.role.charAt(0).toLowerCase() + about.role.slice(1)
 
 /**
  * Портрет с лёгким наклоном за курсором: пара градусов и блик, как у карточек Apple.
@@ -38,7 +41,7 @@ function Portrait() {
       <motion.div style={{ rotateX, rotateY, x: shiftX }} className="relative overflow-hidden rounded-[22px]">
         <img
           src={`${import.meta.env.BASE_URL}img/andrey.webp`}
-          alt={`${about.name}, ${about.role.toLowerCase()}`}
+          alt={`${about.name}, ${role}`}
           loading="lazy"
           className="block aspect-[4/5] w-full object-cover [mask-image:linear-gradient(to_bottom,black_78%,transparent)]"
         />
@@ -50,19 +53,21 @@ function Portrait() {
 
 export function About() {
   return (
-    <section className="mx-auto max-w-[1248px] px-4 pt-24 sm:px-6 lg:pt-32">
+    <section id="about" className="mx-auto max-w-[1248px] scroll-mt-20 px-4 pt-24 sm:px-6 lg:pt-32">
       <Reveal>
-        <div className="grid items-center gap-8 overflow-hidden rounded-[28px] bg-[radial-gradient(ellipse_at_85%_30%,#2b2a2c_0%,#161519_55%,#121116_100%)] p-5 text-white sm:p-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:p-14">
+        <div data-dark className="on-dark grid items-center gap-8 overflow-hidden rounded-[28px] bg-[radial-gradient(ellipse_at_85%_30%,#2b2a2c_0%,#161519_55%,#121116_100%)] p-5 text-white sm:p-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:p-14">
           <div className="order-2 lg:order-1">
-            <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#f0a37a]">Кто делает</p>
-            <p className="display mt-5 text-[28px] leading-[1.16] sm:text-[38px]">«{about.quote}»</p>
+            <h2 className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#f0a37a]">Кто делает</h2>
+            <blockquote className="display mt-5 text-[28px] leading-[1.16] sm:text-[38px]">
+              «<T>{about.quote}</T>»
+            </blockquote>
             <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5">
               <div>
                 <p className="text-[17px] font-semibold">{about.name}</p>
                 <p className="text-[14px] text-white/60">{about.role}</p>
               </div>
               <div className="flex gap-2">
-                <a href={tgHref('Здравствуйте, Андрей! ')} target="_blank" rel="noopener" className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[15px] font-medium text-ink transition hover:bg-white/90 active:scale-[0.97]">
+                <a href={tgHref('Здравствуйте, Андрей! ')} target="_blank" rel="noopener" className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[15px] font-medium text-ink transition-[box-shadow,transform] duration-200 hover:shadow-[0_10px_30px_-10px_rgba(255,255,255,.45)] active:scale-[0.97]">
                   <TgIcon size={16} /> Написать мне
                 </a>
                 <a href={maxHref} target="_blank" rel="noopener" aria-label="Написать в Max" className="grid h-11 w-11 place-items-center rounded-full text-white ring-1 ring-white/25 transition hover:bg-white/10">
@@ -71,7 +76,7 @@ export function About() {
               </div>
             </div>
           </div>
-          <div className="order-1 mx-auto w-full max-w-[420px] lg:order-2 lg:max-w-none">
+          <div className="order-1 w-full max-w-[420px] justify-self-start lg:order-2 lg:max-w-none">
             <Portrait />
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { motion } from 'motion/react'
 import { process } from '../data/content'
 import { draftPoster } from '../lib/snapshot'
+import { T } from '../lib/typo'
 import { Reveal } from './Reveal'
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -34,8 +35,9 @@ function Chat() {
             className={`max-w-[86%] ${us ? 'self-start' : 'self-end'}`}
             style={{ transformOrigin: us ? 'left bottom' : 'right bottom' }}
           >
-            <div className={`rounded-[18px] px-4 py-3 text-[15px] leading-[1.5] ${us ? 'rounded-bl-[6px] bg-night-2 text-white/85 ring-1 ring-white/[0.06]' : 'rounded-br-[6px] bg-[#e9e6e1] text-ink'}`}>
-              {m.text}
+            {/* Пузырь — div, а не p: правило text-wrap: pretty из index.css на него не действует, ставим явно */}
+            <div className={`text-pretty rounded-[18px] px-4 py-3 text-[15px] leading-[1.5] ${us ? 'rounded-bl-[6px] bg-night-2 text-white/85 ring-1 ring-white/[0.06]' : 'rounded-br-[6px] bg-[#e9e6e1] text-ink'}`}>
+              <T>{m.text}</T>
               {m.preview && (
                 <div className="mt-3 w-[260px] max-w-full overflow-hidden rounded-[10px] ring-1 ring-white/10">
                   <img src={draftPoster()} alt="Черновик первого экрана барбершопа «Борода»" loading="lazy" width={1280} height={760} className="block h-auto w-full" />
@@ -55,7 +57,7 @@ function Chat() {
 
 export function Process() {
   return (
-    <section id="process" className="mt-24 scroll-mt-16 bg-night py-24 text-white lg:mt-32 lg:py-32">
+    <section id="process" data-dark className="mt-24 scroll-mt-16 bg-night pb-12 pt-24 text-white lg:mt-32 lg:pt-32">
       <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
         <Reveal className="text-center">
           <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#f0a37a]">Как работаем</p>
@@ -73,9 +75,13 @@ export function Process() {
                 key={s.title}
                 className={`p-7 ${STEP_BORDERS[i]}`}
               >
-                <p className="text-[13px] text-white/45">{s.day}</p>
-                <h3 className="mt-2 text-[17px] font-medium">{s.title}</h3>
-                <p className="mt-2 text-[15px] leading-[1.55] text-white/60">{s.text}</p>
+                <p className="text-[13px] text-white/55">{s.day}</p>
+                <h3 className="mt-2 text-[17px] font-medium">
+                  <T>{s.title}</T>
+                </h3>
+                <p className="mt-2 text-[15px] leading-[1.55] text-white/60">
+                  <T>{s.text}</T>
+                </p>
               </div>
             ))}
           </div>
