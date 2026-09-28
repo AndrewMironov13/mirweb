@@ -28,6 +28,10 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
   const [invalid, setInvalid] = useState('')
   const field = useRef<HTMLInputElement>(null)
   const errId = useId()
+  /** Согласие — отдельной галочкой, не отмеченной заранее: так оно явное, а не «молча при отправке» */
+  const [agreed, setAgreed] = useState(false)
+  const [needConsent, setNeedConsent] = useState(false)
+  const box = useRef<HTMLInputElement>(null)
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
@@ -39,6 +43,11 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
       field.current?.focus()
       return
     }
+    if (!agreed) {
+      setNeedConsent(true)
+      box.current?.focus()
+      return
+    }
     setState('sending')
     const ok = await sendLead({ contact: v, business, niche, source })
     setState(ok ? 'sent' : 'error')
@@ -47,7 +56,7 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
 
   const tg = tgLink(`Здравствуйте! Хочу сайт${business ? ` для «${business}»` : ''}. `)
   // Ошибка проверки или сети — одной строкой над согласием; согласие не прячем никогда
-  const failed = Boolean(invalid) || state === 'error'
+  const failed = Boolean(invalid) || needConsent || state === 'error'
   const link = 'py-1 underline underline-offset-2'
 
   return (
@@ -104,6 +113,8 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
           <p id={errId} role="alert" className={failed ? `mt-2 text-[14px] leading-snug ${dark ? 'text-[#f0a37a]' : 'text-rust'}` : undefined}>
             {invalid ? (
               <T>{invalid}</T>
+            ) : needConsent ? (
+              <T>Отметьте согласие на обработку персональных данных</T>
             ) : state === 'error' ? (
               <>
                 Не отправилось.{' '}
@@ -113,16 +124,37 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
               </>
             ) : null}
           </p>
-          <p className={`mt-2 text-[13px] leading-snug ${dark ? 'text-white/55' : 'text-muted'}`}>
-            <T>Отправляя заявку, вы даёте</T>{' '}
-            <a href={`${base}consent.html`} target="_blank" className={link}>
-              <T>согласие на обработку персональных данных</T>
-            </a>{' '}
-            <T>и принимаете</T>{' '}
-            <a href={`${base}privacy.html`} target="_blank" className={link}>
-              политику
-            </a>
-          </p>
+          <label className={`relative mt-2.5 flex cursor-pointer items-start gap-2.5 text-[13px] leading-snug ${dark ? 'text-white/60' : 'text-ink-soft'}`}>
+            <span aria-hidden className="absolute -left-[11px] -top-[10px] h-10 w-10" onClick={(e) => {
+                // Гасим клик по подписи, иначе галочка переключится дважды и останется как была
+                e.preventDefault()
+                box.current?.click()
+              }}
+            />
+            <input
+              ref={box}
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => {
+                setAgreed(e.target.checked)
+                if (e.target.checked) setNeedConsent(false)
+              }}
+              aria-invalid={needConsent ? true : undefined}
+              aria-describedby={needConsent ? errId : undefined}
+              className={`mt-px h-[18px] w-[18px] shrink-0 cursor-pointer ${dark ? 'accent-white' : 'accent-ink'}`}
+            />
+            {/* Подпись почти вся из ссылок: палец попал бы в документ, а не в галочку. Поэтому вокруг галочки невидимая зона 40 px */}
+            <span>
+              <T>Даю</T>{' '}
+              <a href={`${base}consent.html`} target="_blank" className={link}>
+                <T>согласие на обработку персональных данных</T>
+              </a>{' '}
+              <T>и принимаю</T>{' '}
+              <a href={`${base}privacy.html`} target="_blank" className={link}>
+                политику
+              </a>
+            </span>
+          </label>
         </motion.form>
       )}
     </AnimatePresence>

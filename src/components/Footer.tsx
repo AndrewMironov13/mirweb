@@ -21,6 +21,8 @@ export function Footer() {
             <a href={`${import.meta.env.BASE_URL}privacy.html`} className="mt-2 inline-block text-[13px] text-white/55 underline-offset-2 transition-colors hover:text-white hover:underline">
               Политика обработки персональных данных
             </a>
+            {/* Цены «от» и описания работ — приглашение обсудить, а не оферта (ст. 437 ГК РФ) */}
+            <p className="mt-2 max-w-[260px] text-[13px] leading-snug text-white/55">Информация на сайте не является публичной офертой</p>
           </div>
           <div>
             <p className={col}>Разделы</p>
