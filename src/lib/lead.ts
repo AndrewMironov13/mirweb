@@ -24,9 +24,13 @@ export async function sendLead(lead: Lead): Promise<boolean> {
         'Бизнес': lead.business ?? '—',
         'Ниша': lead.niche ?? '—',
         'Откуда': lead.source,
+        'Согласие': 'consent.html, ред. 2026-09-28',
       }),
     })
-    return r.ok
+    if (!r.ok) return false
+    // Неподтверждённый адрес formsubmit тоже отвечает 200, но с success:"false" и заявку выбрасывает
+    const j: { success?: unknown } | null = await r.json().catch(() => null)
+    return String(j?.success) === 'true'
   } catch {
     return false
   }
