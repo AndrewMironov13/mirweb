@@ -63,7 +63,11 @@ export function Stage() {
   const lead = {
     business: d.mine && d.ownName ? d.name : undefined,
     niche: d.mine ? d.niche.noun : undefined,
-    source: d.mine ? 'Генератор на первом экране' : `Генератор, смотрел пример ${shown} (${d.niche.noun})`,
+    source: d.mine
+      ? d.ownName
+        ? 'Генератор на первом экране'
+        : `Генератор на первом экране, вписал «${d.name}»`
+      : `Генератор, смотрел пример ${shown} (${d.niche.noun})`,
   }
   const tgText = !d.mine
     ? `Здравствуйте! Хочу сайт. Понравился пример: ${d.niche.noun}. `

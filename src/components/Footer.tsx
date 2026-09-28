@@ -9,7 +9,7 @@ export function Footer() {
   const [user, domain] = channels.email.split('@')
   return (
     <footer className="px-3 pb-3 pt-3">
-      <div className="on-dark mx-auto max-w-[1416px] rounded-[28px] bg-night px-6 py-14 text-white sm:px-10 lg:px-7 lg:py-16">
+      <div data-dark className="on-dark mx-auto max-w-[1416px] rounded-[28px] bg-night px-6 py-14 text-white sm:px-10 lg:px-7 lg:py-16">
         {/* Сетка той же ширины, что содержимое секций (1200 px), чтобы логотип стоял на одной линии с заголовками */}
         <div className="mx-auto grid max-w-[1200px] grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
           <div className="col-span-2 md:col-span-3 lg:col-span-1">

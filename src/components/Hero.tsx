@@ -23,7 +23,7 @@ export function Hero() {
   const g = useGen()
   const setHeroVisible = g.setHeroVisible
   /** Посетитель собирает свой черновик (не автодемо) */
-  const mine = !g.demo && g.status !== 'idle'
+  const mine = g.byVisitor && g.status !== 'idle'
   const ref = useRef<HTMLElement>(null)
 
   // Автодемо крутится, только пока первый экран на виду: не жжём батарею ниже по странице

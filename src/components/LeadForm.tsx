@@ -10,7 +10,7 @@ type State = 'idle' | 'sending' | 'sent' | 'error'
 /** Что не так с контактом ('' — можно отправлять). E-mail и ссылки пропускаем как есть */
 function check(v: string) {
   if (!v) return 'Напишите телефон или ник в Telegram'
-  if (/^\S+@\S+\.\S+$/.test(v) || /[/:]|t\.me/i.test(v)) return ''
+  if (/^\S+@\S+\.\S+$/.test(v) || /^(https?:\/\/|t\.me\/|vk\.com\/|wa\.me\/)\S{3,}/i.test(v)) return ''
   if (/^[\d\s()+\-.]+$/.test(v)) return v.replace(/\D/g, '').length < 10 ? 'Номер неполный: проверьте цифры' : ''
   return v.replace(/^@/, '').length < 5 ? 'Ник в Telegram — от 5 символов' : ''
 }
@@ -65,7 +65,7 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
           <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-go text-white">
             <Check size={14} strokeWidth={3} />
           </span>
-          <span className="text-[15px] leading-snug">Заявка у нас. Напишем в течение рабочего дня</span>
+          <span className="text-[15px] leading-snug"><T>Заявка у нас. Напишем в течение рабочего дня</T></span>
         </motion.div>
       ) : (
         <motion.form key="form" onSubmit={submit} exit={{ opacity: 0 }} className="w-full">

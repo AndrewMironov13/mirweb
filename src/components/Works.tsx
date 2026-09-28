@@ -10,7 +10,7 @@ import { Reveal } from './Reveal'
 const shot = (id: string, m = false) => `${import.meta.env.BASE_URL}img/works/${id}${m ? '-m' : ''}.webp`
 const clip = (id: string, ext: 'mp4' | 'webp') => `${import.meta.env.BASE_URL}video/works/${id}.${ext}`
 /** Для каких работ записан живой ролик первого экрана (фары, пролив, скролл-видео) */
-const LIVE: Record<string, boolean> = { veridis: true, 'veridis-m': true, caspol: true, expert: true }
+const LIVE: Record<string, boolean> = { 'veridis-m': true, caspol: true, expert: true }
 /** «Оклейка, тонировка» → «оклейка, тонировка»: ниша идёт в подпись после названия */
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1)
 
@@ -87,7 +87,7 @@ function WorkCard({ id, tall, load }: { id: string; tall?: boolean; load: boolea
         <div className="mt-auto flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 pt-0.5">
           <p className="text-[14px] text-muted">{w.city}</p>
           <span className="flex shrink-0 items-center gap-1 text-[14px] font-medium text-ink-soft transition-colors group-hover:text-ink">
-            {w.host.includes('.') ? w.host : 'Открыть'} <ArrowUpRight size={15} />
+            {w.host || 'Открыть'} <ArrowUpRight size={15} />
           </span>
         </div>
       </div>
@@ -97,7 +97,7 @@ function WorkCard({ id, tall, load }: { id: string; tall?: boolean; load: boolea
 
 export function Works() {
   const ref = useRef<HTMLElement>(null)
-  const near = useInView(ref, { margin: '800px 0px', once: true })
+  const near = useInView(ref, { margin: '300px 0px', once: true })
   const load = near && !SNAPSHOT
   return (
     <section ref={ref} id="works" className="mx-auto max-w-[1248px] scroll-mt-20 px-4 pt-24 sm:px-6 lg:pt-32">

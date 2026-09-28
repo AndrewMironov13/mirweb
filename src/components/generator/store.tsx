@@ -175,7 +175,10 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
     return () => {
       alive = false
       // Первый экран ушёл из вида посреди печати: не оставляем в поле обрывок вроде «Студия маник»
-      if (demoRef.current) setTextRaw(builtRef.current)
+      if (demoRef.current) {
+        setTextRaw(builtRef.current)
+        demoTarget.current = builtRef.current
+      }
     }
   }, [demo, heroVisible, build, staticStart, still])
 
