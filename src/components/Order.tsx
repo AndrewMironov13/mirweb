@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { about } from '../data/content'
 import { T } from '../lib/typo'
 import { LeadForm } from './LeadForm'
-import { MaxBadge, TgIcon, maxHref, tgHref } from './Messengers'
+import { TgIcon, maxHref, tgHref } from './Messengers'
 
 const Ctx = createContext<() => void>(() => {})
 /** Открыть окно «Заказать сайт» из любого места страницы */
@@ -91,7 +91,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
                   <TgIcon /> Telegram
                 </a>
                 <a href={maxHref} target="_blank" rel="noopener" className="inline-flex h-12 items-center justify-center gap-2 rounded-[11px] bg-cloud text-[15px] font-medium text-ink transition hover:bg-cloud-2 active:scale-[0.97]">
-                  <MaxBadge /> Max
+                  Max
                 </a>
               </div>
             </motion.div>

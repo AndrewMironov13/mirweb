@@ -2,7 +2,7 @@ import { ArrowUp } from 'lucide-react'
 import { goToGenerator } from '../lib/goto'
 import { T } from '../lib/typo'
 import { LeadForm } from './LeadForm'
-import { MaxBadge, TgIcon, maxHref, tgHref } from './Messengers'
+import { TgIcon, maxHref, tgHref } from './Messengers'
 import { Reveal } from './Reveal'
 
 /** Финал без второго генератора: контакт, мессенджеры и ссылка наверх к черновику */
@@ -35,7 +35,7 @@ export function FinalCta() {
               rel="noopener"
               className="inline-flex h-12 items-center justify-center gap-2 rounded-[11px] bg-white text-[15px] font-medium text-ink ring-1 ring-line transition-[box-shadow,transform] duration-200 hover:shadow-[0_10px_24px_-12px_rgba(28,27,26,.35)] active:scale-[0.97]"
             >
-              <MaxBadge /> Max
+              Max
             </a>
           </div>
           {/* Блоком, а не flex: строка переносится целиком, «наверху» и стрелка не отрываются друг от друга */}
