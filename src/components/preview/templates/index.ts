@@ -1,6 +1,6 @@
 import { useEffect, useState, type ComponentType } from 'react'
 import type { Draft, TemplateId } from '../../../data/niches'
-import barber from './barber'
+import auto from './auto'
 
 /** Шаблон черновика: две секции (первый экран + следующая), каждая ровно 760 px на десктопе и 800 px на телефоне */
 export interface Template {
@@ -10,11 +10,11 @@ export interface Template {
 
 /**
  * Шаблоны подключаются сами: файл templates/<id>.tsx с `export default { Desktop, Mobile }`.
- * Барбершоп в основном бандле — с него начинается автодемо. Остальные грузятся отдельными кусками
+ * Авто в основном бандле — с детейлинга начинается автодемо. Остальные грузятся отдельными кусками
  * и подкачиваются в фоне после загрузки страницы, чтобы не тормозить первый экран
  */
-const loaders = import.meta.glob<{ default: Template }>(['./*.tsx', '!./barber.tsx'])
-const cache = new Map<string, Template>([['barber', barber]])
+const loaders = import.meta.glob<{ default: Template }>(['./*.tsx', '!./auto.tsx'])
+const cache = new Map<string, Template>([['auto', auto]])
 const pending = new Map<string, Promise<Template | undefined>>()
 
 function load(id: string): Promise<Template | undefined> {
@@ -26,7 +26,7 @@ function load(id: string): Promise<Template | undefined> {
 }
 
 /** Порядок фоновой подкачки: как в автодемо, потом остальные */
-const ORDER = ['beauty', 'auto', 'food', 'industry', 'health', 'build', 'sport', 'edu', 'services']
+const ORDER = ['industry', 'health', 'build', 'beauty', 'food', 'sport', 'edu', 'services', 'barber']
 let preloading = false
 export function preloadTemplates() {
   if (preloading || typeof window === 'undefined') return

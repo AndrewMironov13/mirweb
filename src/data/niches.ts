@@ -49,16 +49,17 @@ export interface Niche {
   video?: string
 }
 
+/** Порядок плашек сфер под полем: сначала авто и ниши с дорогим чеком, еда — в самом конце */
 export const SPHERES: Sphere[] = [
   { id: 'auto', label: 'Авто', fallback: 'detailing' },
-  { id: 'beauty', label: 'Красота', fallback: 'nails' },
-  { id: 'food', label: 'Еда', fallback: 'restaurant' },
-  { id: 'repair', label: 'Ремонт', fallback: 'flat' },
   { id: 'production', label: 'Производство', fallback: 'factory' },
+  { id: 'repair', label: 'Ремонт', fallback: 'flat' },
   { id: 'health', label: 'Здоровье', fallback: 'clinic' },
+  { id: 'beauty', label: 'Красота', fallback: 'nails' },
   { id: 'sport', label: 'Спорт', fallback: 'gym' },
   { id: 'edu', label: 'Обучение', fallback: 'school' },
   { id: 'services', label: 'Услуги', fallback: 'generic' },
+  { id: 'food', label: 'Еда', fallback: 'restaurant' },
 ]
 
 export const NICHES: Niche[] = [
@@ -535,12 +536,15 @@ export function makeDraft(text: string, sphere: SphereId | null, mine = false): 
   return { name, quoted, niche, domain: toDomain(name), label, mine, ownName }
 }
 
-/** Сценарий автодемо: что печатаем в поле, пока посетитель не тронул его сам */
+/**
+ * Сценарий автодемо: что печатаем в поле, пока посетитель не тронул его сам.
+ * Начинаем с детейлинга — наш главный клиент, дальше ниши с дорогим чеком; кофейня самой последней
+ */
 export const DEMO_SEQUENCE = [
-  'Барбершоп «Борода»',
-  'Студия маникюра «Лак»',
   'Детейлинг «Глянец»',
-  'Кофейня «Зерно»',
   'Мебельная фабрика «Кедр»',
   'Стоматология «Улыбка»',
+  'Ремонт квартир «Дом Мастер»',
+  'Студия маникюра «Лак»',
+  'Кофейня «Зерно»',
 ]

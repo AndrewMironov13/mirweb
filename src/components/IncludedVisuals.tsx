@@ -9,7 +9,7 @@ import { Mail, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { nicheById } from '../data/niches'
 import { MaxBadge, TgIcon } from './Messengers'
-import { DEMO_DOMAIN, autoDraft } from '../lib/snapshot'
+import { DEMO_DOMAIN, draftPoster } from '../lib/snapshot'
 import { enter, useLive } from './useLive'
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -21,7 +21,7 @@ const tint = nicheById('tint')
 
 /** Детейлинг: настоящий первый экран с нашего генератора, он впереди веера */
 function MiniDetailing() {
-  return <img src={autoDraft('desktop')} alt="" loading="lazy" width={1280} height={760} className="block aspect-[1280/760] h-auto w-full" />
+  return <img src={draftPoster()} alt="" loading="lazy" width={1280} height={760} className="block aspect-[1280/760] h-auto w-full" />
 }
 
 /** Маникюр: светлый экран пополам с фото, антиква */
@@ -138,7 +138,7 @@ export function PhoneMock() {
       >
         <div className="relative overflow-hidden rounded-[24px] bg-black">
           <div className="absolute left-1/2 top-[6px] z-10 h-[14px] w-[30%] -translate-x-1/2 rounded-full bg-black" />
-          <img src={autoDraft('mobile')} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
+          <img src={draftPoster(true)} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
           {/* Касание кнопки «Записаться на осмотр»: круг расходится и гаснет, пока телефон на экране */}
           <motion.span
             className="absolute left-1/2 top-[77%] -ml-[18px] -mt-[18px] h-9 w-9 rounded-full bg-white/70"

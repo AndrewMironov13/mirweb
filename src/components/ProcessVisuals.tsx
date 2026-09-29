@@ -9,7 +9,7 @@ import { Lock, MapPin, Mic, PhoneOff, Video } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { nicheById } from '../data/niches'
 import { TgIcon } from './Messengers'
-import { DEMO_DOMAIN, autoDraft } from '../lib/snapshot'
+import { DEMO_DOMAIN, draftPoster, draftSecond } from '../lib/snapshot'
 import { enter, useLive } from './useLive'
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -116,7 +116,7 @@ export function DraftVisual() {
       >
         <Chrome domain="черновик" />
         <div className="relative overflow-hidden">
-          <img src={autoDraft('desktop')} alt="" loading="lazy" width={1280} height={760} className="block h-auto w-full" />
+          <img src={draftPoster()} alt="" loading="lazy" width={1280} height={760} className="block h-auto w-full" />
           <motion.div
             aria-hidden
             className="absolute inset-0 bg-[#1f1e1d]"
@@ -199,8 +199,8 @@ export function SiteVisual() {
 function LongPage() {
   return (
     <div className="bg-[#0b0b0c] text-white">
-      <img src={autoDraft('mobile')} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
-      <img src={autoDraft('mobile-2')} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
+      <img src={draftPoster(true)} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
+      <img src={draftSecond()} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
       <div className="bg-[#f4f3f1] px-3 pb-4 pt-3.5 text-ink">
         <p className="text-[10px] font-medium uppercase tracking-[0.12em]">Услуги и цены</p>
         <div className="mt-2 divide-y divide-ink/10">

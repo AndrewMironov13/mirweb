@@ -2,7 +2,7 @@ type Flags = { __SNAPSHOT__?: boolean; __PRE__?: boolean }
 
 /**
  * Пререндер ставит __SNAPSHOT__ до загрузки скриптов: в разметку уходит спокойный первый кадр —
- * пример «Борода» картинкой, без автодемо и без живых макетов (их текст не нужен поисковикам)
+ * пример «Глянец» (детейлинг) картинкой, без автодемо и без живых макетов (их текст не нужен поисковикам)
  */
 export const SNAPSHOT = Boolean((window as unknown as Flags).__SNAPSHOT__)
 
@@ -12,11 +12,11 @@ export const SNAPSHOT = Boolean((window as unknown as Flags).__SNAPSHOT__)
  */
 export const isPre = () => Boolean((window as unknown as Flags).__PRE__)
 
-/** Картинка готового черновика «Борода»: тот же кадр, что рисует живой макет без анимации */
+/** Картинка готового черновика «Глянец»: тот же кадр, что рисует живой макет без анимации. Снимать со стенда ?harness&tpl=auto&still=1 */
 export const draftPoster = (mobile = false) => `${import.meta.env.BASE_URL}img/draft-${mobile ? 'mobile' : 'desktop'}.webp`
 
-/** Кадры черновика детейлинга «Глянец» со стенда ?harness (шаблон auto): пример в «Как работаем» и «Цене» */
-export const autoDraft = (part: 'desktop' | 'mobile' | 'mobile-2') => `${import.meta.env.BASE_URL}img/draft-auto-${part}.webp`
+/** Второй экран того же черновика на телефоне (подбор услуги и работы): длинная страница в «Как работаем» */
+export const draftSecond = () => `${import.meta.env.BASE_URL}img/draft-mobile-2.webp`
 
 /** Адрес-заглушка в иллюстрациях: пример выдуманный, настоящий домен не показываем */
 export const DEMO_DOMAIN = 'ваш-сайт.рф'

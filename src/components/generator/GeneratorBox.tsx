@@ -142,7 +142,7 @@ export function GeneratorBox({ id, toStage }: { id?: string; toStage?: boolean }
               onFocus={onFocus}
               onChange={(e) => g.setText(e.target.value)}
               onKeyDown={onKey}
-              placeholder={sm ? 'Название и сфера, например: барбершоп «Борода»' : 'Название и сфера'}
+              placeholder={sm ? 'Название и сфера, например: детейлинг «Глянец»' : 'Название и сфера'}
               className="h-11 min-w-0 flex-1 truncate bg-transparent px-3 text-[16px] text-ink outline-none placeholder:text-muted sm:px-3.5"
             />
             {dice('hidden sm:grid')}
