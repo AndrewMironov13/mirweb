@@ -73,8 +73,8 @@ function PriceCompare() {
       <div>
         <p className="text-[15px] text-ink-soft">{full.label}</p>
         <p className="display mt-3 whitespace-nowrap text-[64px] leading-none sm:text-[88px]">
-          <span className="mr-2 text-[0.42em] text-ink-soft">от</span>
-          {from}
+          {/* Пробел настоящий: без него скринридер и снимок пререндера читают «от30 000 ₽» */}
+          <span className="text-[0.42em] text-ink-soft">от</span> {from}
         </p>
         <p className="mt-4 text-[15px] text-muted">
           <T>{full.note}</T>

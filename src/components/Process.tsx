@@ -56,9 +56,15 @@ function useRail() {
       })
     }
     el.addEventListener('scroll', onScroll, { passive: true })
+    // Лента в фокусе с клавиатуры (листается стрелками) только когда она правда листается: на широком экране это сетка
+    const ro = new ResizeObserver(() => {
+      el.tabIndex = el.scrollWidth > el.clientWidth + 1 ? 0 : -1
+    })
+    ro.observe(el)
     return () => {
       el.removeEventListener('scroll', onScroll)
       cancelAnimationFrame(raf)
+      ro.disconnect()
     }
   }, [])
   return { ref, at }
@@ -86,6 +92,8 @@ export function Process() {
           {/* Лента на телефоне выходит под края экрана, чтобы следующая карточка выглядывала и было видно, что листается */}
           <div
             ref={ref}
+            role="region"
+            aria-label="Пять дней по шагам"
             className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4 lg:gap-4 [&::-webkit-scrollbar]:hidden"
           >
             {process.steps.map((s, i) => (
@@ -94,9 +102,10 @@ export function Process() {
               </div>
             ))}
           </div>
-          <div aria-hidden className="mt-5 flex justify-center gap-1.5 sm:hidden">
+          <div aria-hidden className="mt-5 flex justify-center sm:hidden">
             {process.steps.map((s, i) => (
-              <span key={s.title} className={`h-1.5 rounded-full transition-[width,background-color] duration-300 ${i === at ? 'w-5 bg-[#f0a37a]' : 'w-1.5 bg-white/25'}`} />
+              // Ширина у всех одна, неактивные сжаты через transform: анимируется не геометрия
+              <span key={s.title} className={`h-1.5 w-5 rounded-full transition-[transform,background-color] duration-300 ${i === at ? 'bg-[#f0a37a]' : 'scale-x-[.3] bg-white/25'}`} />
             ))}
           </div>
         </Reveal>

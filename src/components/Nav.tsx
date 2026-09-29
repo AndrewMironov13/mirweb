@@ -55,7 +55,8 @@ export function Nav() {
       const hit = document
         .elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2)
         .find((e) => !header.current?.contains(e) && !e.closest('[data-nav-layer]'))
-      return Boolean(hit?.closest('[data-dark]'))
+      // Светлая плашка внутри тёмной секции ([data-light], например карточка звонка) — шапка над ней светлая
+      return Boolean(hit?.closest('[data-dark],[data-light]')?.hasAttribute('data-dark'))
     }
     const check = () => {
       raf = 0

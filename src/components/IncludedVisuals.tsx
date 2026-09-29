@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import { nicheById } from '../data/niches'
 import { MaxBadge, TgIcon } from './Messengers'
 import { DEMO_DOMAIN, draftPoster } from '../lib/snapshot'
+import { T } from '../lib/typo'
 import { enter, useLive } from './useLive'
 
 const EASE = [0.22, 1, 0.36, 1] as const
@@ -75,7 +76,7 @@ export function DesignFan() {
       {FAN.map(({ C, to, z }, i) => (
         <motion.div
           key={i}
-          className="absolute w-[54%] max-w-[380px] overflow-hidden rounded-[10px] bg-white shadow-[0_24px_50px_-22px_rgba(28,27,26,.55),0_0_0_1px_rgba(28,27,26,.08)]"
+          className="absolute w-[54%] max-w-[380px] overflow-hidden rounded-[10px] lg:w-[46%] bg-white shadow-[0_24px_50px_-22px_rgba(28,27,26,.55),0_0_0_1px_rgba(28,27,26,.08)]"
           style={{ zIndex: z }}
           {...(still
             ? { initial: { opacity: 0, transform: to }, animate: seen ? { opacity: 1, transform: to } : undefined }
@@ -137,14 +138,18 @@ export function PhoneMock() {
         className="relative w-[52%] max-w-[270px] shrink-0 rounded-[30px] bg-[#161616] p-[6px] shadow-[0_30px_60px_-24px_rgba(28,27,26,.6),0_0_0_1px_rgba(28,27,26,.12)] lg:w-[64%] lg:max-w-[250px]"
       >
         <div className="relative overflow-hidden rounded-[24px] bg-black">
-          <div className="absolute left-1/2 top-[6px] z-10 h-[14px] w-[30%] -translate-x-1/2 rounded-full bg-black" />
+          {/* Строка состояния: чёлка сидит в ней и не режет логотип сайта на широком телефоне */}
+          <div className="relative h-[20px] bg-black lg:h-[24px]">
+            <div className="absolute left-1/2 top-[5px] h-[13px] w-[30%] -translate-x-1/2 rounded-full bg-[#161616] lg:top-[6px] lg:h-[14px]" />
+          </div>
           <img src={draftPoster(true)} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
           {/* Касание кнопки «Записаться на осмотр»: круг расходится и гаснет, пока телефон на экране */}
           <motion.span
             className="absolute left-1/2 top-[77%] -ml-[18px] -mt-[18px] h-9 w-9 rounded-full bg-white/70"
             initial={{ opacity: 0, transform: 'scale(.4)' }}
-            animate={live ? { opacity: [0, 0.8, 0], transform: ['scale(.4)', 'scale(.7)', 'scale(1.8)'] } : { opacity: 0, transform: 'scale(.4)' }}
-            transition={live ? { duration: 1.4, times: [0, 0.2, 1], repeat: Infinity, repeatDelay: 1.6, ease: 'easeOut' } : { duration: 0.2 }}
+            // Пауза заложена в ключи, а не в repeatDelay: так анимация уходит на композитор (WAAPI)
+            animate={live ? { opacity: [0, 0.8, 0, 0], transform: ['scale(.4)', 'scale(.7)', 'scale(1.8)', 'scale(1.8)'] } : { opacity: 0, transform: 'scale(.4)' }}
+            transition={live ? { duration: 3, times: [0, 0.093, 0.467, 1], ease: ['easeOut', 'easeOut', 'linear'], repeat: Infinity } : { duration: 0.2 }}
           />
         </div>
       </motion.div>
@@ -197,7 +202,7 @@ export function SeoSnippet() {
       <motion.div
         {...enter(seen, still, 'translateY(14px)', 'translateY(0px)')}
         transition={{ delay: 0.15, duration: 0.7, ease: EASE }}
-        className="relative ml-5 mt-5 w-[72%] max-w-[300px] overflow-hidden rounded-[14px] bg-white shadow-[0_14px_34px_-18px_rgba(28,27,26,.4)] sm:ml-6"
+        className="relative ml-5 mt-5 w-[68%] max-w-[300px] min-[360px]:w-[72%] overflow-hidden rounded-[14px] bg-white shadow-[0_14px_34px_-18px_rgba(28,27,26,.4)] sm:ml-6"
       >
         <div className="flex items-center gap-2 border-b border-line px-3.5 py-2 text-[12.5px] text-ink">
           <Search size={13} className="shrink-0 text-muted" />
@@ -211,8 +216,12 @@ export function SeoSnippet() {
               <p className="text-[11px] text-muted">{DEMO_DOMAIN}</p>
             </div>
           </div>
-          <p className="mt-2 text-[14px] font-medium leading-snug text-[#2a55c9]">Полировка, керамика и химчистка — запись онлайн</p>
-          <p className="mt-1 text-[12px] leading-[1.45] text-ink-soft">{detailing.pain}</p>
+          <p className="mt-2 text-[14px] font-medium leading-snug text-[#2a55c9]">
+            <T>Полировка, керамика и химчистка — запись онлайн</T>
+          </p>
+          <p className="mt-1 text-[12px] leading-[1.45] text-ink-soft">
+            <T>{detailing.pain}</T>
+          </p>
         </div>
       </motion.div>
     </div>

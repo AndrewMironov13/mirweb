@@ -34,11 +34,13 @@ export function CallVisual() {
   const { ref, live, seen, still } = useLive()
 
   return (
-    <div ref={ref} className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-5">
+    <div ref={ref} className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 min-[360px]:gap-3 min-[360px]:px-5">
+      {/* data-light: светлая плашка внутри тёмной секции — шапка над ней становится светлой (Nav.tsx) */}
       <motion.div
+        data-light
         {...enter(seen, still, 'translateY(16px)', 'translateY(0px)')}
         transition={{ duration: 0.7, ease: EASE }}
-        className="w-full max-w-[270px] rounded-[18px] bg-[#f7f5f2] p-3.5 text-ink shadow-[0_24px_50px_-20px_rgba(0,0,0,.7)]"
+        className="w-full max-w-[270px] rounded-[18px] bg-[#f7f5f2] p-3 text-ink shadow-[0_24px_50px_-20px_rgba(0,0,0,.7)] min-[360px]:p-3.5"
       >
         <div className="flex items-center gap-3">
           <img src={avatar} alt="" loading="lazy" width={80} height={80} className="h-10 w-10 shrink-0 rounded-full object-cover" />
@@ -57,7 +59,7 @@ export function CallVisual() {
               className="h-full w-[3px] origin-center rounded-full bg-ink/70"
               initial={{ transform: `scaleY(${h * 0.6})` }}
               animate={live ? { transform: [`scaleY(${h * 0.35})`, `scaleY(${h})`, `scaleY(${h * 0.5})`] } : { transform: `scaleY(${h * 0.6})` }}
-              transition={live ? { duration: 0.9 + (i % 4) * 0.18, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' } : { duration: 0.3 }}
+              transition={live ? { duration: 0.9 + (i % 4) * 0.18, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' } : { duration: 0.3 }}
             />
           ))}
         </div>
@@ -75,9 +77,10 @@ export function CallVisual() {
       </motion.div>
       {/* Что присылает клиент в первый день: ссылку на Карты */}
       <motion.div
+        data-light
         {...enter(seen, still, 'translateY(12px)', 'translateY(0px)')}
         transition={{ delay: 0.35, duration: 0.6, ease: EASE }}
-        className="flex max-w-[270px] items-center gap-2 self-center rounded-[14px] rounded-br-[5px] bg-[#e9e6e1] px-3 py-2 text-[12.5px] text-ink"
+        className="flex max-w-[270px] items-center gap-2 self-center whitespace-nowrap rounded-[14px] rounded-br-[5px] bg-[#e9e6e1] px-3 py-2 text-[12px] text-ink min-[360px]:text-[12.5px]"
       >
         <MapPin size={14} className="shrink-0 text-rust" />
         Ссылка на Яндекс Карты
@@ -87,13 +90,13 @@ export function CallVisual() {
 }
 
 /** Мини-окно браузера: три точки и полоска адреса */
-function Chrome({ light = false, domain }: { light?: boolean; domain?: string }) {
+function Chrome({ domain }: { domain: string }) {
   return (
-    <div className={`flex h-[22px] items-center gap-1 px-2.5 ${light ? 'bg-[#ecebe9]' : 'bg-[#1d1d1f]'}`}>
+    <div className="flex h-[24px] items-center gap-1 bg-[#1d1d1f] px-2.5">
       <span className="h-[6px] w-[6px] rounded-full bg-[#ff5f57]" />
       <span className="h-[6px] w-[6px] rounded-full bg-[#febc2e]" />
       <span className="h-[6px] w-[6px] rounded-full bg-[#28c840]" />
-      {domain && <span className={`mx-auto truncate rounded px-2 text-[8.5px] ${light ? 'bg-white text-ink-soft' : 'bg-white/10 text-white/60'}`}>{domain}</span>}
+      <span className="mx-auto truncate rounded bg-white/10 px-2 text-[10px] text-white/75">{domain}</span>
     </div>
   )
 }
@@ -130,7 +133,8 @@ export function DraftVisual() {
                   }
                 : { transform: 'translateX(101%)', opacity: 1 }
             }
-            transition={live ? { duration: 8, times: [0, 0.05, 0.26, 0.9, 0.905, 0.91, 0.97, 1], ease: 'easeInOut', repeat: Infinity } : { duration: 0 }}
+            // Смягчение по отрезкам: одно ease на все ключи растягивает удержания и набросок висит треть круга
+            transition={live ? { duration: 8, times: [0, 0.05, 0.26, 0.9, 0.905, 0.91, 0.97, 1], ease: ['linear', 'easeInOut', 'linear', 'linear', 'linear', 'easeOut', 'linear'], repeat: Infinity } : { duration: 0 }}
           >
             <Sketch />
             <span className="absolute inset-y-0 left-0 w-[2px] bg-[#f0a37a] shadow-[0_0_14px_2px_rgba(240,163,122,.55)]" />
@@ -181,7 +185,7 @@ export function SiteVisual() {
           <motion.div
             initial={{ transform: 'translateY(0px)' }}
             animate={live ? { transform: ['translateY(0%)', 'translateY(0%)', 'translateY(-78%)', 'translateY(-78%)', 'translateY(0%)'] } : { transform: 'translateY(0%)' }}
-            transition={live ? { duration: 11, times: [0, 0.12, 0.55, 0.7, 1], ease: 'easeInOut', repeat: Infinity } : { duration: 0.6 }}
+            transition={live ? { duration: 11, times: [0, 0.12, 0.55, 0.7, 1], ease: ['linear', 'easeInOut', 'linear', 'easeInOut'], repeat: Infinity } : { duration: 0.6 }}
             aria-hidden
           >
             <LongPage />
@@ -200,7 +204,7 @@ function LongPage() {
   return (
     <div className="bg-[#0b0b0c] text-white">
       <img src={draftPoster(true)} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
-      <img src={draftSecond()} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
+      <img src={draftSecond()} alt="" loading="lazy" width={390} height={668} className="block h-auto w-full" />
       <div className="bg-[#f4f3f1] px-3 pb-4 pt-3.5 text-ink">
         <p className="text-[10px] font-medium uppercase tracking-[0.12em]">Услуги и цены</p>
         <div className="mt-2 divide-y divide-ink/10">
@@ -223,7 +227,7 @@ function LongPage() {
 }
 
 /** Заявки, которые приходят по кругу в карточке запуска: пример детейлинга, выдуманный */
-const LAUNCH_LEADS = ['Полировка и керамика, суббота', 'Химчистка салона, завтра', 'Керамика в 2 слоя, на неделе']
+const LAUNCH_LEADS = ['Керамика, в субботу', 'Химчистка салона, завтра', 'Полировка, на неделе']
 
 /**
  * День 5. Адрес печатается в строке браузера, следом приходит заявка. На следующем круге адрес печатается заново,
@@ -258,8 +262,8 @@ export function LaunchVisual() {
   const shown = done ? round : round - 1
 
   return (
-    <div ref={ref} className="absolute inset-0 flex flex-col justify-center gap-4 px-5">
-      <div className="flex h-12 items-center gap-2 rounded-full bg-[#f7f5f2] px-4 text-[15px] text-ink shadow-[0_24px_50px_-20px_rgba(0,0,0,.7)]">
+    <div ref={ref} className="@container absolute inset-0 flex flex-col justify-center gap-4 px-3 min-[360px]:px-5">
+      <div data-light className="flex h-12 items-center gap-2 rounded-full bg-[#f7f5f2] px-3.5 text-[14px] text-ink shadow-[0_24px_50px_-20px_rgba(0,0,0,.7)] min-[360px]:px-4 min-[360px]:text-[15px]">
         <Lock size={14} strokeWidth={2.5} className={`shrink-0 transition-colors duration-300 ${done ? 'text-go' : 'text-muted'}`} />
         <span className="whitespace-nowrap">{DEMO_DOMAIN.slice(0, n)}</span>
         <motion.span
@@ -267,7 +271,8 @@ export function LaunchVisual() {
           animate={live && !done ? { opacity: [1, 0] } : { opacity: 0 }}
           transition={live && !done ? { duration: 0.5, repeat: Infinity, repeatType: 'reverse' } : { duration: 0.2 }}
         />
-        <span className={`ml-auto shrink-0 text-[11.5px] font-medium transition-opacity duration-300 ${done ? 'text-go opacity-100' : 'opacity-0'}`}>Опубликован</span>
+        {/* Подпись — только где хватает места; готовность и так видна по зелёному замку */}
+        <span className={`ml-auto hidden shrink-0 text-[11.5px] font-medium transition-opacity duration-300 @min-[252px]:inline ${done ? 'text-go opacity-100' : 'opacity-0'}`}>Опубликован</span>
       </div>
       {/* Уведомление приходит поверх стопки, как на экране блокировки: под ним край второго */}
       <div className="relative h-[84px]">
@@ -282,13 +287,13 @@ export function LaunchVisual() {
               className="absolute inset-x-0 top-0"
             >
               <span className="absolute inset-x-4 -bottom-2.5 h-10 rounded-[14px] bg-white/45" />
-              <div className="relative flex items-center gap-3 rounded-[16px] bg-white p-3 text-ink shadow-[0_20px_40px_-18px_rgba(0,0,0,.8)]">
+              <div data-light className="relative flex items-center gap-3 rounded-[16px] bg-white p-3 text-ink shadow-[0_20px_40px_-18px_rgba(0,0,0,.8)]">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[11px] bg-[#2aabee] text-white">
                   <TgIcon size={18} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="flex items-baseline justify-between gap-2 text-[13.5px] font-medium leading-tight">
-                    Новая заявка <span className="shrink-0 text-[11px] font-normal text-muted">сейчас</span>
+                    Новая заявка <span className="hidden shrink-0 text-[11px] font-normal text-muted @min-[252px]:inline">сейчас</span>
                   </p>
                   <p className="mt-0.5 truncate text-[12.5px] leading-snug text-ink-soft">{LAUNCH_LEADS[shown % LAUNCH_LEADS.length]}</p>
                 </div>
