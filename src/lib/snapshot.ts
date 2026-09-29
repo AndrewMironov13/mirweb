@@ -14,3 +14,9 @@ export const isPre = () => Boolean((window as unknown as Flags).__PRE__)
 
 /** Картинка готового черновика «Борода»: тот же кадр, что рисует живой макет без анимации */
 export const draftPoster = (mobile = false) => `${import.meta.env.BASE_URL}img/draft-${mobile ? 'mobile' : 'desktop'}.webp`
+
+/** Кадры черновика детейлинга «Глянец» со стенда ?harness (шаблон auto): пример в «Как работаем» и «Цене» */
+export const autoDraft = (part: 'desktop' | 'mobile' | 'mobile-2') => `${import.meta.env.BASE_URL}img/draft-auto-${part}.webp`
+
+/** Адрес-заглушка в иллюстрациях: пример выдуманный, настоящий домен не показываем */
+export const DEMO_DOMAIN = 'ваш-сайт.рф'

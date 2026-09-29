@@ -9,15 +9,12 @@ import { Lock, MapPin, Mic, PhoneOff, Video } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { nicheById } from '../data/niches'
 import { TgIcon } from './Messengers'
+import { DEMO_DOMAIN, autoDraft } from '../lib/snapshot'
 import { enter, useLive } from './useLive'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 const avatar = `${import.meta.env.BASE_URL}img/andrey-avatar.webp`
 const detailing = nicheById('detailing')
-/** Кадры черновика детейлинга: первый экран на компьютере, первый и второй экраны на телефоне */
-export const autoDraft = (part: 'desktop' | 'mobile' | 'mobile-2') => `${import.meta.env.BASE_URL}img/draft-auto-${part}.webp`
-/** Адрес-заглушка: пример выдуманный, настоящий домен не показываем */
-export const DEMO_DOMAIN = 'ваш-сайт.рф'
 
 const mmss = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 

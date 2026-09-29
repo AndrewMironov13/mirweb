@@ -9,7 +9,7 @@ import { Mail, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { nicheById } from '../data/niches'
 import { MaxBadge, TgIcon } from './Messengers'
-import { DEMO_DOMAIN, autoDraft } from './ProcessVisuals'
+import { DEMO_DOMAIN, autoDraft } from '../lib/snapshot'
 import { enter, useLive } from './useLive'
 
 const EASE = [0.22, 1, 0.36, 1] as const
