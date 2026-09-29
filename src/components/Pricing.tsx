@@ -1,51 +1,139 @@
+import { motion } from 'motion/react'
 import { ArrowUp, Send } from 'lucide-react'
+import type { ComponentType } from 'react'
 import { brand, included, pricing, tgLink } from '../data/content'
 import { goToGenerator } from '../lib/goto'
 import { T } from '../lib/typo'
+import { CopyMarker, DesignFan, LeadsStack, MotionDemo, PhoneMock, SeoSnippet } from './IncludedVisuals'
 import { Reveal } from './Reveal'
+import { useLive } from './useLive'
+
+type Id = (typeof included)[number]['id']
+
+/**
+ * Плитка «Что входит», как у durable: ячейки разного размера, в каждой — своя живая картинка.
+ * На компьютере: дизайн широкий, телефон во всю высоту двух рядов, заявки широкие снизу
+ */
+const CELLS: { id: Id; Visual: ComponentType; className: string; h: string }[] = [
+  { id: 'design', Visual: DesignFan, className: 'md:col-span-2', h: 'h-[250px] sm:h-[300px] lg:h-auto' },
+  { id: 'mobile', Visual: PhoneMock, className: 'lg:row-span-2', h: 'h-[300px] lg:h-auto' },
+  { id: 'copy', Visual: CopyMarker, className: '', h: 'h-[230px] lg:h-auto' },
+  { id: 'seo', Visual: SeoSnippet, className: '', h: 'h-[250px] lg:h-auto' },
+  { id: 'motion', Visual: MotionDemo, className: '', h: 'h-[220px] lg:h-auto' },
+  { id: 'leads', Visual: LeadsStack, className: 'md:col-span-2', h: 'h-[240px] lg:h-auto' },
+]
+
+/** Цена «0 ₽» обводится от руки, как пометка маркером. Рисуем маской слева направо, один раз */
+function Circled({ children }: { children: string }) {
+  const { ref, seen, still } = useLive<HTMLSpanElement>()
+  return (
+    <span ref={ref} className="relative inline-block">
+      {children}
+      <motion.svg
+        viewBox="0 0 200 110"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute -inset-x-[34%] -inset-y-[18%] h-[136%] w-[168%] text-[#e8772f]"
+        aria-hidden
+        {...(still
+          ? { initial: { opacity: 0 }, animate: seen ? { opacity: 1 } : undefined }
+          : { initial: { clipPath: 'inset(0 100% 0 0)' }, animate: seen ? { clipPath: 'inset(0 0% 0 0)' } : undefined })}
+        transition={{ delay: 0.5, duration: 0.9, ease: [0.45, 0, 0.2, 1] }}
+      >
+        <path
+          d="M156 14C118 2 52 6 22 32 2 50 10 86 64 98c52 11 118 4 128-34C200 30 150 10 104 10 82 10 64 13 50 18"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3.2"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      </motion.svg>
+    </span>
+  )
+}
+
+/** Сравнение, как у durable «Typical spend / Launch plan»: только наши цифры, без чужих цен */
+function PriceCompare() {
+  const { free, full } = pricing
+  const from = brand.priceLabel.replace(/^от\s*/, '')
+  return (
+    <Reveal delay={0.05} className="mx-auto mt-12 grid max-w-[720px] items-start gap-10 text-center sm:mt-14 sm:grid-cols-[1fr_auto_1fr] sm:gap-6">
+      <div>
+        <p className="text-[15px] text-ink-soft">{free.label}</p>
+        <p className="display mt-3 text-[72px] leading-none sm:text-[88px]">
+          <Circled>{free.value}</Circled>
+        </p>
+        <p className="mt-4 text-[15px] text-muted">
+          <T>{free.note}</T>
+        </p>
+      </div>
+      <span className="mx-auto hidden h-px w-12 self-center bg-ink/20 sm:block" aria-hidden />
+      <div>
+        <p className="text-[15px] text-ink-soft">{full.label}</p>
+        <p className="display mt-3 whitespace-nowrap text-[64px] leading-none sm:text-[88px]">
+          <span className="mr-2 text-[0.42em] text-ink-soft">от</span>
+          {from}
+        </p>
+        <p className="mt-4 text-[15px] text-muted">
+          <T>{full.note}</T>
+        </p>
+      </div>
+    </Reveal>
+  )
+}
 
 export function Pricing() {
   return (
-    <section id="price" data-dark className="on-dark scroll-mt-16 bg-night pb-24 pt-8 text-white lg:pb-28">
+    // Светлый лист со скруглённым верхом наезжает на тёмный «Как работаем»: переход виден сразу, как смена страницы
+    <section id="price" className="relative z-10 -mt-10 scroll-mt-16 rounded-t-[28px] bg-paper pb-4 pt-20 sm:rounded-t-[40px] lg:-mt-12 lg:pt-28">
       <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
-        <Reveal className="mx-auto max-w-[900px] py-10 text-center lg:py-16">
-          <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-[#f0a37a]">{pricing.eyebrow}</p>
+        <Reveal className="mx-auto max-w-[900px] text-center">
+          <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-rust">{pricing.eyebrow}</p>
           <h2 className="display mt-4 text-[40px] sm:text-[56px]">
             <T>{pricing.title}</T>
           </h2>
-          <p className="display mt-6 whitespace-nowrap text-[54px] text-[#f0a37a] min-[400px]:text-[64px] sm:text-[96px]">{brand.priceLabel}</p>
-          <p className="mx-auto mt-5 max-w-[520px] text-[17px] leading-[1.6] text-white/65">
+        </Reveal>
+
+        <PriceCompare />
+
+        <Reveal delay={0.05} className="mx-auto mt-12 max-w-[520px] text-center">
+          <p className="text-[16px] leading-[1.6] text-ink-soft sm:text-[17px]">
             <T>{pricing.text}</T>
           </p>
         </Reveal>
 
-        {/* Что входит. Линии сетки — просвет между ячейками на светлой подложке */}
-        <Reveal delay={0.05} className="grid gap-px overflow-hidden rounded-[22px] bg-white/10 ring-1 ring-white/10 sm:grid-cols-2 lg:grid-cols-3">
-          {included.map((it) => (
-            <div key={it.title} className="bg-night p-7">
-              <h3 className="text-[17px] font-medium">
-                <T>{it.title}</T>
-              </h3>
-              <p className="mt-2 text-[15px] leading-[1.55] text-white/60">
-                <T>{it.text}</T>
-              </p>
-            </div>
-          ))}
-        </Reveal>
+        <div className="mt-10 grid gap-3 md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:grid-rows-[400px_400px_380px] lg:gap-4">
+          {CELLS.map(({ id, Visual, className, h }, i) => {
+            const it = included.find((x) => x.id === id)!
+            return (
+              <Reveal key={id} delay={(i % 3) * 0.05} className={`h-full ${className}`}>
+                <article className="flex h-full flex-col overflow-hidden rounded-[22px] bg-cloud">
+                  <div className={`relative shrink-0 overflow-hidden lg:min-h-0 lg:flex-1 ${h}`}>
+                    <Visual />
+                  </div>
+                  <div className="px-6 pb-6 pt-3 sm:px-7 sm:pb-7">
+                    <h3 className="text-[17px] font-medium">
+                      <T>{it.title}</T>
+                    </h3>
+                    <p className="mt-1.5 max-w-[460px] text-[15px] leading-[1.55] text-ink-soft">
+                      <T>{it.text}</T>
+                    </p>
+                  </div>
+                </article>
+              </Reveal>
+            )
+          })}
+        </div>
 
         <Reveal delay={0.1} className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={goToGenerator}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-[12px] bg-white px-6 text-[15px] font-medium text-ink transition-[box-shadow,transform] duration-200 hover:shadow-[0_10px_30px_-10px_rgba(255,255,255,.45)] active:scale-[0.98]"
-          >
+          <button type="button" onClick={goToGenerator} className="btn-dark h-12 px-6 text-[15px]">
             Собрать свой черновик <ArrowUp size={17} />
           </button>
           <a
             href={tgLink('Здравствуйте! Хочу обсудить сайт. ')}
             target="_blank"
             rel="noopener"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-[12px] px-6 text-[15px] font-medium text-white ring-1 ring-white/25 transition hover:bg-white/10 active:scale-[0.98]"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-[11px] px-6 text-[15px] font-medium text-ink ring-1 ring-ink/20 transition hover:bg-cloud active:scale-[0.98]"
           >
             <Send size={16} /> Обсудить в Telegram
           </a>
