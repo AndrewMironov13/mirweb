@@ -1,20 +1,22 @@
 /**
  * Живые картинки к дням в «Как работаем»: созвон, первый экран, весь сайт, запуск.
- * Всё нарисовано кодом поверх двух готовых кадров черновика «Борода». Двигаются только transform и opacity;
+ * Пример — детейлинг «Глянец»: кадры его черновика сняты с нашего же генератора (стенд ?harness, шаблон auto).
+ * Остальное нарисовано кодом. Двигаются только transform и opacity;
  * бесконечное движение идёт, пока карточка на экране (useLive)
  */
 import { AnimatePresence, motion } from 'motion/react'
 import { Lock, MapPin, Mic, PhoneOff, Video } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { nicheById } from '../data/niches'
-import { draftPoster } from '../lib/snapshot'
 import { TgIcon } from './Messengers'
 import { enter, useLive } from './useLive'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 const avatar = `${import.meta.env.BASE_URL}img/andrey-avatar.webp`
-const barber = nicheById('barber')
-/** Адрес-заглушка: пример «Бороды» выдуманный, настоящий домен не показываем */
+const detailing = nicheById('detailing')
+/** Кадры черновика детейлинга: первый экран на компьютере, первый и второй экраны на телефоне */
+export const autoDraft = (part: 'desktop' | 'mobile' | 'mobile-2') => `${import.meta.env.BASE_URL}img/draft-auto-${part}.webp`
+/** Адрес-заглушка: пример выдуманный, настоящий домен не показываем */
 export const DEMO_DOMAIN = 'ваш-сайт.рф'
 
 const mmss = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
@@ -100,8 +102,9 @@ function Chrome({ light = false, domain }: { light?: boolean; domain?: string })
 }
 
 /**
- * День 2. Первый экран «Бороды» в наклонённом окне, как макеты у durable. Пока карточка на экране,
- * шторка с наброском уезжает и открывает готовый экран: из пустой схемы — настоящий сайт
+ * День 2. Первый экран детейлинга в наклонённом окне, как макеты у durable. Пока карточка на экране,
+ * шторка с наброском коротко проходит по экрану и открывает готовый: из схемы — настоящий сайт.
+ * Набросок виден меньше секунды, остальное время — готовый экран, иначе кажется, что картинка не загрузилась
  */
 export function DraftVisual() {
   const { ref, live, seen, still } = useLive()
@@ -116,12 +119,12 @@ export function DraftVisual() {
       >
         <Chrome domain="черновик" />
         <div className="relative overflow-hidden">
-          <img src={draftPoster()} alt="Черновик первого экрана барбершопа «Борода»" loading="lazy" width={1280} height={760} className="block h-auto w-full" />
+          <img src={autoDraft('desktop')} alt="" loading="lazy" width={1280} height={760} className="block h-auto w-full" />
           <motion.div
             aria-hidden
             className="absolute inset-0 bg-[#1f1e1d]"
             initial={{ transform: 'translateX(101%)', opacity: 1 }}
-            // Шторка уезжает вправо и открывает экран; за краем гаснет, возвращается невидимой и снова проявляется набросок
+            // Шторка уезжает вправо и открывает экран; за краем гаснет, возвращается невидимой и перед новым кругом коротко проявляется набросок
             animate={
               live
                 ? {
@@ -130,19 +133,12 @@ export function DraftVisual() {
                   }
                 : { transform: 'translateX(101%)', opacity: 1 }
             }
-            transition={live ? { duration: 7.5, times: [0, 0.14, 0.42, 0.8, 0.81, 0.82, 0.95, 1], ease: 'easeInOut', repeat: Infinity } : { duration: 0 }}
+            transition={live ? { duration: 8, times: [0, 0.05, 0.26, 0.9, 0.905, 0.91, 0.97, 1], ease: 'easeInOut', repeat: Infinity } : { duration: 0 }}
           >
             <Sketch />
             <span className="absolute inset-y-0 left-0 w-[2px] bg-[#f0a37a] shadow-[0_0_14px_2px_rgba(240,163,122,.55)]" />
           </motion.div>
         </div>
-      </motion.div>
-      <motion.div
-        {...enter(seen, still, 'translateY(10px) scale(.96)', 'translateY(0px) scale(1)')}
-        transition={{ delay: 0.5, duration: 0.6, ease: EASE }}
-        className="absolute left-4 top-4 rounded-full bg-[#f0a37a] px-3 py-1 text-[12px] font-medium text-[#2b1a10]"
-      >
-        0 ₽ до оплаты
       </motion.div>
     </div>
   )
@@ -173,7 +169,7 @@ function Sketch() {
   )
 }
 
-/** Дни 3–4. Весь сайт: длинная страница «Бороды» медленно едет в окне, как при просмотре по ссылке */
+/** Дни 3–4. Весь сайт: длинная страница детейлинга медленно едет в окне, как при просмотре по ссылке */
 export function SiteVisual() {
   const { ref, live, seen, still } = useLive()
   return (
@@ -187,7 +183,7 @@ export function SiteVisual() {
         <div className="relative min-h-0 flex-1 overflow-hidden">
           <motion.div
             initial={{ transform: 'translateY(0px)' }}
-            animate={live ? { transform: ['translateY(0%)', 'translateY(0%)', 'translateY(-64%)', 'translateY(-64%)', 'translateY(0%)'] } : { transform: 'translateY(0%)' }}
+            animate={live ? { transform: ['translateY(0%)', 'translateY(0%)', 'translateY(-78%)', 'translateY(-78%)', 'translateY(0%)'] } : { transform: 'translateY(0%)' }}
             transition={live ? { duration: 11, times: [0, 0.12, 0.55, 0.7, 1], ease: 'easeInOut', repeat: Infinity } : { duration: 0.6 }}
             aria-hidden
           >
@@ -199,17 +195,19 @@ export function SiteVisual() {
   )
 }
 
-/** Длинная страница целиком, в масштабе окна: первый экран, услуги с ценами, работы, отзывы, запись */
+/**
+ * Длинная страница целиком, в масштабе окна: два настоящих экрана черновика с генератора
+ * (первый экран, подбор услуги и работы студии), дальше услуги с ценами и запись — кодом
+ */
 function LongPage() {
   return (
-    <div className="bg-[#141414] text-white">
-      <div className="relative h-[190px] overflow-hidden">
-        <img src={draftPoster(true)} alt="" loading="lazy" width={390} height={800} className="absolute inset-x-0 top-0 h-auto w-full" />
-      </div>
-      <div className="bg-[#f6f3ee] px-3 pb-4 pt-3.5 text-ink">
-        <p className="font-display text-[15px] leading-none">Услуги и цены</p>
-        <div className="mt-2.5 divide-y divide-ink/10">
-          {barber.list.map(([name, price]) => (
+    <div className="bg-[#0b0b0c] text-white">
+      <img src={autoDraft('mobile')} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
+      <img src={autoDraft('mobile-2')} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
+      <div className="bg-[#f4f3f1] px-3 pb-4 pt-3.5 text-ink">
+        <p className="text-[10px] font-medium uppercase tracking-[0.12em]">Услуги и цены</p>
+        <div className="mt-2 divide-y divide-ink/10">
+          {detailing.list.map(([name, price]) => (
             <div key={name} className="flex items-baseline justify-between gap-2 py-1.5 text-[9.5px]">
               <span>{name}</span>
               <span className="shrink-0 text-ink-soft">{price}</span>
@@ -217,35 +215,23 @@ function LongPage() {
           ))}
         </div>
       </div>
-      <div className="px-3 pb-4 pt-3.5">
-        <p className="font-display text-[15px] leading-none">Работы</p>
-        <div className="mt-2.5 grid grid-cols-3 gap-1.5">
-          {['#3a2c22', '#5a4031', '#2b2522', '#4a3426', '#2f2a27', '#634532'].map((c) => (
-            <span key={c} className="aspect-square rounded-[4px]" style={{ background: `linear-gradient(160deg, ${c}, #151210)` }} />
-          ))}
-        </div>
-      </div>
-      <div className="bg-[#f6f3ee] px-3 pb-4 pt-3.5 text-ink">
-        <p className="font-display text-[15px] leading-none">Отзывы</p>
-        {[0, 1].map((i) => (
-          <div key={i} className="mt-2 rounded-[6px] bg-white p-2">
-            <span className="block h-[4px] w-[90%] rounded-full bg-ink/15" />
-            <span className="mt-1 block h-[4px] w-[70%] rounded-full bg-ink/15" />
-            <span className="mt-1.5 block h-[4px] w-[30%] rounded-full bg-ink/30" />
-          </div>
-        ))}
-      </div>
       <div className="px-3 pb-5 pt-3.5">
-        <p className="font-display text-[15px] leading-none">Запись</p>
-        <span className="mt-2.5 block h-[18px] rounded-[4px] bg-white/10" />
-        <span className="mt-1.5 block h-[18px] rounded-[4px] bg-white/10" />
-        <span className="mt-2 grid h-[20px] place-items-center rounded-[4px] bg-[#f97316] text-[8.5px] font-medium">Записаться</span>
+        <p className="text-[10px] font-medium uppercase tracking-[0.12em]">Запись на осмотр</p>
+        <span className="mt-2.5 block h-[18px] rounded-[3px] ring-1 ring-white/25" />
+        <span className="mt-1.5 block h-[18px] rounded-[3px] ring-1 ring-white/25" />
+        <span className="mt-2 grid h-[20px] place-items-center rounded-[3px] bg-[#8aa4b4] text-[8px] font-medium uppercase tracking-[0.08em] text-[#0b0b0c]">Записаться</span>
       </div>
     </div>
   )
 }
 
-/** День 5. Адрес печатается в строке браузера, следом приходит первая заявка */
+/** Заявки, которые приходят по кругу в карточке запуска: пример детейлинга, выдуманный */
+const LAUNCH_LEADS = ['Полировка и керамика, суббота', 'Химчистка салона, завтра', 'Керамика в 2 слоя, на неделе']
+
+/**
+ * День 5. Адрес печатается в строке браузера, следом приходит заявка. На следующем круге адрес печатается заново,
+ * а прошлая заявка остаётся на месте, пока не придёт новая: карточка не пустеет
+ */
 export function LaunchVisual() {
   const { ref, live, seen, still } = useLive()
   const [typed, setN] = useState(0)
@@ -271,6 +257,9 @@ export function LaunchVisual() {
     return () => clearTimeout(t)
   }, [live, done])
 
+  // Какая заявка на экране: пока адрес печатается, видна прошлая; до первой заявки — ничего
+  const shown = done ? round : round - 1
+
   return (
     <div ref={ref} className="absolute inset-0 flex flex-col justify-center gap-4 px-5">
       <div className="flex h-12 items-center gap-2 rounded-full bg-[#f7f5f2] px-4 text-[15px] text-ink shadow-[0_24px_50px_-20px_rgba(0,0,0,.7)]">
@@ -286,9 +275,9 @@ export function LaunchVisual() {
       {/* Уведомление приходит поверх стопки, как на экране блокировки: под ним край второго */}
       <div className="relative h-[84px]">
         <AnimatePresence>
-          {done && (
+          {shown >= 0 && (
             <motion.div
-              key={round}
+              key={shown}
               initial={still ? { opacity: 0 } : { opacity: 0, transform: 'translateY(-14px) scale(.96)' }}
               animate={still ? { opacity: 1 } : { opacity: 1, transform: 'translateY(0px) scale(1)' }}
               exit={{ opacity: 0, transition: { duration: 0.25 } }}
@@ -304,7 +293,7 @@ export function LaunchVisual() {
                   <p className="flex items-baseline justify-between gap-2 text-[13.5px] font-medium leading-tight">
                     Новая заявка <span className="shrink-0 text-[11px] font-normal text-muted">сейчас</span>
                   </p>
-                  <p className="mt-0.5 text-[12.5px] leading-snug text-ink-soft">Стрижка и борода, суббота</p>
+                  <p className="mt-0.5 truncate text-[12.5px] leading-snug text-ink-soft">{LAUNCH_LEADS[shown % LAUNCH_LEADS.length]}</p>
                 </div>
               </div>
             </motion.div>

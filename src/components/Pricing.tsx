@@ -3,6 +3,7 @@ import { ArrowUp, Send } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { brand, included, pricing, tgLink } from '../data/content'
 import { goToGenerator } from '../lib/goto'
+import { SNAPSHOT } from '../lib/snapshot'
 import { T } from '../lib/typo'
 import { CopyMarker, DesignFan, LeadsStack, MotionDemo, PhoneMock, SeoSnippet } from './IncludedVisuals'
 import { Reveal } from './Reveal'
@@ -12,15 +13,16 @@ type Id = (typeof included)[number]['id']
 
 /**
  * Плитка «Что входит», как у durable: ячейки разного размера, в каждой — своя живая картинка.
- * На компьютере: дизайн широкий, телефон во всю высоту двух рядов, заявки широкие снизу
+ * На телефоне сначала то, что цепляет: дизайн и заявки. На компьютере (lg:order) — дизайн широкий, телефон во всю
+ * высоту двух рядов, заявки широкие снизу; у широкой ячейки заявок текст слева, картинка справа — без пустой половины
  */
-const CELLS: { id: Id; Visual: ComponentType; className: string; h: string }[] = [
-  { id: 'design', Visual: DesignFan, className: 'md:col-span-2', h: 'h-[250px] sm:h-[300px] lg:h-auto' },
-  { id: 'mobile', Visual: PhoneMock, className: 'lg:row-span-2', h: 'h-[300px] lg:h-auto' },
-  { id: 'copy', Visual: CopyMarker, className: '', h: 'h-[230px] lg:h-auto' },
-  { id: 'seo', Visual: SeoSnippet, className: '', h: 'h-[250px] lg:h-auto' },
-  { id: 'motion', Visual: MotionDemo, className: '', h: 'h-[220px] lg:h-auto' },
-  { id: 'leads', Visual: LeadsStack, className: 'md:col-span-2', h: 'h-[240px] lg:h-auto' },
+const CELLS: { id: Id; Visual: ComponentType; className: string; h: string; row?: boolean }[] = [
+  { id: 'design', Visual: DesignFan, className: 'md:col-span-2 lg:order-1', h: 'h-[250px] sm:h-[300px] lg:h-auto' },
+  { id: 'leads', Visual: LeadsStack, className: 'md:col-span-2 lg:order-5', h: 'h-[230px] lg:h-auto', row: true },
+  { id: 'mobile', Visual: PhoneMock, className: 'lg:order-2 lg:row-span-2', h: 'h-[280px] lg:h-auto' },
+  { id: 'seo', Visual: SeoSnippet, className: 'lg:order-3', h: 'h-[240px] lg:h-auto' },
+  { id: 'copy', Visual: CopyMarker, className: 'lg:order-4', h: 'h-[210px] lg:h-auto' },
+  { id: 'motion', Visual: MotionDemo, className: 'lg:order-6', h: 'h-[220px] lg:h-auto' },
 ]
 
 /** Цена «0 ₽» обводится от руки, как пометка маркером. Рисуем маской слева направо, один раз */
@@ -103,15 +105,16 @@ export function Pricing() {
         </Reveal>
 
         <div className="mt-10 grid gap-3 md:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:grid-rows-[400px_400px_380px] lg:gap-4">
-          {CELLS.map(({ id, Visual, className, h }, i) => {
+          {CELLS.map(({ id, Visual, className, h, row }, i) => {
             const it = included.find((x) => x.id === id)!
             return (
               <Reveal key={id} delay={(i % 3) * 0.05} className={`h-full ${className}`}>
-                <article className="flex h-full flex-col overflow-hidden rounded-[22px] bg-cloud">
-                  <div className={`relative shrink-0 overflow-hidden lg:min-h-0 lg:flex-1 ${h}`}>
-                    <Visual />
+                <article className={`flex h-full flex-col overflow-hidden rounded-[22px] bg-cloud ${row ? 'lg:flex-row-reverse' : ''}`}>
+                  {/* Картинка — иллюстрация, её содержимое скринридеру не читаем; в снимок пререндера не идёт */}
+                  <div aria-hidden className={`relative shrink-0 overflow-hidden lg:min-h-0 lg:flex-1 ${h}`}>
+                    {!SNAPSHOT && <Visual />}
                   </div>
-                  <div className="px-6 pb-6 pt-3 sm:px-7 sm:pb-7">
+                  <div className={`px-6 pb-6 pt-3 sm:px-7 sm:pb-7 ${row ? 'lg:w-[40%] lg:shrink-0 lg:self-end lg:pb-9 lg:pl-9' : ''}`}>
                     <h3 className="text-[17px] font-medium">
                       <T>{it.title}</T>
                     </h3>

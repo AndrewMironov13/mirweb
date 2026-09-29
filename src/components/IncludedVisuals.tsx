@@ -1,41 +1,27 @@
 /**
  * Живые мини-картинки для плитки «Что входит», как ячейки у durable: веер черновиков, текст с маркером,
- * телефон, сниппет с графиком, въезжающие блоки, стопка заявок. Всё кодом, пример — выдуманный барбершоп «Борода».
+ * телефон, сниппет с графиком, въезжающие блоки, стопка заявок. Акцент на авто: сквозной пример — выдуманный
+ * детейлинг «Глянец» (его черновик снят с нашего генератора), в анимациях — тонировка.
  * Движение: transform и opacity, клип-маска только на разовом «рисовании» графика
  */
 import { AnimatePresence, motion } from 'motion/react'
 import { Mail, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { nicheById } from '../data/niches'
-import { draftPoster } from '../lib/snapshot'
 import { MaxBadge, TgIcon } from './Messengers'
-import { DEMO_DOMAIN } from './ProcessVisuals'
+import { DEMO_DOMAIN, autoDraft } from './ProcessVisuals'
 import { enter, useLive } from './useLive'
 
 const EASE = [0.22, 1, 0.36, 1] as const
 const fan = (id: string) => `${import.meta.env.BASE_URL}img/fan/${id}.webp`
-const barber = nicheById('barber')
+const detailing = nicheById('detailing')
+const tint = nicheById('tint')
 
 /* ─────────────── Дизайн: веер черновиков разных ниш ─────────────── */
 
-/** Детейлинг: тёмный первый экран с фото машины, гротеск */
+/** Детейлинг: настоящий первый экран с нашего генератора, он впереди веера */
 function MiniDetailing() {
-  return (
-    <div className="@container relative aspect-[1280/760] overflow-hidden bg-[#0d1116]">
-      <img src={fan('auto')} alt="" loading="lazy" width={480} height={320} className="absolute inset-0 h-full w-full object-cover opacity-70" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,10,14,.92)_0%,rgba(8,10,14,.55)_55%,transparent_100%)]" />
-      <div className="relative flex h-full flex-col justify-center px-[7cqw] text-white">
-        <p className="text-[8.5cqw] font-extrabold leading-[0.95] tracking-[-0.03em]">
-          Полировка.
-          <br />
-          Керамика.
-          <br />
-          Химчистка.
-        </p>
-        <span className="mt-[4cqw] w-fit rounded-[1.4cqw] bg-[#38bdf8] px-[3.4cqw] py-[1.6cqw] text-[3cqw] font-semibold text-[#06121c]">Записаться</span>
-      </div>
-    </div>
-  )
+  return <img src={autoDraft('desktop')} alt="" loading="lazy" width={1280} height={760} className="block aspect-[1280/760] h-auto w-full" />
 }
 
 /** Маникюр: светлый экран пополам с фото, антиква */
@@ -75,11 +61,11 @@ function MiniCoffee() {
   )
 }
 
-/** Три ниши, ни одна не повторяет «Бороду»: её черновик и так виден в «Как работаем» */
+/** Впереди — детейлинг, наш главный клиент. За ним маникюр, кофейня в самом конце: показывает, что берём и другие ниши */
 const FAN = [
-  { C: MiniDetailing, to: 'translate(-40%, 9%) rotate(-9deg)', z: 1 },
-  { C: MiniNails, to: 'translate(40%, 9%) rotate(9deg)', z: 2 },
-  { C: MiniCoffee, to: 'translate(0%, -3%) rotate(0deg)', z: 3 },
+  { C: MiniCoffee, to: 'translate(-38%, 10%) rotate(-9deg) scale(.9)', z: 1 },
+  { C: MiniNails, to: 'translate(40%, 8%) rotate(8deg) scale(.94)', z: 2 },
+  { C: MiniDetailing, to: 'translate(0%, -4%) rotate(0deg) scale(1.08)', z: 3 },
 ]
 
 export function DesignFan() {
@@ -123,7 +109,7 @@ export function CopyMarker() {
   return (
     <div ref={ref} className="absolute inset-0 flex flex-col justify-center gap-2 px-6 sm:px-8" aria-hidden>
       <Note>что делаете</Note>
-      <p className="display text-[34px] text-ink sm:text-[38px]">{barber.services.join(' ')}</p>
+      <p className="display text-[30px] text-ink sm:text-[38px]">{detailing.services.join(' ')}</p>
       <p className="relative w-fit text-[15.5px] text-ink">
         <motion.span
           className="absolute -inset-x-1.5 inset-y-0 origin-left rounded-[4px] bg-[#f6c9ad]"
@@ -132,7 +118,7 @@ export function CopyMarker() {
             : { initial: { transform: 'scaleX(0)' }, animate: seen ? { transform: 'scaleX(1)' } : undefined })}
           transition={{ delay: 0.5, duration: 0.8, ease: EASE }}
         />
-        <span className="relative">{barber.pain.split('.')[0]}</span>
+        <span className="relative">{detailing.pain.split(':')[0]}</span>
       </p>
       <Note flip>какую проблему решаете</Note>
     </div>
@@ -144,18 +130,18 @@ export function CopyMarker() {
 export function PhoneMock() {
   const { ref, live, seen, still } = useLive()
   return (
-    <div ref={ref} className="absolute inset-0 flex justify-center" aria-hidden>
+    <div ref={ref} className="absolute inset-0 flex items-start justify-center pt-7 lg:items-center lg:pt-0" aria-hidden>
       <motion.div
         {...enter(seen, still, 'translateY(48px)', 'translateY(0px)')}
         transition={{ duration: 0.9, ease: EASE }}
-        className="absolute top-7 w-[52%] max-w-[270px] rounded-[30px] bg-[#161616] p-[6px] shadow-[0_30px_60px_-24px_rgba(28,27,26,.6),0_0_0_1px_rgba(28,27,26,.12)] lg:top-10"
+        className="relative w-[52%] max-w-[270px] shrink-0 rounded-[30px] bg-[#161616] p-[6px] shadow-[0_30px_60px_-24px_rgba(28,27,26,.6),0_0_0_1px_rgba(28,27,26,.12)] lg:w-[64%] lg:max-w-[250px]"
       >
         <div className="relative overflow-hidden rounded-[24px] bg-black">
           <div className="absolute left-1/2 top-[6px] z-10 h-[14px] w-[30%] -translate-x-1/2 rounded-full bg-black" />
-          <img src={draftPoster(true)} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
-          {/* Касание кнопки «Записаться»: круг расходится и гаснет, пока телефон на экране */}
+          <img src={autoDraft('mobile')} alt="" loading="lazy" width={390} height={800} className="block h-auto w-full" />
+          {/* Касание кнопки «Записаться на осмотр»: круг расходится и гаснет, пока телефон на экране */}
           <motion.span
-            className="absolute left-1/2 top-[62%] -ml-[18px] -mt-[18px] h-9 w-9 rounded-full bg-white/70"
+            className="absolute left-1/2 top-[77%] -ml-[18px] -mt-[18px] h-9 w-9 rounded-full bg-white/70"
             initial={{ opacity: 0, transform: 'scale(.4)' }}
             animate={live ? { opacity: [0, 0.8, 0], transform: ['scale(.4)', 'scale(.7)', 'scale(1.8)'] } : { opacity: 0, transform: 'scale(.4)' }}
             transition={live ? { duration: 1.4, times: [0, 0.2, 1], repeat: Infinity, repeatDelay: 1.6, ease: 'easeOut' } : { duration: 0.2 }}
@@ -215,18 +201,18 @@ export function SeoSnippet() {
       >
         <div className="flex items-center gap-2 border-b border-line px-3.5 py-2 text-[12.5px] text-ink">
           <Search size={13} className="shrink-0 text-muted" />
-          барбершоп рядом
+          детейлинг рядом
         </div>
         <div className="px-3.5 pb-3.5 pt-2.5">
           <div className="flex items-center gap-2">
-            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#f97316] text-[11px] font-bold text-white">Б</span>
+            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#0b0b0c] text-[11px] font-bold text-white">Г</span>
             <div className="min-w-0 leading-tight">
-              <p className="text-[12px] text-ink">{barber.sample}</p>
+              <p className="text-[12px] text-ink">{detailing.sample}</p>
               <p className="text-[11px] text-muted">{DEMO_DOMAIN}</p>
             </div>
           </div>
-          <p className="mt-2 text-[14px] font-medium leading-snug text-[#2a55c9]">Стрижки, борода и бритьё — запись онлайн</p>
-          <p className="mt-1 text-[12px] leading-[1.45] text-ink-soft">{barber.pain.split('.')[0]}</p>
+          <p className="mt-2 text-[14px] font-medium leading-snug text-[#2a55c9]">Полировка, керамика и химчистка — запись онлайн</p>
+          <p className="mt-1 text-[12px] leading-[1.45] text-ink-soft">{detailing.pain}</p>
         </div>
       </motion.div>
     </div>
@@ -250,35 +236,35 @@ export function MotionDemo() {
     animate: seen ? (still ? { opacity: 1 } : { opacity: 1, transform: 'translateY(0%)' }) : undefined,
     transition: { delay: 0.15 + i * 0.11, duration: 0.75, ease: EASE },
   })
-  const words = ['Йога.', 'Пилатес.', 'Растяжка.']
+  const words = tint.services
 
   return (
     <div ref={ref} className="absolute inset-0 flex justify-center" aria-hidden>
-      {/* Мини-страница другой ниши: студия йоги. key={cycle} перезапускает появление, пока ячейка на экране */}
-      <div key={cycle} className="absolute top-7 w-[76%] max-w-[310px] rounded-t-[14px] bg-[#fbf8f3] px-4 pb-8 pt-3.5 shadow-[0_20px_44px_-22px_rgba(28,27,26,.45),0_0_0_1px_rgba(28,27,26,.06)]">
+      {/* Мини-страница тонировки: тёмная, как сайты авто-ниши. key={cycle} перезапускает появление, пока ячейка на экране */}
+      <div key={cycle} className="absolute top-7 w-[76%] max-w-[310px] rounded-t-[14px] bg-[#0f1215] px-4 pb-8 pt-3.5 shadow-[0_20px_44px_-22px_rgba(28,27,26,.55),0_0_0_1px_rgba(28,27,26,.1)]">
         <motion.div className="flex items-center gap-1.5" {...rise(0, 'translateY(-8px)')}>
-          <span className="h-3 w-3 rounded-full bg-[#16a34a]" />
-          <span className="ml-auto h-[4px] w-6 rounded-full bg-ink/20" />
-          <span className="h-[4px] w-6 rounded-full bg-ink/20" />
+          <span className="h-3 w-3 rounded-full bg-[#2dd4bf]" />
+          <span className="ml-auto h-[4px] w-6 rounded-full bg-white/25" />
+          <span className="h-[4px] w-6 rounded-full bg-white/25" />
         </motion.div>
-        <p className="mt-3.5 font-display text-[23px] leading-[1.02] tracking-[-0.01em] text-[#1d2a20]">
+        <p className="mt-3.5 text-[21px] font-extrabold leading-[1.02] tracking-[-0.02em] text-white">
           {words.map((w, i) => (
             <span key={w} className="mr-[0.22em] inline-block overflow-hidden pb-[0.06em] align-bottom">
-              <motion.span className={`inline-block ${i === 1 ? 'italic text-[#16a34a]' : ''}`} {...rise(1 + i)}>
+              <motion.span className={`inline-block ${i === 1 ? 'text-[#2dd4bf]' : ''}`} {...rise(1 + i)}>
                 {w}
               </motion.span>
             </span>
           ))}
         </p>
-        <motion.span className="mt-3 inline-block rounded-full bg-[#16a34a] px-3 py-1.5 text-[10.5px] font-medium text-white" {...rise(4, 'translateY(10px)')}>
-          Записаться
+        <motion.span className="mt-3 inline-block rounded-[6px] bg-[#2dd4bf] px-3 py-1.5 text-[10.5px] font-semibold text-[#06201c]" {...rise(4, 'translateY(10px)')}>
+          {tint.cta}
         </motion.span>
         <div className="mt-3.5 grid grid-cols-3 gap-1.5">
           {/* Одно фото, разрезанное на три плитки: каждая показывает свою треть */}
           {[0, 1, 2].map((i) => (
             <motion.div key={i} className="relative h-[56px] overflow-hidden rounded-[6px]" {...rise(5 + i, 'translateY(18px)')}>
               <img
-                src={fan('yoga')}
+                src={fan('auto')}
                 alt=""
                 loading="lazy"
                 width={480}
@@ -297,10 +283,10 @@ export function MotionDemo() {
 /* ─────────────── Заявки: стопка уведомлений из мессенджеров и почты ─────────────── */
 
 const LEADS = [
-  { ch: 'tg', from: 'Telegram', text: 'Стрижка и борода, суббота' },
-  { ch: 'max', from: 'Max', text: 'Королевское бритьё, завтра' },
-  { ch: 'mail', from: 'Почта', text: 'Отец и сын, воскресенье' },
-  { ch: 'tg', from: 'Telegram', text: 'Стрижка, сегодня после 18' },
+  { ch: 'tg', from: 'Telegram', text: 'Полировка и керамика, суббота' },
+  { ch: 'max', from: 'Max', text: 'Химчистка салона, завтра' },
+  { ch: 'mail', from: 'Почта', text: 'Оклейка зон риска, пятница' },
+  { ch: 'tg', from: 'Telegram', text: 'Мойка и полировка, сегодня после 18' },
 ] as const
 
 function ChannelIcon({ ch }: { ch: (typeof LEADS)[number]['ch'] }) {
