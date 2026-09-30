@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { X } from 'lucide-react'
+import { Phone, X } from 'lucide-react'
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
-import { about } from '../data/content'
+import { about, channels } from '../data/content'
 import { goal } from '../lib/goal'
 import { T } from '../lib/typo'
 import { LeadForm } from './LeadForm'
-import { TgIcon, maxHref, tgHref } from './Messengers'
+import { TgIcon, maxHref, tgHref, telHref } from './Messengers'
 
 const Ctx = createContext<() => void>(() => {})
 /** Открыть окно «Заказать сайт» из любого места страницы */
@@ -85,7 +85,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
               </div>
               <div className="mt-6 flex items-center gap-3">
                 <span className="h-px flex-1 bg-line" />
-                <span className="text-[13px] text-muted">или напишите сами</span>
+                <span className="text-[13px] text-muted">или свяжитесь сами</span>
                 <span className="h-px flex-1 bg-line" />
               </div>
               <div className="mt-4 grid grid-cols-2 gap-2">
@@ -94,6 +94,9 @@ export function OrderProvider({ children }: { children: ReactNode }) {
                 </a>
                 <a href={maxHref} target="_blank" rel="noopener" className="inline-flex h-12 items-center justify-center gap-2 rounded-[11px] bg-cloud text-[15px] font-medium text-ink transition hover:bg-cloud-2 active:scale-[0.97]">
                   Max
+                </a>
+                <a href={telHref} className="col-span-2 inline-flex h-12 items-center justify-center gap-2 rounded-[11px] text-[15px] font-medium text-ink ring-1 ring-line transition hover:bg-cloud active:scale-[0.97]">
+                  <Phone size={16} /> {channels.phoneLabel}
                 </a>
               </div>
             </motion.div>

@@ -1,9 +1,9 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, Phone } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { nav } from '../data/content'
+import { channels, nav } from '../data/content'
 import { LogoMark } from './Logo'
-import { MaxBadge, TgIcon, maxHref, tgHref } from './Messengers'
+import { MaxBadge, TgIcon, maxHref, tgHref, telHref } from './Messengers'
 import { useOrder } from './Order'
 
 const SPRING = { type: 'spring', bounce: 0.22, visualDuration: 0.42 } as const
@@ -207,6 +207,16 @@ export function Nav() {
                   <ArrowUpRight size={18} className="rotate-45 text-ink-soft" />
                 </motion.a>
               ))}
+              {/* Позвонить — отдельной плашкой: на телефоне это самое быстрое действие */}
+              <motion.a
+                href={telHref}
+                onClick={() => setOpen(false)}
+                variants={plate}
+                className="glass-dense flex h-14 items-center justify-between rounded-[20px] px-5 text-[17px] font-medium text-ink"
+              >
+                <span className="whitespace-nowrap">{channels.phoneLabel}</span>
+                <Phone size={18} className="text-ink-soft" />
+              </motion.a>
               {/* От планшета Telegram, Max и «Заказать сайт» уже есть в шапке — в меню не повторяем */}
               <motion.div variants={plate} className="flex gap-2 md:hidden">
                 <Circle href={tgHref()} label="Написать в Telegram" className="glass-dense text-ink">

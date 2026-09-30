@@ -23,3 +23,4 @@ export function MaxBadge() {
 
 export const tgHref = (text = 'Здравствуйте! Хочу сайт. ') => tgLink(text)
 export const maxHref = channels.max
+export const telHref = `tel:${channels.phone}`

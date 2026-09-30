@@ -47,6 +47,9 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <p className={col}>Связаться</p>
             <div className="mt-3">
+              <a href={`tel:${channels.phone}`} className={`${link} whitespace-nowrap`}>
+                {channels.phoneLabel}
+              </a>
               <a href={tgLink('Здравствуйте! ')} target="_blank" rel="noopener" className={link}>
                 Telegram @{channels.telegram}
               </a>

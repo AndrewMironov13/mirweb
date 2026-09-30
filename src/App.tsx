@@ -1,5 +1,6 @@
 import { MotionConfig } from 'motion/react'
 import { About } from './components/About'
+import { CookieNote } from './components/CookieNote'
 import { Faq } from './components/Faq'
 import { FinalCta } from './components/FinalCta'
 import { FloatingAsk } from './components/FloatingAsk'
@@ -33,6 +34,7 @@ export default function App() {
           <Footer />
           {/* В снимок пререндера плашка не идёт: без JS невидимый слой внизу экрана съедал бы нажатия */}
           {!SNAPSHOT && <FloatingAsk />}
+          {!SNAPSHOT && <CookieNote />}
         </OrderProvider>
       </GeneratorProvider>
     </MotionConfig>

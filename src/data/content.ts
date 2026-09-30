@@ -9,6 +9,9 @@ export const brand = {
 
 export const channels = {
   telegram: 'MirWeba',
+  /** Тот же номер, что на сайте Интеллекта: звонки с обоих сайтов приходят Андрею */
+  phone: '+79334170016',
+  phoneLabel: '+7 933 417-00-16',
   max: 'https://max.ru/u/f9LHodD0cOJjxTRx-z3mN-F4waZeqClPehBT_uOx9VixL4gyIbEiJClEP3M',
   /** formsubmit.co: первое письмо попросит подтвердить адрес, до подтверждения заявки не доходят */
   email: 'andrew.mironov417@yandex.ru',

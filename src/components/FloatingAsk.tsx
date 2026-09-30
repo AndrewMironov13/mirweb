@@ -38,7 +38,9 @@ export function FloatingAsk() {
           animate={{ opacity: 1, transform: 'translate(-50%, 0px)' }}
           exit={{ opacity: 0, transform: `translate(-50%, ${dy}px)` }}
           transition={{ type: 'spring', bounce: 0.25, visualDuration: 0.45 }}
-          className="fixed bottom-5 left-1/2 z-30 flex w-[calc(100%-32px)] max-w-[420px] items-center justify-between gap-3 rounded-[16px] bg-[#e6e5e3]/90 py-2 pl-5 pr-2 text-left shadow-[0_18px_40px_-16px_rgba(0,0,0,.35)] ring-1 ring-black/5 backdrop-blur-xl"
+          // Над плашкой cookies, пока она на экране: --cookie-offset ставит CookieNote
+          style={{ bottom: 'calc(1.25rem + var(--cookie-offset, 0px))' }}
+          className="fixed left-1/2 z-30 [transition:bottom_.3s_cubic-bezier(.22,1,.36,1)] flex w-[calc(100%-32px)] max-w-[420px] items-center justify-between gap-3 rounded-[16px] bg-[#e6e5e3]/90 py-2 pl-5 pr-2 text-left shadow-[0_18px_40px_-16px_rgba(0,0,0,.35)] ring-1 ring-black/5 backdrop-blur-xl"
         >
           <span className="truncate text-[15px] text-ink-soft">Как называется ваш бизнес?</span>
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] bg-ink text-white">

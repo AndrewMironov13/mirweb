@@ -28,6 +28,7 @@ function jsonLd(): Plugin {
     description: seo.description,
     areaServed: { '@type': 'Country', name: 'Россия' },
     email: channels.email,
+    telephone: channels.phoneLabel,
     sameAs: [`https://t.me/${channels.telegram}`, ...(SITE_URL ? [channels.max] : [])],
     // Логотип, основатель и Max — только когда у сайта есть свой адрес
     ...(SITE_URL

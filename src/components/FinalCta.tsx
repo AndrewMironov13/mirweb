@@ -1,8 +1,9 @@
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, Phone } from 'lucide-react'
+import { channels } from '../data/content'
 import { goToGenerator } from '../lib/goto'
 import { T } from '../lib/typo'
 import { LeadForm } from './LeadForm'
-import { TgIcon, maxHref, tgHref } from './Messengers'
+import { TgIcon, maxHref, tgHref, telHref } from './Messengers'
 import { Reveal } from './Reveal'
 
 /** Финал без второго генератора: контакт, мессенджеры и ссылка наверх к черновику */
@@ -22,7 +23,7 @@ export function FinalCta() {
           <LeadForm source="Форма внизу страницы" />
           <div className="mt-6 flex items-center gap-3">
             <span className="h-px flex-1 bg-line" />
-            <span className="text-[13px] text-muted">или напишите сами</span>
+            <span className="text-[13px] text-muted">или свяжитесь сами</span>
             <span className="h-px flex-1 bg-line" />
           </div>
           <div className="mt-4 grid grid-cols-2 gap-2">
@@ -36,6 +37,13 @@ export function FinalCta() {
               className="inline-flex h-12 items-center justify-center gap-2 rounded-[11px] bg-white text-[15px] font-medium text-ink ring-1 ring-line transition-[box-shadow,transform] duration-200 hover:shadow-[0_10px_24px_-12px_rgba(28,27,26,.35)] active:scale-[0.97]"
             >
               Max
+            </a>
+            {/* Номер цифрами: на компьютере его переписывают в телефон, на телефоне — нажимают */}
+            <a
+              href={telHref}
+              className="col-span-2 inline-flex h-12 items-center justify-center gap-2 rounded-[11px] text-[15px] font-medium text-ink ring-1 ring-line transition hover:bg-white active:scale-[0.97]"
+            >
+              <Phone size={16} /> {channels.phoneLabel}
             </a>
           </div>
           {/* Блоком, а не flex: строка переносится целиком, «наверху» и стрелка не отрываются друг от друга */}
