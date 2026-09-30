@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://andrewmironov13.github.io/mirweb/sitemap.xml
+Sitemap: https://mirwebstudio.ru/sitemap.xml
