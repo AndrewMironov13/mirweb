@@ -93,7 +93,7 @@ export function Process() {
           <div
             ref={ref}
             role="region"
-            aria-label="Пять дней по шагам"
+            aria-label="Шаги от созвона до запуска"
             className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4 lg:gap-4 [&::-webkit-scrollbar]:hidden"
           >
             {process.steps.map((s, i) => (

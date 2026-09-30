@@ -37,14 +37,14 @@ export function Hero() {
 
   return (
     <section id="top" ref={ref} className="overflow-x-clip px-4 pb-6 pt-[84px] sm:px-6 sm:pt-[108px] lg:pt-[100px] short:pt-[104px]">
-      {/* На телефоне обе строки по одной: кегль от ширины экрана, «за 5 дней, от 30 000 ₽» не рвётся */}
+      {/* На телефоне обе строки по одной: кегль от ширины экрана, «за 7 дней, от 30 000 ₽» не рвётся */}
       <h1 className="display mx-auto max-w-[1000px] text-center text-[length:min(44px,calc((100vw_-_32px)/9.4))] text-ink sm:text-[56px] md:text-[68px] lg:text-[84px] short:text-[60px]">
         {/* Строки не переносятся: пока грузится шрифт, запасной не должен дать третью строку и сдвиг всего экрана */}
         <motion.span className="block whitespace-nowrap" {...up(0.05)}>
           Сайт для бизнеса
         </motion.span>{' '}
         <motion.span className="block whitespace-nowrap" {...up(0.15)}>
-          <span className="accent-word">за 5 дней,</span> от 30 000 ₽
+          <span className="accent-word">за 7 дней,</span> от 30 000 ₽
         </motion.span>
       </h1>
       <motion.p
