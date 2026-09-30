@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { X } from 'lucide-react'
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { about } from '../data/content'
+import { goal } from '../lib/goal'
 import { T } from '../lib/typo'
 import { LeadForm } from './LeadForm'
 import { TgIcon, maxHref, tgHref } from './Messengers'
@@ -21,6 +22,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   const show = useCallback(() => {
     opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
     setOpen(true)
+    goal('order_open')
   }, [])
 
   useEffect(() => {

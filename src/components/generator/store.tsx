@@ -1,5 +1,6 @@
 import { createContext, startTransition, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { DEMO_SEQUENCE, NICHES, SPHERES, detectNiche, makeDraft, type Draft, type SphereId } from '../../data/niches'
+import { goal } from '../../lib/goal'
 import { SNAPSHOT, isPre } from '../../lib/snapshot'
 import { useMedia } from '../../lib/useMedia'
 
@@ -78,6 +79,8 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
       setStatus('style')
       setByVisitor(!auto)
     })
+    // Черновик собрал сам посетитель, а не автодемо — цель в Метрике
+    if (!auto) goal('draft_built')
     const total = 1.7 + Math.random() * 0.5
     timers.current.push(
       window.setTimeout(() => setStatus('headline'), 550),

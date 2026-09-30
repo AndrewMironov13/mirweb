@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { ArrowRight, Check, Loader2 } from 'lucide-react'
 import { useId, useRef, useState, type FormEvent } from 'react'
 import { tgLink } from '../data/content'
+import { goal } from '../lib/goal'
 import { sendLead } from '../lib/lead'
 import { T } from '../lib/typo'
 
@@ -51,7 +52,8 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
     setState('sending')
     const ok = await sendLead({ contact: v, business, niche, source })
     setState(ok ? 'sent' : 'error')
-    if (!ok) field.current?.focus()
+    if (ok) goal('lead_sent')
+    else field.current?.focus()
   }
 
   const tg = tgLink(`Здравствуйте! Хочу сайт${business ? ` для «${business}»` : ''}. `)
@@ -99,7 +101,8 @@ export function LeadForm({ business, niche, source, dark, autoFocus, stackedLg }
               aria-label="Телефон или ник в Telegram"
               aria-invalid={invalid ? true : undefined}
               aria-describedby={failed ? errId : undefined}
-              className={`min-w-0 flex-1 bg-transparent px-3 py-2.5 text-[16px] outline-none ${dark ? 'text-white placeholder:text-white/55' : 'text-ink placeholder:text-muted'}`}
+              // ym-hide-content и ym-disable-keys: контакт не попадает в запись Вебвизора
+              className={`ym-hide-content ym-disable-keys min-w-0 flex-1 bg-transparent px-3 py-2.5 text-[16px] outline-none ${dark ? 'text-white placeholder:text-white/55' : 'text-ink placeholder:text-muted'}`}
             />
             <button
               type="submit"
