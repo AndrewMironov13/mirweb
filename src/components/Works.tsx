@@ -1,7 +1,7 @@
 import { useInView, useReducedMotion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 import { useEffect, useRef } from 'react'
-import { works, worksLead } from '../data/content'
+import { works } from '../data/content'
 import { SNAPSHOT } from '../lib/snapshot'
 import { T } from '../lib/typo'
 import { PhoneFrame } from './preview/Frames'
@@ -103,9 +103,6 @@ export function Works() {
     <section ref={ref} id="works" className="mx-auto max-w-[1248px] scroll-mt-20 px-4 pt-24 sm:px-6 lg:pt-32">
       <Reveal>
         <h2 className="display text-[40px] text-ink sm:text-[56px]">Наши работы</h2>
-        <p className="mt-3 max-w-[560px] text-[16px] leading-[1.6] text-ink-soft">
-          <T>{worksLead}</T>
-        </p>
       </Reveal>
       <Reveal className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <div className="md:col-span-2">
