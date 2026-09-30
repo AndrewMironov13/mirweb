@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
-    "deploy": "SITE_URL=https://andrewmironov13.github.io/mirweb npm run build && gh-pages -d dist -t -m \"deploy\""
+    "deploy": "SITE_URL=https://mirwebstudio.ru npm run build && gh-pages -d dist -t -m \"deploy\""
   },
   "dependencies": {
     "@fontsource-variable/cormorant-garamond": "^5.3.0",
