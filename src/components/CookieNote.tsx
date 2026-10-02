@@ -15,9 +15,9 @@ const seen = () => {
 /**
  * Уведомление о cookies и Яндекс Метрике: маленькая стеклянная плашка внизу, как капсулы шапки.
  * Появляется через секунду после загрузки, чтобы не спорить с первым экраном, и больше не показывается после «Понятно».
- * Пока плашка на экране, плавающее поле генератора поднимается над ней (--cookie-offset в FloatingAsk)
+ * Пока плашка на экране, плавающее поле генератора не показываем (onOpen → App → FloatingAsk): вдвоём они закрывали низ экрана
  */
-export function CookieNote() {
+export function CookieNote({ onOpen }: { onOpen: (open: boolean) => void }) {
   const [show, setShow] = useState(false)
   const still = useReducedMotion()
 
@@ -27,9 +27,7 @@ export function CookieNote() {
     return () => window.clearTimeout(t)
   }, [])
 
-  useEffect(() => {
-    document.documentElement.style.setProperty('--cookie-offset', show ? '64px' : '0px')
-  }, [show])
+  useEffect(() => onOpen(show), [show, onOpen])
 
   const ok = () => {
     setShow(false)

@@ -1,4 +1,5 @@
 import { MotionConfig } from 'motion/react'
+import { useState } from 'react'
 import { About } from './components/About'
 import { CookieNote } from './components/CookieNote'
 import { Faq } from './components/Faq'
@@ -15,6 +16,8 @@ import { Works } from './components/Works'
 import { SNAPSHOT } from './lib/snapshot'
 
 export default function App() {
+  /** Плашка про cookies на экране: пока она не закрыта, плавающее поле генератора не показываем */
+  const [cookieOpen, setCookieOpen] = useState(false)
   return (
     // Просили меньше движения в системе — motion гасит анимации x/y/scale, проявление остаётся.
     // Анимации через строку transform (Reveal, меню, плашка) переключают на одну opacity сами, через useReducedMotion
@@ -33,8 +36,8 @@ export default function App() {
           </main>
           <Footer />
           {/* В снимок пререндера плашка не идёт: без JS невидимый слой внизу экрана съедал бы нажатия */}
-          {!SNAPSHOT && <FloatingAsk />}
-          {!SNAPSHOT && <CookieNote />}
+          {!SNAPSHOT && <FloatingAsk hidden={cookieOpen} />}
+          {!SNAPSHOT && <CookieNote onOpen={setCookieOpen} />}
         </OrderProvider>
       </GeneratorProvider>
     </MotionConfig>
