@@ -45,7 +45,7 @@ export const works: Work[] = [
   { id: 'intellect', name: 'Интеллект', niche: 'Оклейка, тонировка, автозапуск', city: 'Нижний Новгород', url: 'https://intellectdetailing.ru', host: 'intellectdetailing.ru' },
   { id: 'veridis', name: 'VERIDIS', niche: 'Премиальный детейлинг-центр', city: 'Дзержинск', url: 'https://veridis52.ru', host: 'veridis52.ru' },
   { id: 'caspol', name: 'CASPOL Спорт', niche: 'Связующие для спортивных покрытий', city: 'Производство', url: 'https://sport.caspol.ru', host: 'sport.caspol.ru' },
-  { id: 'expert', name: 'ЭКСПЕРТ', niche: 'Клеи для паркета, дилерская линейка', city: 'Производство', url: 'https://andrewmironov13.github.io/expert-landing/', host: '' },
+  { id: 'expert', name: 'ЭКСПЕРТ', niche: 'Клеи для паркета, дилерская линейка', city: 'Производство', url: 'https://expert.caspol.ru/', host: 'expert.caspol.ru' },
 ]
 
 /** «Что входит» в блоке цены. id выбирает живую картинку ячейки. Тексты в одну-две строки: картинка уже объясняет */
