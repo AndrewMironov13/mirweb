@@ -36,7 +36,7 @@ function jsonLd(): Plugin {
           url: SITE_URL + '/',
           logo: SITE_URL + '/img/logo-256.png',
           image: SITE_URL + '/og.jpg',
-          founder: { '@type': 'Person', name: about.name, jobTitle: about.role },
+          founder: { '@type': 'Person', name: about.name },
         }
       : {}),
     makesOffer: {

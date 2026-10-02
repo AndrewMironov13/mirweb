@@ -6,8 +6,6 @@ import { MaxBadge, TgIcon, maxHref, tgHref } from './Messengers'
 import { Reveal } from './Reveal'
 
 const SPRING = { stiffness: 120, damping: 18, mass: 0.6 }
-/** «Основатель МирВеб» → «основатель МирВеб»: без toLowerCase, иначе и название станет строчным */
-const role = about.role.charAt(0).toLowerCase() + about.role.slice(1)
 
 /**
  * Портрет с лёгким наклоном за курсором: пара градусов и блик, как у карточек Apple.
@@ -41,7 +39,7 @@ function Portrait() {
       <motion.div style={{ rotateX, rotateY, x: shiftX }} className="relative overflow-hidden rounded-[22px]">
         <img
           src={`${import.meta.env.BASE_URL}img/andrey.webp`}
-          alt={`${about.name}, ${role}`}
+          alt={`${about.name}, МирВеб`}
           loading="lazy"
           className="block aspect-[4/5] w-full object-cover [mask-image:linear-gradient(to_bottom,black_78%,transparent)]"
         />
@@ -64,7 +62,6 @@ export function About() {
             <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5">
               <div>
                 <p className="text-[17px] font-semibold">{about.name}</p>
-                <p className="text-[14px] text-white/60">{about.role}</p>
               </div>
               <div className="flex gap-2">
                 <a href={tgHref('Здравствуйте, Андрей! ')} target="_blank" rel="noopener" className="inline-flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[15px] font-medium text-ink transition-[box-shadow,transform] duration-200 hover:shadow-[0_10px_30px_-10px_rgba(255,255,255,.45)] active:scale-[0.97]">

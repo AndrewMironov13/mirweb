@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { Phone, X } from 'lucide-react'
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
-import { about, channels } from '../data/content'
+import { channels } from '../data/content'
 import { goal } from '../lib/goal'
 import { T } from '../lib/typo'
 import { LeadForm } from './LeadForm'
@@ -73,7 +73,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
                 <img src={`${import.meta.env.BASE_URL}img/andrey-avatar.webp`} alt="" className="h-11 w-11 rounded-full object-cover ring-2 ring-white shadow-[0_6px_16px_-6px_rgba(0,0,0,.4)]" />
                 <div className="leading-tight">
                   <p className="text-[14px] font-semibold text-ink">Андрей</p>
-                  <p className="text-[13px] text-ink-soft">{about.role}</p>
+                  <p className="text-[13px] text-ink-soft">МирВеб</p>
                 </div>
               </div>
               <h2 id="order-title" className="display pr-10 text-[34px] leading-[1.05] text-ink">Заказать сайт</h2>
