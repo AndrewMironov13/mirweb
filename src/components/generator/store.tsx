@@ -1,6 +1,7 @@
 import { createContext, startTransition, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { DEMO_SEQUENCE, NICHES, SPHERES, detectNiche, makeDraft, type Draft, type SphereId } from '../../data/niches'
-import { goal } from '../../lib/goal'
+import { goal, visitParams } from '../../lib/goal'
+import { PERSONAL } from '../../lib/personal'
 import { SNAPSHOT, isPre } from '../../lib/snapshot'
 import { useMedia } from '../../lib/useMedia'
 
@@ -32,19 +33,23 @@ export const useGen = () => useContext(Ctx)!
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
+/** Первый черновик: по персональной ссылке — бизнес адресата, иначе первый пример автодемо */
+const START = PERSONAL?.text ?? DEMO_SEQUENCE[0]
+
 export function GeneratorProvider({ children }: { children: ReactNode }) {
   /** Разметку отдал пререндер: первый черновик уже нарисован картинкой, собираем его без анимации и без видео */
-  const [staticStart] = useState(() => SNAPSHOT || isPre())
-  const [text, setTextRaw] = useState(DEMO_SEQUENCE[0])
+  // По персональной ссылке в разметке пререндера стоит чужой пример: собираем черновик адресата заново, с анимацией
+  const [staticStart] = useState(() => SNAPSHOT || (isPre() && !PERSONAL))
+  const [text, setTextRaw] = useState(START)
   const [sphere, setSphere] = useState<SphereId | null>(null)
-  const [draft, setDraft] = useState<Draft>(() => makeDraft(DEMO_SEQUENCE[0], null))
+  const [draft, setDraft] = useState<Draft>(() => makeDraft(START, null, Boolean(PERSONAL)))
   const [buildKey, setBuildKey] = useState(0)
   const [status, setStatus] = useState<Status>(staticStart ? 'done' : 'idle')
   const [took, setTook] = useState(0)
   const [byVisitor, setByVisitor] = useState(false)
   /** Автодемо — это печать по буквам: при «уменьшить движение» не запускаем, стоит первый пример */
   const still = useMedia('(prefers-reduced-motion: reduce)', false)
-  const [demo, setDemo] = useState(true)
+  const [demo, setDemo] = useState(!PERSONAL)
   const [heroVisible, setHeroVisible] = useState(true)
   const timers = useRef<number[]>([])
   const textRef = useRef(text)
@@ -52,14 +57,14 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
   const demoRef = useRef(demo)
   demoRef.current = demo
   /** Текст, по которому собран текущий черновик: к нему возвращаем поле, если автодемо прервали на полуслове */
-  const builtRef = useRef(DEMO_SEQUENCE[0])
+  const builtRef = useRef(START)
   /** Пример, который автодемо печатает сейчас: «Показать» посреди печати собирает его целиком, а не обрывок */
   const demoTarget = useRef(DEMO_SEQUENCE[0])
   /**
    * В поле текст самого посетителя. Только тогда имя черновика можно отправить в заявке как его бизнес.
    * Автодемо, кубик, пример сферы и пустое поле — чужой пример
    */
-  const ownText = useRef(false)
+  const ownText = useRef(Boolean(PERSONAL))
   const demoIdx = useRef(1)
 
   const clearTimers = () => {
@@ -187,7 +192,12 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
 
   // Первый показ: собираем пример сразу при загрузке
   useEffect(() => {
-    if (!staticStart) build(DEMO_SEQUENCE[0], null, true)
+    if (!staticStart) build(START, null, true)
+    // Адресат открыл свою ссылку: цель и код лида в параметрах визита
+    if (PERSONAL) {
+      visitParams({ personal: PERSONAL.code || PERSONAL.text })
+      goal('personal_open')
+    }
     return clearTimers
   }, [build, staticStart])
 

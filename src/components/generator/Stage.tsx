@@ -19,9 +19,10 @@ const ambient = (d: { niche: { video?: string } }, tpl: string) => `${import.met
 const LIGHT = new Set(['health', 'nails', 'beauty', 'yoga', 'edu', 'flat'])
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 /** Длинное имя не должно рваться посреди слова в узкой колонке: уменьшаем кегль по длине самого длинного слова и всей строки */
-const titleSize = (name: string) => {
+const titleSize = (name: string, quoted = false) => {
   const longest = Math.max(...name.split(/\s+/).map((w) => w.length))
-  if (longest >= 13 || name.length > 22) return 'text-[32px] sm:text-[36px]'
+  // Кавычки стоят вплотную к слову и не отрываются: слово из 11–12 букв с ними уже не влезает в колонку
+  if (longest + (quoted ? 2 : 0) >= 13 || name.length > 22) return 'text-[32px] sm:text-[36px]'
   if (longest >= 10 || name.length > 14) return 'text-[38px] sm:text-[42px]'
   return 'text-[44px] sm:text-[52px]'
 }
@@ -156,7 +157,7 @@ export function Stage() {
                 <p className="mt-5 text-[14px] text-white/60">{cap(d.niche.noun)}</p>
                 <p
                   lang="ru"
-                  className={`display mt-1 leading-[1.04] [hyphens:auto] [overflow-wrap:break-word] ${titleSize(d.name)}`}
+                  className={`display mt-1 leading-[1.04] [hyphens:auto] [overflow-wrap:break-word] ${titleSize(d.name, d.quoted)}`}
                 >
                   {shown}
                 </p>

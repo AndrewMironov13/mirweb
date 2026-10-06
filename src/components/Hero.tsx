@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { CircleCheck, Loader2 } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { trust } from '../data/content'
+import { PERSONAL } from '../lib/personal'
 import { isPre } from '../lib/snapshot'
 import { GeneratorBox, statusText } from './generator/GeneratorBox'
 import { Stage } from './generator/Stage'
@@ -51,7 +52,9 @@ export function Hero() {
         {...up(0.3)}
         className="mx-auto mt-4 max-w-[440px] text-center text-[14px] leading-[1.55] text-ink-soft min-[360px]:text-[15px] sm:mt-5 sm:max-w-[680px] sm:text-[17px] short:mt-4 short:text-[16px]"
       >
-        Делаем лендинги для малого бизнеса: дизайн, тексты, анимации и SEO под Яндекс. Впишите свой бизнес ниже и посмотрите, каким может быть ваш сайт
+        {PERSONAL
+          ? `Набросали первый экран для ${g.draft.quoted ? `«${g.draft.name}»` : g.draft.name}, он ниже. Дизайн, тексты и анимации делаем под вас, это пока черновик на шаблоне`
+          : 'Делаем лендинги для малого бизнеса: дизайн, тексты, анимации и SEO под Яндекс. Впишите свой бизнес ниже и посмотрите, каким может быть ваш сайт'}
       </motion.p>
 
       <motion.div {...up(0.45)} className="mt-6 sm:mt-7 short:mt-5">
