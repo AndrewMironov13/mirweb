@@ -5,7 +5,7 @@
  * Шрифты, цвета и капсулы те же, что на главной (стили — content/blog.css). Запуск после vite build:
  *   node scripts/blog.mjs                 — с адресом сайта из SITE_URL (canonical, og, sitemap)
  *
- * Формат статьи: frontmatter (title, description, h1, lead, date, updated) и markdown.
+ * Формат статьи: frontmatter (title, description, h1, lead, date, по желанию updated, cta_who, cta_example) и markdown.
  * Свои блоки: «::: stats» (строки «число | подпись | сравнение») и «::: cta» (поле генератора первого экрана).
  * Раздел «## Частые вопросы» с подзаголовками ### становится разметкой FAQPage.
  */
@@ -35,6 +35,8 @@ const nb = (s) =>
     .replace(new RegExp(`(?<=^|[\\s«(„"])(${SHORT}) `, 'giu'), '$1 ')
     .replace(/ —/g, ' —')
     .replace(/(\d) (?=[\p{L}%₽])/gu, '$1 ')
+    // Разряды числа не разрываются переносом: «12 000», «1 106»
+    .replace(/(\d) (?=\d{3}(?!\d))/g, '$1 ')
 
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
 const ruDate = (iso) => {
@@ -189,11 +191,11 @@ const goal = (name) => `onclick="window.ym&&ym(${METRIKA},'reachGoal','${name}')
 
 function cta(ctx) {
   return `<section class="cta" aria-labelledby="cta-${ctx.n}">
-  <h2 id="cta-${ctx.n}">${esc(nb('Посмотрите, каким может быть сайт вашей студии'))}</h2>
+  <h2 id="cta-${ctx.n}">${esc(nb(`Посмотрите, каким может быть сайт ${ctx.ctaWho}`))}</h2>
   <p>${esc(nb('Впишите название, и мы сразу соберём первый экран. Бесплатно, без звонка и регистрации'))}</p>
   <form action="/" method="get" onsubmit="window.ym&&ym(${METRIKA},'reachGoal','blog_cta')">
-    <label class="sr" for="cta-input-${ctx.n}">Название вашей студии</label>
-    <input id="cta-input-${ctx.n}" name="b" required maxlength="80" placeholder="Детейлинг «Глянец»" autocomplete="organization" />
+    <label class="sr" for="cta-input-${ctx.n}">Название ${ctx.ctaWho}</label>
+    <input id="cta-input-${ctx.n}" name="b" required maxlength="80" placeholder="${esc(ctx.ctaExample)}" autocomplete="organization" />
     <input type="hidden" name="p" value="blog" />
     <button type="submit">Собрать</button>
   </form>
@@ -286,7 +288,9 @@ for (const [n, f] of files.entries()) {
   const slug = f.replace(/\.md$/, '')
   if (!/^[a-z0-9-]{3,80}$/.test(slug)) throw new Error(`blog: имя файла ${f} — только латиница, цифры и дефис`)
   const { meta, body } = frontmatter(await readFile(join(src, f), 'utf8'), f)
-  const { html, toc, faq, stats } = render(body, { n, h1: meta.h1 })
+  // Кому адресована кнопка внизу статьи: «сайт вашей студии», «сайт вашего сервиса»; пример названия в поле
+  const ctx = { n, h1: meta.h1, ctaWho: meta.cta_who || 'вашей студии', ctaExample: meta.cta_example || 'Детейлинг «Глянец»' }
+  const { html, toc, faq, stats } = render(body, ctx)
   const words = plain(body).split(/\s+/).filter(Boolean).length
   posts.push({ slug, meta, html, toc, faq, stats, minutes: Math.max(1, Math.round(words / 180)) })
 }
