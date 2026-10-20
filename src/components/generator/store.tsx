@@ -196,7 +196,8 @@ export function GeneratorProvider({ children }: { children: ReactNode }) {
     // Адресат открыл свою ссылку: цель и код лида в параметрах визита
     if (PERSONAL) {
       visitParams({ personal: PERSONAL.code || PERSONAL.text })
-      goal('personal_open')
+      // Из статьи блога (p=blog) — своя цель, чтобы не путать с персональными ссылками рассылки
+      goal(PERSONAL.code === 'blog' ? 'blog_open' : 'personal_open')
     }
     return clearTimers
   }, [build, staticStart])

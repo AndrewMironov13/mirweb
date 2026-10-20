@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/prerender.mjs",
+    "build": "tsc -b && vite build && node scripts/prerender.mjs && node scripts/blog.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
-    "deploy": "SITE_URL=https://mirwebstudio.ru npm run build && node scripts/personal.mjs && gh-pages -d dist -t -m \"deploy\""
+    "deploy": "SITE_URL=https://mirwebstudio.ru npm run build && node scripts/personal.mjs && gh-pages -d dist -t -m \"deploy\"",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@fontsource-variable/cormorant-garamond": "^5.3.0",

@@ -32,6 +32,9 @@ export function Footer() {
                   {n.label}
                 </a>
               ))}
+              <a href={`${import.meta.env.BASE_URL}blog/`} className={link}>
+                Статьи
+              </a>
             </div>
           </div>
           <div>
