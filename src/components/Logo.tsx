@@ -1,9 +1,8 @@
-/** Знак МирВеб: шестигранник с «М», как на аватарке в Telegram, но в одну краску — как у референса */
+/** Знак МирВеб «Острия»: «М», ножки которой уходят двумя остриями. В одну краску, исходник — ~/Claude/logo-m */
 export function LogoMark({ size = 22, className }: { size?: number; className?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <path d="M16 2.5 27.7 9.25v13.5L16 29.5 4.3 22.75V9.25Z" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinejoin="round" />
-      <path d="M10.4 21.5V10.8h2.5l3.1 5.2 3.1-5.2h2.5v10.7h-2.6v-6.2l-2.9 4.8h-.3l-2.9-4.8v6.2Z" fill="currentColor" />
+    <svg width={size} height={size} viewBox="12 12 96 96" className={className} aria-hidden="true">
+      <path d="M12,12 L60,60 L60,79.8 L12,31.8 Z M12,30.8 L25.3,44.1 L25.3,96 L18.65,108 L12,96 Z M28.7,47.5 L42,60.8 L42,78 L35.35,90 L28.7,78 Z M108,12 L60,60 L60,79.8 L108,31.8 Z M108,30.8 L94.7,44.1 L94.7,96 L101.35,108 L108,96 Z M91.3,47.5 L78,60.8 L78,78 L84.65,90 L91.3,78 Z" fill="currentColor" />
     </svg>
   )
 }
