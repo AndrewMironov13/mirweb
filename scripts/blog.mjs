@@ -6,6 +6,7 @@
  *   node scripts/blog.mjs                 — с адресом сайта из SITE_URL (canonical, og, sitemap)
  *
  * Формат статьи: frontmatter (title, description, h1, lead, date, по желанию updated, cta_who, cta_example) и markdown.
+ * Картинка: строка «![подпись](/img/…)», файл в public/, кадр 16:10 (1200×750).
  * Свои блоки: «::: stats» (строки «число | подпись | сравнение») и «::: cta» (поле генератора первого экрана).
  * Раздел «## Частые вопросы» с подзаголовками ### становится разметкой FAQPage.
  */
@@ -166,6 +167,16 @@ function render(body, ctx) {
           .map((c) => `<th>${inline(c)}</th>`)
           .join('')}</tr></thead><tbody>${rest.map((r) => `<tr>${cells(r).map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`,
       )
+      continue
+    }
+    // Картинка отдельной строкой: ![подпись](/img/…webp) → figure; файл должен лежать в public/
+    const img = t.match(/^!\[([^\]]*)\]\(([^)\s]+)\)$/)
+    if (img) {
+      flush()
+      const [, alt, src] = img
+      if (!existsSync(join(root, 'public', src))) throw new Error(`blog: нет картинки ${src}`)
+      out.push(`<figure><img src="${esc(src)}" alt="${esc(alt)}" width="1200" height="750" loading="lazy" decoding="async" />${alt ? `<figcaption>${esc(nb(alt))}</figcaption>` : ''}</figure>`)
+      i++
       continue
     }
     if (t.startsWith('> ')) {
